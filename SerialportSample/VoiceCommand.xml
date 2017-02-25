@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.3">
+  <CommandSet xml:lang="en-us" Name="CustomersCommands">
+    <CommandPrefix>Customers</CommandPrefix>
+    <Example>Show me your name</Example>
+  
+  <Command Name="ShowDetailsOf">
+  <Example>show detail of John Sharp</Example>
+    <ListenFor RequireAppName="BeforeOrAfterPhrase">
+    show details of {customer}
+    </ListenFor>
+    <ListenFor RequireAppName="BeforeOrAfterPhrase">
+    show details for {customer}
+    </ListenFor>
+    <ListenFor RequireAppName="BeforeOrAfterPhrase">
+    search for {customer}
+    </ListenFor>
+    <Feedback>Looking for{customer}</Feedback>
+    <Navigate/>
+  </Command>
+    
+  <PhraseTopic Label="customer" Scenario="Search">
+    <Subject>Person Name</Subject>
+  </PhraseTopic>
+
+    </CommandSet>
+  </VoiceCommands>
