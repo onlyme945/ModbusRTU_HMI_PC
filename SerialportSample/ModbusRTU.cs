@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.IO.Ports;
+using System.Timers;
 
 namespace SerialportSample
 {
@@ -21,6 +23,13 @@ namespace SerialportSample
         public const byte Receiving        = 0x01;
         public const byte IdleWait         = 0x02;
 
+        public const byte ERR_OK= 0x00;
+        public const byte ERR_Station = 0x01;
+        public const byte ERR_FunctionCode = 0x02;
+        public const byte ERR_Address = 0x03;
+        public const byte ERR_NumOrData = 0x04;//与NumOrData相对应
+        public const byte ERR_CRCCode = 0x05;
+        public const byte ERR_Response = 0xFF;
 
         public static byte[] TxRxBuffer = new byte[256];
         public byte[] Datas = new byte[250];
@@ -28,9 +37,9 @@ namespace SerialportSample
         public static UInt16 RxLength = 0;
         public UInt16 Pointer = 0;
         public UInt16 RetryCNT = 0;
-        public UInt16 ACKTimeoutCNT = 0;
-        public UInt16 BroadcastTimeoutCNT = 0;
-        public UInt16 RxTimeoutCNT = 0;
+        public UInt16 ACKTimeoutCNT = 1000;
+        public UInt16 BroadcastTimeoutCNT = 200;
+        public UInt16 RxTimeoutCNT = 10;
         public Boolean IsACKTimeout = false;
         public Boolean IsBroadcastTimeout = false;
         public Boolean IsRxDone = false;
@@ -39,15 +48,51 @@ namespace SerialportSample
         public UInt16 ErrorCode = 0;
         public UInt16 CRCCode = 0;
         public UInt16 Address = 0;
-        public UInt16 TargetNumber = 0;
+        public UInt16 NumOrData = 0;//存放读取（写入）的寄存器数量或者写入单个线圈（寄存器）的值
         public UInt16 DataByteNumber = 0;
         public UInt16 DataWordNumber = 0;
         public UInt16 Status = 0;
         public Word2Byte TempWord;
         public Boolean IsMaster = false;
 
+        private Timer RxDataTimer=new Timer();
+        private Timer ACKTimer = new Timer();
+        private Timer BroadcastTimer = new Timer();
+
         public delegate void ModbusSendFrameDelegate(byte[] buffer,int offset,int count);//声明委托类型（就像声明结构体类型一样，委托也是一种类型）
         public ModbusSendFrameDelegate ModbusSendFrame;//定义委托变量（就像申明了结构体以后，用所申明的结构体定义变量一样）  最后给这个委托变量赋值，就可以使用了，不赋值就是空的，直接使用会报错
+
+        public  ModbusRTU()
+        {
+            ACKTimer.Interval= ACKTimeoutCNT;
+            BroadcastTimer.Interval= BroadcastTimeoutCNT;
+            RxDataTimer.Interval = RxTimeoutCNT;
+
+            RxDataTimer.Elapsed += RxDataTimer_Tick1;//为接收数据定时器创建定时函数
+            BroadcastTimer.Elapsed += BroadcastTimer_Elapsed;//为广播定时器创建定时函数
+            ACKTimer.Elapsed += ACKTimer_Elapsed;//为应答超时定时器创建定时函数
+
+        }
+
+        private void ACKTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            ACKTimer.Enabled = false;
+            Console.Write("NO ACK!");
+            IsACKTimeout = true;
+        }
+
+        private void BroadcastTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            BroadcastTimer.Enabled = false;
+            Console.Write("Broadcasting done!");
+            IsBroadcastTimeout = true;
+        }
+
+        private void RxDataTimer_Tick1(object sender, EventArgs e)
+        {
+            RxDataTimer.Enabled = false;
+            ModbusReceiveData_SerialPort_Done(); //接收数据流的间隙时间超过帧间间隔时间表示一帧接收完成
+        }
 
         public Boolean RequestADU_ReadCoils(byte ID,UInt16 Addr,UInt16 Num)
         {
@@ -69,7 +114,27 @@ namespace SerialportSample
             TxRxBuffer[7] = TempWord.LByte;
             TxLength = 8;
 
-            ModbusSendFrame(TxRxBuffer,0,TxLength);//调用发送函数（委托）
+
+            try
+            {
+                ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
+            }
+            catch
+            {
+                Console.Write("Error:ModbusSendFrame未关联 或 Serialport未打开！");
+                return false;
+            }
+
+            if (ID == 0)
+            {
+                IsBroadcastTimeout = false;
+                BroadcastTimer.Enabled = true;
+            }  
+            else
+            {
+                IsACKTimeout = false;
+                ACKTimer.Enabled = true;
+            }
 
             return true;
         }
@@ -149,6 +214,7 @@ namespace SerialportSample
             StationID = ID;
             Address = Addr;
             FunctionCode = WriteSingleCoil;
+            NumOrData = Cmd;
 
             TxRxBuffer[0] = ID;
             TxRxBuffer[1] = WriteSingleCoil;
@@ -250,14 +316,6 @@ namespace SerialportSample
         }
 
 
-        public Boolean SendFrame(byte[] data,UInt16 offset,UInt16 length) //最好搞成委托，好调用外部的发送函数
-        {
-
-            return true;
-
-        }
-
-
         public Boolean Assemble_RequestADU(UInt16 BeginAddress,byte[] DataToSend)
         {
             switch (FunctionCode)
@@ -271,7 +329,7 @@ namespace SerialportSample
                 TempWord.Word = BeginAddress;
                 TxRxBuffer[2] = TempWord.HByte;
                 TxRxBuffer[3] = TempWord.LByte;
-                TempWord.Word = TargetNumber;
+                TempWord.Word = NumOrData;
                 TxRxBuffer[4] = TempWord.HByte;
                 TxRxBuffer[5] = TempWord.LByte;
                 TempWord.Word = CRCCaculation.CRC16(TxRxBuffer,6);
@@ -312,18 +370,84 @@ namespace SerialportSample
             return true;
         }
 
-        public Boolean Disassemble_ReceivedADU(System.Timers.Timer  ACKTimer)
+        public void ModbusReceiveData_SerialPort(object sender, SerialDataReceivedEventArgs e)
+        {
+            RxDataTimer.Enabled = false;//定时器停止计数并将计数值归零
+            RxDataTimer.Enabled = true;//定时器从新开始计数
+            UInt16 n = (UInt16)((SerialPort)sender).BytesToRead;//先记录下来，避免某种原因，人为的原因，操作几次之间时间长，缓存不一致
+            ((SerialPort)sender).Read(TxRxBuffer, Pointer, n);//读取缓冲数据
+            Pointer += n;//增加接收计数
+            RxLength = Pointer;
+            
+
+        }
+
+        public void ModbusReceiveData_SerialPort_Done()
+        {
+
+            Console.Write(" " + "*" + RxLength + "*" + " ");
+            for (int a = 0; a < RxLength; a++)
+                Console.Write(TxRxBuffer[a] + " ");
+            Console.Write("Frame Received!");
+            IsRxDone = true;
+            Disassemble_ReceivedADU();
+            Pointer = 0;
+        }
+
+
+        public byte Disassemble_ReceivedADU()
         {
             if (IsMaster == true)
             {
                 if (StationID != TxRxBuffer[0]) //站号错误不进行任何处理，立即返回（ACKTimeout定时器继续定时）
-                    return false;
+                    return ERR_Station;
 
                 ACKTimer.Enabled = false;//通过上面站号检测的说明是期望子节点发送来的响应帧，因而停止ACKTimeout倒计时。
                 TempWord.HByte = TxRxBuffer[RxLength - 1];
                 TempWord.LByte = TxRxBuffer[RxLength - 2];
-                TempWord.Word= CRCCaculation.CRC16(TxRxBuffer,(UInt16)(RxLength-2));
+                if (TempWord.Word != CRCCaculation.CRC16(TxRxBuffer, (UInt16)(RxLength - 2)))
+                    return ERR_CRCCode;
 
+                if (FunctionCode!=TxRxBuffer[1])
+                    return ERR_FunctionCode;
+
+                switch (FunctionCode)
+                {
+                    case WriteSingleCoil:
+                    case WriteCoils:
+                    case WriteRegs:
+                    case WriteSingleReg:
+                        TempWord.HByte = TxRxBuffer[2];
+                        TempWord.LByte = TxRxBuffer[3];
+                        if (TempWord.Word != Address)
+                            return ERR_Address;
+                        TempWord.HByte = TxRxBuffer[4];
+                        TempWord.LByte = TxRxBuffer[5];
+                        if (TempWord.Word != NumOrData)
+                            return ERR_NumOrData;
+
+                        break;
+
+
+
+                    case (ReadCoils + 0x80):
+                    case (ReadDistrbuteBits + 0x80):
+                    case (ReadStorageRegs + 0x80):
+                    case (ReadInputRegs + 0x80):
+                    case (WriteSingleCoil + 0x80):
+                    case (WriteSingleReg + 0x80):
+                    case (WriteCoils + 0x80):
+                    case (WriteRegs + 0x80):
+
+                        return ERR_Response;
+                        break;
+
+                    default:
+                        break;
+
+
+                }
+                
 
             }
             else
@@ -331,7 +455,7 @@ namespace SerialportSample
 
 
             }
-            return true;
+            return ERR_OK;
         }
 
 
@@ -417,6 +541,7 @@ namespace SerialportSample
         }
 
     }
+
     [StructLayout(LayoutKind.Explicit)]
     public struct Word2Byte
     {

@@ -28,7 +28,7 @@ namespace SerialportSample
         {
             InitializeComponent();
         }
-
+        
         //窗体初始化
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -45,8 +45,12 @@ namespace SerialportSample
 
             //添加事件注册
             //comm.DataReceived += comm_DataReceived;
-            comm.DataReceived += Modbus_DataReceived;
+            //comm.DataReceived += Modbus_DataReceived;
+
+            comm.DataReceived += ModbusMaster.ModbusReceiveData_SerialPort;
             ModbusMaster.ModbusSendFrame += comm.Write;//为Modbus实例中的发送委托关联正确的发送函数
+
+            //ModbusMaster.RxDataTimer = Timer_RxDone;
         }
 
         private void Modbus_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -337,7 +341,7 @@ namespace SerialportSample
 
         private void Timer_RxDone_Tick(object sender, EventArgs e)
         {
-            //if RxDone Disassemble_ResponseADU
+            //ModbusMaster.ModbusReceiveData_SerialPort_Done();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -345,6 +349,11 @@ namespace SerialportSample
 
             ModbusMaster.RequestADU_ReadCoils(1,100, 10);
             
+        }
+
+        private void Timer_ACKTimeout_Tick(object sender, EventArgs e)
+        {
+
         }
     }
 }

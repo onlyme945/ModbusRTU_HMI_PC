@@ -277,7 +277,12 @@
             // 
             // Timer_RxDone
             // 
+            this.Timer_RxDone.Interval = 1000;
             this.Timer_RxDone.Tick += new System.EventHandler(this.Timer_RxDone_Tick);
+            // 
+            // Timer_ACKTimeout
+            // 
+            this.Timer_ACKTimeout.Tick += new System.EventHandler(this.Timer_ACKTimeout_Tick);
             // 
             // button1
             // 
