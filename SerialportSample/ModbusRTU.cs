@@ -5,41 +5,48 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.IO.Ports;
 using System.Timers;
+using System.ComponentModel;
 
 namespace SerialportSample
 {
     public class ModbusRTU
     {
-        public const byte ReadCoils        = 0x01;
-        public const byte ReadDistrbuteBits= 0x02;
-        public const byte ReadStorageRegs  = 0x03;
-        public const byte ReadInputRegs    = 0x04;
-        public const byte WriteSingleCoil  = 0x05;
-        public const byte WriteSingleReg   = 0x06;
-        public const byte WriteCoils       = 0x0F;
-        public const byte WriteRegs        = 0x10;
 
-        public const byte Transmitting     = 0x00;
-        public const byte Receiving        = 0x01;
-        public const byte IdleWait         = 0x02;
+        #region//////////////////修改过的量///////////////////////
+        //public const byte ReadCoils        = 0x01;
+        //public const byte ReadDistrbuteBits= 0x02;
+        //public const byte ReadStorageRegs  = 0x03;
+        //public const byte ReadInputRegs    = 0x04;
+        //public const byte WriteSingleCoil  = 0x05;
+        //public const byte WriteSingleReg   = 0x06;
+        //public const byte WriteCoils       = 0x0F;
+        //public const byte WriteRegs        = 0x10;
 
-        public const byte ERR_OK= 0x00;
-        public const byte ERR_Station = 0x01;
-        public const byte ERR_FunctionCode = 0x02;
-        public const byte ERR_Address = 0x03;
-        public const byte ERR_NumOrData = 0x04;//与NumOrData相对应
-        public const byte ERR_CRCCode = 0x05;
-        public const byte ERR_Response = 0xFF;
+
+        //public const byte ERR_OK= 0x00;
+        //public const byte ERR_Station = 0x01;
+        //public const byte ERR_FunctionCode = 0x02;
+        //public const byte ERR_Address = 0x03;
+        //public const byte ERR_NumOrData = 0x04;//与NumOrData相对应
+        //public const byte ERR_CRCCode = 0x05;
+        //public const byte ERR_BreakFrame = 0x06;
+        //public const byte ERR_Response = 0xFF;
+
+        #endregion
+        
+        public byte[][] HighPriorityTxRxBuffer;
+        public byte[][] LowPriorityTxRxBuffer;
+        public bool HighPriorityFrameRdy = false;
+        public bool LosPriorityFrameRdy = false;
 
         public static byte[] TxRxBuffer = new byte[256];
-        public byte[] Datas = new byte[250];
+        public byte[] DatasInByte = new byte[250];
+        public UInt16[] DatasInWord = new UInt16[250];
         public static UInt16 TxLength = 0;
         public static UInt16 RxLength = 0;
         public UInt16 Pointer = 0;
         public UInt16 RetryCNT = 0;
-        public UInt16 ACKTimeoutCNT = 1000;
-        public UInt16 BroadcastTimeoutCNT = 200;
-        public UInt16 RxTimeoutCNT = 10;
+        
         public Boolean IsACKTimeout = false;
         public Boolean IsBroadcastTimeout = false;
         public Boolean IsRxDone = false;
@@ -53,29 +60,136 @@ namespace SerialportSample
         public UInt16 DataWordNumber = 0;
         public UInt16 Status = 0;
         public Word2Byte TempWord;
-        public Boolean IsMaster = false;
+        public ByteBits[] ByteBitsExchange=new ByteBits[2];
+        public string ControlName;
 
-        private Timer RxDataTimer=new Timer();
-        private Timer ACKTimer = new Timer();
-        private Timer BroadcastTimer = new Timer();
-
+        private static Timer RxDataTimer=new Timer();
+        private static Timer ACKTimer = new Timer();
+        private static Timer BroadcastTimer = new Timer();
+        #region////////////////////委托与事件的声明///////////////////////
         public delegate void ModbusSendFrameDelegate(byte[] buffer,int offset,int count);//声明委托类型（就像声明结构体类型一样，委托也是一种类型）
-        public ModbusSendFrameDelegate ModbusSendFrame;//定义委托变量（就像申明了结构体以后，用所申明的结构体定义变量一样）  最后给这个委托变量赋值，就可以使用了，不赋值就是空的，直接使用会报错
+        public static ModbusSendFrameDelegate ModbusSendFrame;//定义委托变量（就像申明了结构体以后，用所申明的结构体定义变量一样）  最后给这个委托变量赋值，就可以使用了，不赋值就是空的，直接使用会报错
 
-        public  ModbusRTU()
+        public delegate void ModbusWriteSuccessDelegate();
+        public static event ModbusWriteSuccessDelegate ModbusWriteSuccessEvent;//声明写成功事件
+
+        public delegate void ModbusReceiveExceptionDelegate();
+        public static event ModbusReceiveExceptionDelegate ModbusReceiveExceptionEvent;//声明收到异常帧事件
+
+        public delegate void ModbusReadDistrbuteBitsSuccessDelegate();
+        public static event ModbusReadDistrbuteBitsSuccessDelegate ModbusReadDistrbuteBitsSuccessEvent;//声明读离散位成功事件
+
+        public delegate void ModbusReadCoilsSuccessDelegate();
+        public static event ModbusReadCoilsSuccessDelegate ModbusReadCoilsSuccessEvent;//声明读线圈成功事件
+
+        public delegate void ModbusReadInputRegsSuccessDelegate();
+        public static event ModbusReadInputRegsSuccessDelegate ModbusReadInputRegsSuccessEvent;//声明读输入寄存器成功事件
+
+        public delegate void ModbusReadStorageRegsSuccessDelegate();
+        public static event ModbusReadStorageRegsSuccessDelegate ModbusReadStorageRegsSuccessEvent;//声明读寄存器成功事件
+
+        #endregion
+
+        #region/////////////////////ModbusRTU类构造器//////////////////////
+        public ModbusRTU()
         {
-            ACKTimer.Interval= ACKTimeoutCNT;
-            BroadcastTimer.Interval= BroadcastTimeoutCNT;
-            RxDataTimer.Interval = RxTimeoutCNT;
+            ACKTimer.Interval= ACKTimerInterval;
+            BroadcastTimer.Interval= BroadcastTimerInterval;
+            RxDataTimer.Interval = RxTimerInterval;
 
-            RxDataTimer.Elapsed += RxDataTimer_Tick1;//为接收数据定时器创建定时函数
+            RxDataTimer.Elapsed += RxDataTimer_Elapsed;//为接收数据定时器创建定时函数
             BroadcastTimer.Elapsed += BroadcastTimer_Elapsed;//为广播定时器创建定时函数
             ACKTimer.Elapsed += ACKTimer_Elapsed;//为应答超时定时器创建定时函数
 
         }
+        #endregion      
+       
+        #region///////////////////////ModbusRTU类属性//////////////////////////
+        private static Boolean _IsMaster = false;
+        private static int _ControlIndex =-1;
+        public static double _ACKTimerInterval = 1000;
+        public static double _BroadcastTimerInterval = 200;
+        public static double _RxTimerInterval = 10;
 
+
+        [Category("ModbusProperty"), Description("主/从选择")]
+        public static Boolean IsMaster
+        {
+            get
+            {
+                return _IsMaster;
+            }
+            set
+            {
+                _IsMaster = value;
+            }
+
+        }
+
+        [Category("ModbusProperty"), Description("调用Modbus功能的控件数量")]
+        public static int TotalControlNumber //外部控件的索引
+        {
+            get
+            {
+                return  _ControlIndex + 1;
+            }       
+        }
+
+        [Category("ModbusProperty"), Description("调用Modbus功能的控件数量")]
+        public static double ACKTimerInterval
+        {
+            get
+            {
+                return _ACKTimerInterval;
+            }
+            set
+            {
+                _ACKTimerInterval = value;
+            }
+
+        }
+        [Category("ModbusProperty"), Description("调用Modbus功能的控件数量")]
+        public static double BroadcastTimerInterval
+        {
+            get
+            {
+                return _BroadcastTimerInterval;
+            }
+            set
+            {
+                _BroadcastTimerInterval = value;
+            }
+
+        }
+        [Category("ModbusProperty"), Description("调用Modbus功能的控件数量")]
+        public static double RxTimerInterval
+        {
+            get
+            {
+                return _RxTimerInterval;
+            }
+            set
+            {
+                _RxTimerInterval = value;
+            }
+
+        }
+
+        #endregion
+
+        #region//////////////////////ModbusRTU类方法//////////////////////////
+        public static int GetMyModbusIndex() //让外部使用本ModbusRTU类的控件都获得一个唯一的编号
+        {
+            _ControlIndex += 1;
+            return _ControlIndex;
+        }
+
+        #endregion
+
+        #region//////////////////////定时器Tick事件////////////////////////
         private void ACKTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            
             ACKTimer.Enabled = false;
             Console.Write("NO ACK!");
             IsACKTimeout = true;
@@ -88,34 +202,24 @@ namespace SerialportSample
             IsBroadcastTimeout = true;
         }
 
-        private void RxDataTimer_Tick1(object sender, EventArgs e)
+        private void RxDataTimer_Elapsed(object sender, EventArgs e)
         {
             RxDataTimer.Enabled = false;
-            ModbusReceiveData_SerialPort_Done(); //接收数据流的间隙时间超过帧间间隔时间表示一帧接收完成
+            ModbusReceiveData_SerialPort_Done(); //数据流的间隙时间超过帧间间隔时间表示一帧接收完成
+            IsRxDone = true;
+        }
+        private void ModbusReceiveData_SerialPort_Done()
+        {
+            Disassemble_ReceivedADU();//解析收到的帧
+            Pointer = 0;
         }
 
-        public Boolean RequestADU_ReadCoils(byte ID,UInt16 Addr,UInt16 Num)
+        #endregion
+   
+        #region//////////////////////////ModbusRTU类收/发事件//////////////////////////
+        private Boolean MasterSendFrame()
         {
-            StationID = ID;
-            Address = Addr;
-            FunctionCode = ReadCoils;
-
-
-            TxRxBuffer[0] = ID;
-            TxRxBuffer[1] = ReadCoils;
-            TempWord.Word = Addr;
-            TxRxBuffer[2] = TempWord.HByte;
-            TxRxBuffer[3] = TempWord.LByte;
-            TempWord.Word = Num;
-            TxRxBuffer[4] = TempWord.HByte;
-            TxRxBuffer[5] = TempWord.LByte;
-            TempWord.Word = CRCCaculation.CRC16(TxRxBuffer, 6);
-            TxRxBuffer[6] = TempWord.HByte;
-            TxRxBuffer[7] = TempWord.LByte;
-            TxLength = 8;
-
-
-            try
+            try //此处不能用if语句简化
             {
                 ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
             }
@@ -125,28 +229,71 @@ namespace SerialportSample
                 return false;
             }
 
-            if (ID == 0)
+            if (StationID == 0)
             {
                 IsBroadcastTimeout = false;
                 BroadcastTimer.Enabled = true;
-            }  
+            }
             else
             {
                 IsACKTimeout = false;
                 ACKTimer.Enabled = true;
             }
-
             return true;
+
+        }
+
+        public void ModbusReceiveData_SerialPort(object sender, SerialDataReceivedEventArgs e)//供外部SerialPort调用的数据接收事件
+        {
+            RxDataTimer.Enabled = false;//定时器停止计数并将计数值归零
+            RxDataTimer.Enabled = true;//定时器重新开始计数
+            UInt16 n = (UInt16)((SerialPort)sender).BytesToRead;//先记录下来，避免某种原因，人为的原因，操作几次之间时间长，缓存不一致
+            ((SerialPort)sender).Read(TxRxBuffer, Pointer, n);//读取缓冲数据
+            Pointer += n;//增加接收计数
+            RxLength = Pointer;
+            
+        }
+
+
+        #endregion
+
+        #region/////////////////////////ModbusRTU(主)读写帧组装方法/////////////////////////
+        public Boolean RequestADU_ReadCoils(byte ID,UInt16 Addr,UInt16 Num)
+        {
+            StationID = ID;
+            Address = Addr;
+            FunctionCode =(byte)ModbusFuncCode.ReadCoils;
+            NumOrData = Num;
+            DataByteNumber =(UInt16) (Num / 8 + (Num % 8 == 0 ? 0: 1));
+
+            TxRxBuffer[0] = ID;
+            TxRxBuffer[1] = (byte)ModbusFuncCode.ReadCoils;
+            TempWord.Word = Addr;
+            TxRxBuffer[2] = TempWord.HByte;
+            TxRxBuffer[3] = TempWord.LByte;
+            TempWord.Word = Num;
+            TxRxBuffer[4] = TempWord.HByte;
+            TxRxBuffer[5] = TempWord.LByte;
+            TempWord.Word = CRCCaculation.CRC16(TxRxBuffer, 6);
+            TxRxBuffer[6] = TempWord.HByte;
+            TxRxBuffer[7] = TempWord.LByte;
+            TxLength = 8;
+
+
+            return MasterSendFrame();//Modbus作为主的时候，调用此发送函数
+
         }
 
         public Boolean RequestADU_ReadDistrbuteBits(byte ID, UInt16 Addr, UInt16 Num)
         {
             StationID = ID;
             Address = Addr;
-            FunctionCode = ReadDistrbuteBits;
+            FunctionCode = (byte)ModbusFuncCode.ReadDistrbuteBits;
+            NumOrData = Num;
+            DataByteNumber = (UInt16)(Num / 8 + (Num % 8 == 0 ? 0 : 1));
 
             TxRxBuffer[0] = ID;
-            TxRxBuffer[1] = ReadDistrbuteBits;
+            TxRxBuffer[1] = (byte)ModbusFuncCode.ReadDistrbuteBits;
             TempWord.Word = Addr;
             TxRxBuffer[2] = TempWord.HByte;
             TxRxBuffer[3] = TempWord.LByte;
@@ -158,18 +305,18 @@ namespace SerialportSample
             TxRxBuffer[7] = TempWord.LByte;
             TxLength = 8;
 
-            ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
-                                                    
-            return true;
+            return MasterSendFrame();//Modbus作为主的时候，调用此发送函数
         }
         public Boolean RequestADU_ReadStorageRegs(byte ID, UInt16 Addr, UInt16 Num)
         {
             StationID = ID;
             Address = Addr;
-            FunctionCode = ReadStorageRegs;
+            FunctionCode = (byte)ModbusFuncCode.ReadStorageRegs;
+            NumOrData = Num;
+            DataByteNumber = (UInt16)(2 * Num);
 
             TxRxBuffer[0] = ID;
-            TxRxBuffer[1] = ReadStorageRegs;
+            TxRxBuffer[1] = (byte)ModbusFuncCode.ReadStorageRegs;
             TempWord.Word = Addr;
             TxRxBuffer[2] = TempWord.HByte;
             TxRxBuffer[3] = TempWord.LByte;
@@ -181,18 +328,18 @@ namespace SerialportSample
             TxRxBuffer[7] = TempWord.LByte;
             TxLength = 8;
 
-            ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
-
-            return true;
+            return MasterSendFrame();//Modbus作为主的时候，调用此发送函数
         }
         public Boolean RequestADU_ReadInputRegs(byte ID, UInt16 Addr, UInt16 Num)
         {
             StationID = ID;
             Address = Addr;
-            FunctionCode = ReadInputRegs;
+            FunctionCode = (byte)ModbusFuncCode.ReadInputRegs;
+            NumOrData =  Num;
+            DataByteNumber = (UInt16)(2 * Num);
 
             TxRxBuffer[0] = ID;
-            TxRxBuffer[1] = ReadInputRegs;
+            TxRxBuffer[1] = (byte)ModbusFuncCode.ReadInputRegs;
             TempWord.Word = Addr;
             TxRxBuffer[2] = TempWord.HByte;
             TxRxBuffer[3] = TempWord.LByte;
@@ -204,20 +351,18 @@ namespace SerialportSample
             TxRxBuffer[7] = TempWord.LByte;
             TxLength = 8;
 
-            ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
-
-            return true;
+            return MasterSendFrame();//Modbus作为主的时候，调用此发送函数
         }
 
         public Boolean RequestADU_WriteSingleCoil(byte ID, UInt16 Addr, UInt16 Cmd)
         {
             StationID = ID;
             Address = Addr;
-            FunctionCode = WriteSingleCoil;
+            FunctionCode = (byte)ModbusFuncCode.WriteSingleCoil;
             NumOrData = Cmd;
 
             TxRxBuffer[0] = ID;
-            TxRxBuffer[1] = WriteSingleCoil;
+            TxRxBuffer[1] = (byte)ModbusFuncCode.WriteSingleCoil;
             TempWord.Word = Addr;
             TxRxBuffer[2] = TempWord.HByte;
             TxRxBuffer[3] = TempWord.LByte;
@@ -229,19 +374,18 @@ namespace SerialportSample
             TxRxBuffer[7] = TempWord.LByte;
             TxLength = 8;
 
-            ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
-
-            return true;
+            return MasterSendFrame();//Modbus作为主的时候，调用此发送函数
         }
 
         public Boolean RequestADU_WriteSingleReg(byte ID, UInt16 Addr, UInt16 SingleData)
         {
             StationID = ID;
             Address = Addr;
-            FunctionCode = WriteSingleReg;
+            FunctionCode = (byte)ModbusFuncCode.WriteSingleReg;
+            NumOrData = SingleData;
 
             TxRxBuffer[0] = ID;
-            TxRxBuffer[1] = WriteSingleReg;
+            TxRxBuffer[1] = (byte)ModbusFuncCode.WriteSingleReg;
             TempWord.Word = Addr;
             TxRxBuffer[2] = TempWord.HByte;
             TxRxBuffer[3] = TempWord.LByte;
@@ -253,43 +397,47 @@ namespace SerialportSample
             TxRxBuffer[7] = TempWord.LByte;
             TxLength = 8;
 
-            ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
-
-            return true;
+            return MasterSendFrame();//Modbus作为主的时候，调用此发送函数
         }
 
-        public Boolean RequestADU_WriteCoils(byte ID, UInt16 Addr, UInt16 Num)//要好好考虑
+        public Boolean RequestADU_WriteCoils(byte ID, UInt16 Addr, UInt16 Num,byte[] DataBuffer)//要好好考虑 已完成
         {
             StationID = ID;
             Address = Addr;
-            FunctionCode = WriteCoils;
+            FunctionCode = (byte)ModbusFuncCode.WriteCoils;
+            NumOrData = Num;
+            DataByteNumber= (UInt16)(Num / 8 + (Num % 8 == 0 ? 0 : 1)); //根据Num的值算出将使用多少个字节
 
-            TxRxBuffer[0] = ID;
-            TxRxBuffer[1] = WriteCoils;
+            TxRxBuffer[0] = ID;//ID
+            TxRxBuffer[1] = (byte)ModbusFuncCode.WriteCoils;//FunctionCode
             TempWord.Word = Addr;
-            TxRxBuffer[2] = TempWord.HByte;
+            TxRxBuffer[2] = TempWord.HByte;//Address
             TxRxBuffer[3] = TempWord.LByte;
             TempWord.Word = Num;
-            TxRxBuffer[4] = TempWord.HByte;
+            TxRxBuffer[4] = TempWord.HByte;//number of bits to be written
             TxRxBuffer[5] = TempWord.LByte;
-            TempWord.Word = CRCCaculation.CRC16(TxRxBuffer, 6);
-            TxRxBuffer[6] = TempWord.HByte;
-            TxRxBuffer[7] = TempWord.LByte;
-            TxLength = 8;
+            TxRxBuffer[6] = (byte)DataByteNumber;//number of bytes to be written
+            Pointer = 7;
+            for (UInt16 i = 0; i < DataByteNumber; i++)
+                TxRxBuffer[Pointer++] = DataBuffer[i];//bytes
+            TempWord.Word = CRCCaculation.CRC16(TxRxBuffer, Pointer);
+            TxRxBuffer[Pointer++] = TempWord.HByte;//crc code
+            TxRxBuffer[Pointer++] = TempWord.LByte;
+            TxLength = Pointer;
 
-            ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
-
-            return true;
+            return MasterSendFrame();//Modbus作为主的时候，调用此发送函数
         }
 
         public Boolean RequestADU_WriteRegs(byte ID, UInt16 Addr, UInt16 Num,UInt16[] DataBuffer)
         {
             StationID = ID;
             Address = Addr;
-            FunctionCode = WriteRegs;
+            FunctionCode = (byte)ModbusFuncCode.WriteRegs;
+            NumOrData = Num;
+            DataByteNumber = (UInt16)(2 * Num);
 
             TxRxBuffer[0] = ID;
-            TxRxBuffer[1] = WriteRegs;
+            TxRxBuffer[1] = (byte)ModbusFuncCode.WriteRegs;
             TempWord.Word = Addr;
             TxRxBuffer[2] = TempWord.HByte;
             TxRxBuffer[3] = TempWord.LByte;
@@ -310,56 +458,13 @@ namespace SerialportSample
             TxRxBuffer[Pointer++] = TempWord.LByte;
             TxLength = Pointer;
 
-            ModbusSendFrame(TxRxBuffer, 0, TxLength);//调用发送函数（委托）
-
-            return true;
+            return MasterSendFrame();//Modbus作为主的时候，调用此发送函数
         }
 
+        #endregion
 
-        public Boolean Assemble_RequestADU(UInt16 BeginAddress,byte[] DataToSend)
-        {
-            switch (FunctionCode)
-            {
-                case ReadCoils:
-                case ReadDistrbuteBits:
-                case ReadStorageRegs:
-                case ReadInputRegs:      
-                TxRxBuffer[0] = StationID;
-                TxRxBuffer[1] = FunctionCode;
-                TempWord.Word = BeginAddress;
-                TxRxBuffer[2] = TempWord.HByte;
-                TxRxBuffer[3] = TempWord.LByte;
-                TempWord.Word = NumOrData;
-                TxRxBuffer[4] = TempWord.HByte;
-                TxRxBuffer[5] = TempWord.LByte;
-                TempWord.Word = CRCCaculation.CRC16(TxRxBuffer,6);
-                TxRxBuffer[6] = TempWord.HByte;
-                TxRxBuffer[7] = TempWord.LByte;
-                TxLength = 8;
-                    break;
-
-                case WriteSingleCoil:
-                    break;
-
-                case WriteSingleReg:
-                    break;
-
-                case WriteCoils:
-                    break;
-
-                case WriteRegs:
-                    break;
-
-                default:
-                    break;
-
-            }
-            
-
-            return true;
-        }
-
-        public Boolean Assemble_ResponseADU()
+        #region//////////////////////////ModbusRTU(从)响应帧组装方法/////////////////////////
+        public Boolean Assemble_ResponseADU()//Slaver To DO...
         {
 
             return true;
@@ -370,98 +475,153 @@ namespace SerialportSample
             return true;
         }
 
-        public void ModbusReceiveData_SerialPort(object sender, SerialDataReceivedEventArgs e)
-        {
-            RxDataTimer.Enabled = false;//定时器停止计数并将计数值归零
-            RxDataTimer.Enabled = true;//定时器从新开始计数
-            UInt16 n = (UInt16)((SerialPort)sender).BytesToRead;//先记录下来，避免某种原因，人为的原因，操作几次之间时间长，缓存不一致
-            ((SerialPort)sender).Read(TxRxBuffer, Pointer, n);//读取缓冲数据
-            Pointer += n;//增加接收计数
-            RxLength = Pointer;
-            
-
-        }
-
-        public void ModbusReceiveData_SerialPort_Done()
-        {
-
-            Console.Write(" " + "*" + RxLength + "*" + " ");
-            for (int a = 0; a < RxLength; a++)
-                Console.Write(TxRxBuffer[a] + " ");
-            Console.Write("Frame Received!");
-            IsRxDone = true;
-            Disassemble_ReceivedADU();
-            Pointer = 0;
-        }
-
-
-        public byte Disassemble_ReceivedADU()
+        #endregion
+    
+        #region///////////////////////ModbusRTU(主/从)Rx帧解析方法//////////////////////////
+       public byte Disassemble_ReceivedADU()
         {
             if (IsMaster == true)
             {
                 if (StationID != TxRxBuffer[0]) //站号错误不进行任何处理，立即返回（ACKTimeout定时器继续定时）
-                    return ERR_Station;
+                    return (byte)ErrorStatus.ERR_Station;
 
                 ACKTimer.Enabled = false;//通过上面站号检测的说明是期望子节点发送来的响应帧，因而停止ACKTimeout倒计时。
-                TempWord.HByte = TxRxBuffer[RxLength - 1];
-                TempWord.LByte = TxRxBuffer[RxLength - 2];
+
+                if (RxLength < 5) return (byte)ErrorStatus.ERR_BreakFrame;
+
+                TempWord.HByte = TxRxBuffer[RxLength - 2];
+                TempWord.LByte = TxRxBuffer[RxLength - 1];
                 if (TempWord.Word != CRCCaculation.CRC16(TxRxBuffer, (UInt16)(RxLength - 2)))
-                    return ERR_CRCCode;
+                    return (byte)ErrorStatus.ERR_CRCCode;//检测CRC是否错误
 
-                if (FunctionCode!=TxRxBuffer[1])
-                    return ERR_FunctionCode;
-
+                FunctionCode = TxRxBuffer[1];//记录功能码
                 switch (FunctionCode)
                 {
-                    case WriteSingleCoil:
-                    case WriteCoils:
-                    case WriteRegs:
-                    case WriteSingleReg:
-                        TempWord.HByte = TxRxBuffer[2];
+                    case (byte)ModbusFuncCode.WriteSingleCoil:
+                    case (byte)ModbusFuncCode.WriteCoils:
+                    case (byte)ModbusFuncCode.WriteRegs:
+                    case (byte)ModbusFuncCode.WriteSingleReg:
+                        TempWord.HByte = TxRxBuffer[2];//检查地址是否正确
                         TempWord.LByte = TxRxBuffer[3];
                         if (TempWord.Word != Address)
-                            return ERR_Address;
-                        TempWord.HByte = TxRxBuffer[4];
+                            return (byte)ErrorStatus.ERR_Address;
+                        TempWord.HByte = TxRxBuffer[4];//检查写入单元数量或写入的单个数据是否正确
                         TempWord.LByte = TxRxBuffer[5];
                         if (TempWord.Word != NumOrData)
-                            return ERR_NumOrData;
+                            return (byte)ErrorStatus.ERR_NumOrData;
+                        if(ModbusRTU.ModbusWriteSuccessEvent !=null)//防止事件的委托在类外部没有被订阅
+                            ModbusWriteSuccessEvent();//（事件引发）如果以上均正确，说明Modbus主向外写操作成功，引发“写成功”事件
 
                         break;
 
+                    case (byte)ModbusFuncCode.ReadCoils:
+                        for (byte i = 0; i < TxRxBuffer[2]; i++)
+                            DatasInByte[i]= TxRxBuffer[i+3];
 
-
-                    case (ReadCoils + 0x80):
-                    case (ReadDistrbuteBits + 0x80):
-                    case (ReadStorageRegs + 0x80):
-                    case (ReadInputRegs + 0x80):
-                    case (WriteSingleCoil + 0x80):
-                    case (WriteSingleReg + 0x80):
-                    case (WriteCoils + 0x80):
-                    case (WriteRegs + 0x80):
-
-                        return ERR_Response;
+                        if(ModbusRTU.ModbusReadCoilsSuccessEvent !=null)
+                        ModbusReadCoilsSuccessEvent();//（事件引发）如果以上均正确，说明Modbus主读线圈操作成功，引发“读线圈成功”事件
                         break;
+
+                    case (byte)ModbusFuncCode.ReadDistrbuteBits:
+                        for (byte i = 0; i < TxRxBuffer[2]; i++)
+                            DatasInByte[i] = TxRxBuffer[i + 3];
+                        if(ModbusRTU.ModbusReadDistrbuteBitsSuccessEvent!=null)
+                        ModbusReadDistrbuteBitsSuccessEvent();//（事件引发）如果以上均正确，说明Modbus主读离散量成功，引发“读离散量成功”事件
+                        break;
+
+                    case (byte)ModbusFuncCode.ReadStorageRegs:
+                        for (byte i = 0; i < TxRxBuffer[2]/2; i++)
+                        {
+                            TempWord.HByte = TxRxBuffer[i + 3];
+                            i++;
+                            TempWord.LByte = TxRxBuffer[i + 3];
+                            DatasInWord[i] = TempWord.Word;
+                        } 
+
+                        if(ModbusRTU.ModbusReadStorageRegsSuccessEvent!=null)
+                        ModbusReadStorageRegsSuccessEvent();//（事件引发）如果以上均正确，说明Modbus主读保持寄存器成功，引发“读保持寄存器成功”事件
+                        break;
+
+                    case (byte)ModbusFuncCode.ReadInputRegs:
+                        for (byte i = 0; i < TxRxBuffer[2] / 2; i++)
+                        {
+                            TempWord.HByte = TxRxBuffer[i + 3];
+                            i++;
+                            TempWord.LByte = TxRxBuffer[i + 3];
+                            DatasInWord[i] = TempWord.Word;
+                        }
+                        if(ModbusRTU.ModbusReadInputRegsSuccessEvent !=null)
+                        ModbusReadInputRegsSuccessEvent();//（事件引发）如果以上均正确，说明Modbus主读输入寄存器成功，引发“读输入寄存器成功”事件
+                        break;
+
+
+                    case ((byte)ModbusFuncCode.ReadCoils + 0x80):
+                    case ((byte)ModbusFuncCode.ReadDistrbuteBits + 0x80):
+                    case ((byte)ModbusFuncCode.ReadStorageRegs + 0x80):
+                    case ((byte)ModbusFuncCode.ReadInputRegs + 0x80):
+                    case ((byte)ModbusFuncCode.WriteSingleCoil + 0x80):
+                    case ((byte)ModbusFuncCode.WriteSingleReg + 0x80):
+                    case ((byte)ModbusFuncCode.WriteCoils + 0x80):
+                    case ((byte)ModbusFuncCode.WriteRegs + 0x80):
+                        if(ModbusRTU.ModbusReceiveExceptionEvent !=null)
+                        ModbusReceiveExceptionEvent();//（事件引发）接收到异常帧
+                        return (byte)ErrorStatus.ERR_Response;                      
 
                     default:
-                        break;
-
-
+                        return (byte)ErrorStatus.ERR_FunctionCode;//检测FunctionCode是否错误
+                       
                 }
                 
 
             }
             else
             {
-
+                //Slaver To Do...
 
             }
-            return ERR_OK;
+            return (byte)ErrorStatus.ERR_OK;
         }
 
+        #endregion
+
+        #region/////////////////////ModbusRTU类中的枚举量////////////////////////
+        public enum TranmitingStatus
+        {
+            Sending = 0x00,
+            Receiving = 0x01,
+            Waiting = 0x02
+        }
+
+        public enum ErrorStatus
+        {
+            ERR_OK = 0x00,
+            ERR_Station = 0x01,
+            ERR_FunctionCode = 0x02,
+            ERR_Address = 0x03,
+            ERR_NumOrData = 0x04,//与NumOrData相对应
+            ERR_CRCCode = 0x05,
+            ERR_BreakFrame = 0x06,
+            ERR_Response = 0xFF
+        }
+
+        public enum ModbusFuncCode
+        {
+            ReadCoils = 0x01,
+            ReadDistrbuteBits = 0x02,
+            ReadStorageRegs = 0x03,
+            ReadInputRegs = 0x04,
+            WriteSingleCoil = 0x05,
+            WriteSingleReg = 0x06,
+            WriteCoils = 0x0F,
+            WriteRegs = 0x10
+        }
+
+        #endregion
 
     }
+    //ModbusRTU类到此结束
 
-
+    #region/////////////////////////ModbusRTU类之外 自定义结构体及附加功能/////////////////////
     public class CRCCaculation
     {
 
@@ -554,4 +714,30 @@ namespace SerialportSample
         [FieldOffset(0)]
         public UInt16 Word;
     }
+
+   public struct ByteBits //使用索引器取用byte中的位值
+    {
+        public byte ALL;
+
+        public bool this [byte index]
+        {
+            get
+            {
+                return (ALL & (1 << index)) != 0;
+            }
+
+            set
+            {
+                if (value)
+                    ALL |=(byte)(1 << index);
+                else
+                    ALL &=(byte) (~(1 << index));
+            }
+
+        }
+
+    }
+
+    #endregion
+
 }
