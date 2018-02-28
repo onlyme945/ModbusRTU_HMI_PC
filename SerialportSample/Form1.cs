@@ -53,64 +53,9 @@ namespace SerialportSample
             ModbusRTU.IsMaster = true;
             comm.DataReceived += ModbusMaster.ModbusReceiveData_SerialPort;
             ModbusRTU.ModbusSendFrame += comm.Write;//为Modbus实例中的发送委托关联正确的发送函数
-            ModbusRTU.ModbusReadCoilsSuccessEvent += ModbusMaster_ModbusReadCoilsSuccessEvent;//订阅事件
-            ModbusRTU.ModbusReadDistrbuteBitsSuccessEvent += ModbusMaster_ModbusReadDistrbuteBitsSuccessEvent;
-            ModbusRTU.ModbusReadInputRegsSuccessEvent += ModbusMaster_ModbusReadInputRegsSuccessEvent;
-            ModbusRTU.ModbusReadStorageRegsSuccessEvent += ModbusMaster_ModbusReadStorageRegsSuccessEvent;
-            ModbusRTU.ModbusReceiveExceptionEvent += ModbusMaster_ModbusReceiveExceptionEvent;
-            ModbusRTU.ModbusWriteSuccessEvent += ModbusMaster_ModbusWriteSuccessEvent;
-            Console.Write(ModbusRTU.TotalControlNumber);
+            ModbusRTU.SetDataStorage();
             //ModbusMaster.RxDataTimer = Timer_RxDone;
         }
-
-        private void ModbusMaster_ModbusWriteSuccessEvent()
-        {
-            Console.Write(" *" + ModbusRTU.RxLength + "* ");
-            for (int a = 0; a < ModbusRTU.RxLength; a++)
-                Console.Write(ModbusRTU.TxRxBuffer[a].ToString("X2") + " ");
-            Console.Write("\r\nWrite Successed!");
-        }
-
-        private void ModbusMaster_ModbusReceiveExceptionEvent()
-        {
-            Console.Write(" *" + ModbusRTU.RxLength + "* ");
-            for (int a = 0; a < ModbusRTU.RxLength; a++)
-                Console.Write(ModbusRTU.TxRxBuffer[a].ToString("X2") + " ");
-            Console.Write("Exception response received!");
-        }
-
-        private void ModbusMaster_ModbusReadStorageRegsSuccessEvent()
-        {
-            Console.Write(" *" + ModbusRTU.RxLength + "* ");
-            for (int a = 0; a < ModbusRTU.RxLength; a++)
-                Console.Write(ModbusRTU.TxRxBuffer[a].ToString("X2") + " ");
-            Console.Write("Read storage regs Successed!");
-        }
-
-        private void ModbusMaster_ModbusReadInputRegsSuccessEvent()
-        {
-            Console.Write(" *" + ModbusRTU.RxLength + "* ");
-            for (int a = 0; a < ModbusRTU.RxLength; a++)
-                Console.Write(ModbusRTU.TxRxBuffer[a].ToString("X2") + " ");
-            Console.Write("Read input regs Successed!");
-        }
-
-        private void ModbusMaster_ModbusReadDistrbuteBitsSuccessEvent()
-        {
-            Console.Write(" *" + ModbusRTU.RxLength + "* ");
-            for (int a = 0; a < ModbusRTU.RxLength; a++)
-                Console.Write(ModbusRTU.TxRxBuffer[a].ToString("X2") + " ");
-            Console.Write("Read Distrbute Bits Successed!");
-        }
-
-        private void ModbusMaster_ModbusReadCoilsSuccessEvent()
-        {
-            Console.Write(" *" + ModbusRTU.RxLength + "* ");
-            for (int a = 0; a < ModbusRTU.RxLength; a++)
-                Console.Write(ModbusRTU.TxRxBuffer[a].ToString("X2") + " ");
-            Console.Write("\r\nRead Coils Successed!\r\n");
-        }
-
 
 
         private void buttonOpenClose_Click(object sender, EventArgs e)
@@ -152,47 +97,8 @@ namespace SerialportSample
             //复位接受和发送的字节数计数器并更新界面。
             send_count = received_count = 0;
             labelGetCount.Text = "Get:0";
-            labelSendCount.Text = "Send:0";
+           
         }
 
-        private void btnReadCoils_Click(object sender, EventArgs e)
-        {
-            ModbusMaster.RequestADU_ReadCoils(1, 100, 10);
-        }
-
-        private void btnReadDisBits_Click(object sender, EventArgs e)
-        {
-            ModbusMaster.RequestADU_ReadDistrbuteBits(1,11,10);
-        }
-
-        private void btnReadStorageRegs_Click(object sender, EventArgs e)
-        {
-            ModbusMaster.RequestADU_ReadStorageRegs(1,12,2);
-        }
-
-        private void btnReadInputRegs_Click(object sender, EventArgs e)
-        {
-            ModbusMaster.RequestADU_ReadInputRegs(1,13,2);
-        }
-
-        private void btnWriteSingleCoil_Click(object sender, EventArgs e)
-        {
-            ModbusMaster.RequestADU_WriteSingleCoil(1,14,0x00FF);
-        }
-
-        private void btnWriteSReg_Click(object sender, EventArgs e)
-        {
-            ModbusMaster.RequestADU_WriteSingleReg(1,15,0x56FE);
-        }
-
-        private void btnWriteCoils_Click(object sender, EventArgs e)
-        {
-            ModbusMaster.RequestADU_WriteCoils(1,16,10, testbytedata);
-        }
-
-        private void btnWriteRegs_Click(object sender, EventArgs e)
-        {
-            ModbusMaster.RequestADU_WriteRegs(1,17,2, testworddata);
-        }
     }
 }

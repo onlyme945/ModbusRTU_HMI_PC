@@ -17,15 +17,17 @@ namespace SerialportSample
         [DllImport("user32.dll")]
         public static extern bool ShowCaret(IntPtr hWnd);//显示textbox的光标
 
-        private TextBox textBox1;
-        private ModbusRTU modbus1=new ModbusRTU();
+        private TextBox ModbusTextBox;
+        //private ModbusRTU modbus1=new ModbusRTU();
         private System.Timers.Timer PeriodicRequestTimer =new System.Timers.Timer();
 
         #region"/////////////////////自定义的属性///////////////////"
-        private int _MyModbusIndex;
-        private byte _StationID;
-        private UInt16 _WriteAddress;
-        private UInt16 _ReadAddress;
+        private int _MyModbusIndex=-1;
+        private byte _StationID=1;
+        private UInt16 _WriteAddress=1;
+        private UInt16 _ReadAddress=1;
+        private double _MaxValue = 0;
+        private double _MinValue = 100;
         private WriteFunctionCodeEnum _WriteFunctionCode = WriteFunctionCodeEnum.WriteCoils;
         private ReadFunctionCodeEnum _ReadFunctionCode = ReadFunctionCodeEnum.ReadCoils;
 
@@ -115,7 +117,7 @@ namespace SerialportSample
         }
 
         [Category("ModbusRTU"), Description("写指令（功能码）")]
-        public WriteFunctionCodeEnum WriyeFuncCode
+        public WriteFunctionCodeEnum WriteFuncCode
         {
             get
             {
@@ -137,7 +139,35 @@ namespace SerialportSample
                 return _MyModbusIndex;
             }
         }
+        [Category("ModbusRTU"), Description("输入上限值（MaxValue）")]
+        public double MaxValue
+        {
+            get
+            {
+                return _MaxValue;
+            }
 
+            set
+            {               
+                _MaxValue = value;
+                if (value < _MinValue) _MaxValue = _MinValue;
+            }
+        }
+
+        [Category("ModbusRTU"), Description("输入下限值（MinValue）")]
+        public double MinValue
+        {
+            get
+            {
+                return _MinValue;
+            }
+
+            set
+            {
+                _MinValue = value;
+                if (value > _MaxValue) _MinValue = _MaxValue;
+            }
+        }
 
         #endregion
 
@@ -150,42 +180,44 @@ namespace SerialportSample
 
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            
-            modbus1.ControlName=this.Name;
-            modbus1.RequestADU_ReadCoils(StationID,ReadAddress,1);
-            Console.Write("1s---");
+            ModbusRTU.AssembleRequestADU(_MyModbusIndex,false,_StationID,(byte)ReadFuncCode,ReadAddress,1,null);
+            if (ModbusRTU.GetDataStorageFlag(_MyModbusIndex) == true)
+                this.Text = "";
+
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-          
             base.OnMouseDown(e);
             ShowCaret(this.Handle);
-            Console.Write("OnMouseDown!");
-
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
             base.OnKeyPress(e);
 
-            if (e.KeyChar == (char)Keys.Enter)
-                HideCaret(this.Handle);
+            //byte[] DataToTx;
 
-            Console.Write("OnKeyPress!");
+            //if (e.KeyChar == (char)Keys.Enter)
+            //{
+            //    HideCaret(this.Handle);
+            //    ModbusRTU.AssembleRequestADU(_MyModbusIndex, true, 1, (byte)WriteFuncCode, WriteAddress, 1, null);
+
+            //}
+
         }
       
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.ModbusTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // textBox1
+            // ModbusTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
-            this.textBox1.TabIndex = 0;
+            this.ModbusTextBox.Location = new System.Drawing.Point(0, 0);
+            this.ModbusTextBox.Name = "ModbusTextBox";
+            this.ModbusTextBox.Size = new System.Drawing.Size(100, 21);
+            this.ModbusTextBox.TabIndex = 0;
             this.ResumeLayout(false);
 
         }
