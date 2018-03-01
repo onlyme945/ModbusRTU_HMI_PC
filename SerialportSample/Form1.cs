@@ -20,7 +20,7 @@ namespace SerialportSample
         /*子1进4*/
         /*子1进5*/
         /*子1进6*/
-        
+        /*子1进7*/
         private ModbusRTU ModbusMaster = new ModbusRTU();
         private SerialPort comm = new SerialPort();
         private StringBuilder builder = new StringBuilder();//避免在事件处理方法中反复的创建，定义到外面。
