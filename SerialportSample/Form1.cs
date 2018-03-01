@@ -13,10 +13,16 @@ namespace SerialportSample
 {
     public partial class SerialportSampleForm : Form
     {
-        /*在master_child2中看到*/
-        /*commit1*/
-        /*commit2*/
-        /*commit3*/
+        /*在master_child1中能看到*/
+        /*子1进1*/
+        /*子1进2*/
+        /*子1进3*/
+        /*子1进4*/
+        /*子1进5*/
+
+        /*子1进7*/
+
+
         private ModbusRTU ModbusMaster = new ModbusRTU();
         private SerialPort comm = new SerialPort();
         private StringBuilder builder = new StringBuilder();//避免在事件处理方法中反复的创建，定义到外面。
