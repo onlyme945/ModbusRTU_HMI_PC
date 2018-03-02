@@ -28,8 +28,92 @@ namespace SerialportSample
         private UInt16 _ReadAddress=1;
         private double _MaxValue = 0;
         private double _MinValue = 100;
+        private byte _ReadDataLengthInWord = 1;
+        private byte _WriteDataLengthInWord = 1;
         private WriteFunctionCodeEnum _WriteFunctionCode = WriteFunctionCodeEnum.WriteCoils;
         private ReadFunctionCodeEnum _ReadFunctionCode = ReadFunctionCodeEnum.ReadCoils;
+        private ReadDataTypeEnum _ReadDataType = ReadDataTypeEnum.UINT16;
+        private WriteDataTypeEnum _WriteDataType = WriteDataTypeEnum.UINT16;
+
+
+
+        [Category("ModbusRTU"), Description("读取数据的长度（以字为单位）")]
+        public byte ReadDataLengthInWord
+        {
+            get
+            {
+                return _ReadDataLengthInWord;
+            }
+
+            set
+            {
+               
+                _ReadDataLengthInWord = value;
+                
+
+            }
+
+        }
+
+        [Category("ModbusRTU"), Description("输出数据的长度（以字为单位）")]
+        public byte WriteDataLengthInWord
+        {
+            get
+            {
+                return _WriteDataLengthInWord;
+            }
+
+            set
+            {
+                _WriteDataLengthInWord = value;
+            }
+
+        }
+
+
+        [Category("ModbusRTU"), Description("读取的数据类型")]
+        public ReadDataTypeEnum ReadDataType
+        {
+            get
+            {
+                return _ReadDataType;
+            }
+            set
+            {
+                _ReadDataType = value;
+                switch (_ReadDataType)
+                {
+                    case ReadDataTypeEnum.UINT16:
+                    case ReadDataTypeEnum.INT16:
+                        ReadDataLengthInWord = 1;
+                        break;
+                    case ReadDataTypeEnum.FLOAT32:
+                        ReadDataLengthInWord = 2;
+                        break;
+                    case ReadDataTypeEnum.FLOAT64:
+                        ReadDataLengthInWord = 4;
+                        break;
+                    case ReadDataTypeEnum.ManualSet:  //直接取用  ReadDataLengthInWord 中设置的值，无需修改     
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+        [Category("ModbusRTU"), Description("发送的数据类型")]
+        public WriteDataTypeEnum WriteDataType
+        {
+            get
+            {
+                return _WriteDataType;
+            }
+            set
+            {
+                _WriteDataType = value;
+            }
+
+        }
 
         [Category("ModbusRTU"), Description("查询周期")]
         public double RequestPeriod
@@ -180,7 +264,25 @@ namespace SerialportSample
 
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            ModbusRTU.AssembleRequestADU(_MyModbusIndex,false,_StationID,(byte)ReadFuncCode,ReadAddress,1,null);
+            switch (ReadDataType)
+            {
+                case ReadDataTypeEnum.UINT16:
+                case ReadDataTypeEnum.INT16:
+                    _ReadDataLengthInWord = 1;
+                    break;
+                case ReadDataTypeEnum.FLOAT32:
+                    _ReadDataLengthInWord = 2;
+                    break;
+                case ReadDataTypeEnum.FLOAT64:
+                    _ReadDataLengthInWord = 4;
+                    break;
+                case ReadDataTypeEnum.ManualSet:  //直接取用  ReadDataLengthInWord 中设置的值，无需修改                
+                default:
+                break;
+            }
+
+
+            ModbusRTU.AssembleRequestADU(_MyModbusIndex,false,_StationID,(byte)ReadFuncCode,ReadAddress, _ReadDataLengthInWord, null);
             
             if (ModbusRTU.GetDataStorageFlag(_MyModbusIndex) == true)
                 this.Invoke((EventHandler)(delegate      //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
@@ -252,7 +354,36 @@ namespace SerialportSample
             WriteRegs = 0x10
 
         }
+        public enum ReadDataTypeEnum
+        {
+            [Description("UINT16")]
+            UINT16=0x01,
+            [Description("INT16")]
+            INT16 = 0x02,
+            [Description("FLOAT32")]
+            FLOAT32=0x03,
+            [Description("FLOAT64")]
+            FLOAT64 = 0x04,
+            [Description("手动设置")]
+            ManualSet=0x05
+
+
+        }
+        public enum WriteDataTypeEnum
+        {
+            [Description("UINT16")]
+            UINT16 = 0x01,
+            [Description("INT16")]
+            INT16 = 0x02,
+            [Description("FLOAT32")]
+            FLOAT32 = 0x03,
+            [Description("FLOAT64")]
+            FLOAT64 = 0x04,
+            [Description("手动设置")]
+            ManualSet = 0x05
+
+        }
         #endregion
-       
+
     }
 }
