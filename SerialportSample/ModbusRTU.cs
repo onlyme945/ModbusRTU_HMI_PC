@@ -61,7 +61,7 @@ namespace SerialportSample
         private Boolean IsACKTimeout = false;
         private Boolean IsBroadcastTimeout = false;
         private Boolean IsRxDone = false;
-        public byte StationID = 0;
+        public byte StationID = 1;
         public byte FunctionCode = 0;
         public UInt16 ErrorCode = 0;
         public UInt16 CRCCode = 0;
@@ -115,6 +115,7 @@ namespace SerialportSample
         private void ModbusRTU_ModbusReceiveExceptionEvent()
         {
             DataStorageFlag[TempControlIndex] = false;
+            //作为主设备 收到异常帧 可以触发重发机制
         }
 
         private void ModbusRTU_ModbusWriteSuccessEvent()

@@ -181,9 +181,13 @@ namespace SerialportSample
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             ModbusRTU.AssembleRequestADU(_MyModbusIndex,false,_StationID,(byte)ReadFuncCode,ReadAddress,1,null);
+            
             if (ModbusRTU.GetDataStorageFlag(_MyModbusIndex) == true)
-                this.Text = "";
-
+                this.Invoke((EventHandler)(delegate      //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
+                {
+                    this.Text = "22222";
+                }));
+            
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
