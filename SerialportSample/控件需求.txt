@@ -1,0 +1,5 @@
+﻿类目  功能         说明         指令        附加指令
+遥控  设置   需有查询信息功能   Set         Request
+遥信  查询   无需设置信息功能   Request     NULL
+遥调  设置   需有查询信息功能   Set         Request
+遥测  查询   无需设置信息功能   Request     NULL

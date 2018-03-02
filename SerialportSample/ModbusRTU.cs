@@ -8,6 +8,7 @@ using System.Timers;
 using System.ComponentModel;
 using System.Threading;
 
+
 namespace SerialportSample
 {
     public class ModbusRTU
@@ -254,6 +255,7 @@ namespace SerialportSample
             TxRxStatus = TransmitingStatus.Idle;
             ACKTimer.Enabled = false;
             Console.Write("NO ACK!");
+           
             IsACKTimeout = true;
         }
 
