@@ -26,8 +26,8 @@ namespace SerialportSample
         private byte _StationID=1;
         private UInt16 _WriteAddress=1;
         private UInt16 _ReadAddress=1;
-        private double _MaxValue = 0;
-        private double _MinValue = 100;
+        private double _MaxValue = 100;
+        private double _MinValue = 1;
         private byte _ReadDataLengthInWord = 1;
         private byte _WriteDataLengthInWord = 1;
         private WriteFunctionCodeEnum _WriteFunctionCode = WriteFunctionCodeEnum.WriteCoils;
@@ -35,7 +35,10 @@ namespace SerialportSample
         private ReadDataTypeEnum _ReadDataType = ReadDataTypeEnum.UINT16;
         private WriteDataTypeEnum _WriteDataType = WriteDataTypeEnum.UINT16;
 
-
+        private string StringInText;
+        private static Word2Byte TempWord=new Word2Byte();
+        private static DoubleWord2Byte TempDWord=new DoubleWord2Byte();
+        private static FourWord2Byte TempFWord=new FourWord2Byte();
 
         [Category("ModbusRTU"), Description("读取数据的长度（以字为单位）")]
         public byte ReadDataLengthInWord
@@ -47,10 +50,28 @@ namespace SerialportSample
 
             set
             {
+                switch (_ReadDataType)     //此段代码保证了只有在数据类型为ManualSet的情况下_ReadDataLengthInWord才可以被手动修改，否则程序根据数据类型自动设定数据长度
+                {
+                    case ReadDataTypeEnum.UINT16:
+                    case ReadDataTypeEnum.INT16:
+                        _ReadDataLengthInWord = 1;
+                        break;
+                    case ReadDataTypeEnum.FLOAT32:
+                        _ReadDataLengthInWord = 2;
+                        break;
+                    case ReadDataTypeEnum.FLOAT64:
+                        _ReadDataLengthInWord = 4;
+                        break;
+                    case ReadDataTypeEnum.ManualSet:  //直接取用  ReadDataLengthInWord 中设置的值，无需修改    
+                        if (value < 1) value = 1;     //手动设置时数据长度不能低于1word
+                        if (value > 100) value = 100; //不能大于100word
+                        _ReadDataLengthInWord = value;
+                        break;
+                    default:
+                        break;
+                }
                
-                _ReadDataLengthInWord = value;
                 
-
             }
 
         }
@@ -223,7 +244,7 @@ namespace SerialportSample
                 return _MyModbusIndex;
             }
         }
-        [Category("ModbusRTU"), Description("输入上限值（MaxValue）")]
+        [Category("ModbusRTU"), Description("输入数据上限值（MaxValue）")]
         public double MaxValue
         {
             get
@@ -238,7 +259,7 @@ namespace SerialportSample
             }
         }
 
-        [Category("ModbusRTU"), Description("输入下限值（MinValue）")]
+        [Category("ModbusRTU"), Description("输入数据下限值（MinValue）")]
         public double MinValue
         {
             get
@@ -264,32 +285,49 @@ namespace SerialportSample
 
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            switch (ReadDataType)
-            {
-                case ReadDataTypeEnum.UINT16:
-                case ReadDataTypeEnum.INT16:
-                    _ReadDataLengthInWord = 1;
-                    break;
-                case ReadDataTypeEnum.FLOAT32:
-                    _ReadDataLengthInWord = 2;
-                    break;
-                case ReadDataTypeEnum.FLOAT64:
-                    _ReadDataLengthInWord = 4;
-                    break;
-                case ReadDataTypeEnum.ManualSet:  //直接取用  ReadDataLengthInWord 中设置的值，无需修改                
-                default:
-                break;
-            }
-
-
+          
             ModbusRTU.AssembleRequestADU(_MyModbusIndex,false,_StationID,(byte)ReadFuncCode,ReadAddress, _ReadDataLengthInWord, null);
-            
+
             if (ModbusRTU.GetDataStorageFlag(_MyModbusIndex) == true)
+            {
+                switch (_ReadDataLengthInWord)
+                {
+                    case 1:
+
+                        TempWord.HByte = ModbusRTU.DataStorage[_MyModbusIndex][0];
+                        TempWord.LByte = ModbusRTU.DataStorage[_MyModbusIndex][1];
+                        StringInText = TempWord.Word.ToString();
+                       // Console.Write(StringInText);
+                        break;
+                    case 2:
+                        TempDWord.Byte3 = ModbusRTU.DataStorage[_MyModbusIndex][0];
+                        TempDWord.Byte2 = ModbusRTU.DataStorage[_MyModbusIndex][1];
+                        TempDWord.Byte1 = ModbusRTU.DataStorage[_MyModbusIndex][2];
+                        TempDWord.Byte0 = ModbusRTU.DataStorage[_MyModbusIndex][3];
+                        StringInText = TempDWord.Float32.ToString();
+                        break;
+                    case 4:
+                        TempFWord.Byte7 = ModbusRTU.DataStorage[_MyModbusIndex][7];
+                        TempFWord.Byte6 = ModbusRTU.DataStorage[_MyModbusIndex][6];
+                        TempFWord.Byte5 = ModbusRTU.DataStorage[_MyModbusIndex][5];
+                        TempFWord.Byte4 = ModbusRTU.DataStorage[_MyModbusIndex][4];
+                        TempFWord.Byte3 = ModbusRTU.DataStorage[_MyModbusIndex][3];
+                        TempFWord.Byte2 = ModbusRTU.DataStorage[_MyModbusIndex][2];
+                        TempFWord.Byte1 = ModbusRTU.DataStorage[_MyModbusIndex][1];
+                        TempFWord.Byte0 = ModbusRTU.DataStorage[_MyModbusIndex][0];
+                        StringInText = TempFWord.Float64.ToString();
+                        break;
+                    default:
+                        break;
+                }
+
+
                 this.Invoke((EventHandler)(delegate      //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
                 {
-                    this.Text = "22222";
+                    this.Text = StringInText;
                 }));
-            
+            }
+               
         }
 
         protected override void OnMouseDown(MouseEventArgs e)

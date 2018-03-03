@@ -518,10 +518,13 @@ namespace SerialportSample
                     case (byte)ModbusFuncCode.ReadStorageRegs:
                     case (byte)ModbusFuncCode.ReadInputRegs:
                         DataByteNumber = TxRxBuffer[2];
-                        DataStorage[TempControlIndex] = new byte[DataByteNumber];
+                        Console.Write(DataByteNumber.ToString());
+                        if((DataStorage[TempControlIndex]==null) || (DataStorage[TempControlIndex].Length!= DataByteNumber))
+                            DataStorage[TempControlIndex] = new byte[DataByteNumber];
                         for (byte i = 0; i < DataByteNumber; i++)
                         {
-                            DataStorage[TempControlIndex][i] = TxRxBuffer[i + 3];                   
+                            DataStorage[TempControlIndex][i] = TxRxBuffer[i + 3];
+                       
                         }
 
                             ModbusReadSuccessEvent();//（事件引发）如果以上均正确，说明Modbus主读输入寄存器成功，引发“读输入寄存器成功”事件
@@ -685,10 +688,70 @@ namespace SerialportSample
         public byte HByte;
 
         [FieldOffset(0)]
-        public UInt16 Word;
+        public UInt16 Word;  //无符号
+
+        [FieldOffset(0)]
+        public Int16 SignedWord;
     }
 
-   public struct ByteBits //使用索引器取用byte中的位值
+    [StructLayout(LayoutKind.Explicit)]
+    public struct DoubleWord2Byte
+    {
+        [FieldOffset(0)]
+        public byte Byte0;
+
+        [FieldOffset(1)]
+        public byte Byte1;
+
+        [FieldOffset(2)]
+        public byte Byte2;
+
+        [FieldOffset(3)]
+        public byte Byte3;
+
+        [FieldOffset(0)]
+        public float Float32;
+
+        [FieldOffset(0)]
+        public UInt32 UInt32Form;
+
+        [FieldOffset(0)]
+        public Int32 Int32Form;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct FourWord2Byte
+    {
+        [FieldOffset(0)]
+        public byte Byte0;
+
+        [FieldOffset(1)]
+        public byte Byte1;
+
+        [FieldOffset(2)]
+        public byte Byte2;
+
+        [FieldOffset(3)]
+        public byte Byte3;
+
+        [FieldOffset(4)]
+        public byte Byte4;
+
+        [FieldOffset(5)]
+        public byte Byte5;
+
+        [FieldOffset(6)]
+        public byte Byte6;
+
+        [FieldOffset(7)]
+        public byte Byte7;
+
+        [FieldOffset(0)]
+        public double Float64;
+    }
+
+
+    public struct ByteBits //使用索引器取用byte中的位值
     {
         public byte ALL;
 
