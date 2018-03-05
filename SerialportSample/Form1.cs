@@ -22,7 +22,7 @@ namespace SerialportSample
 
         /*子1进7*/
 
-
+        private BitInByte testbitinbyte = new BitInByte(10);
         private ModbusRTU ModbusMaster = new ModbusRTU();
         private SerialPort comm = new SerialPort();
         private StringBuilder builder = new StringBuilder();//避免在事件处理方法中反复的创建，定义到外面。
@@ -109,5 +109,16 @@ namespace SerialportSample
            
         }
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            testbitinbyte[Convert.ToUInt16(textBox1.Text)] =true;
+            textBox2.Text = testbitinbyte.Bytes[0].ToString();
+            textBox3.Text = testbitinbyte.Bytes[1].ToString();
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            textBox5.Text = testbitinbyte[Convert.ToUInt16(textBox4.Text)].ToString();
+        }
     }
 }
