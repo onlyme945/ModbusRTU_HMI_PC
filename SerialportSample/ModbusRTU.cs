@@ -243,6 +243,14 @@ namespace SerialportSample
             return DataStorage[ControlIndex];
         }
 
+        //下面的方法完成后， 上面的方法全部失效
+
+        public static void SetFlagReg(BitInByte TargetFlagReg,UInt32 TargetBit,bool BitStatus)
+        {
+            TargetFlagReg[TargetBit] = BitStatus;
+        }
+
+
         #endregion
 
         #region//////////////////////定时器Tick事件////////////////////////
@@ -600,14 +608,14 @@ namespace SerialportSample
 
         public struct ModbusDataRepository
         {
-            public byte[] Coils;
+            public byte[] Coils;   //需要换成BitInByte结构体
 
-            public byte[] DistributeBits;
+            public byte[] DistributeBits; //需要换成BitInByte结构体
 
             public UInt16[] StorageRegs;
-            //public bool[] WStorageRegFlags;//写StorageReg标志位                          *****待用最下面创建的位数组代替，以节约内存用量*****
-            //public bool[] RStorageRegFlags;//读StorageReg标志位
-            //public bool[] StorageRegRxDoneFlags;//StorageReg数据接收成功标志位
+            public BitInByte WStorageRegFlag;//写StorageReg标志位                          *****待用最下面创建的位数组代替，以节约内存用量*****
+            public BitInByte RStorageRegFlag;//读StorageReg标志位
+            public BitInByte StorageRegRxDoneFlag;//StorageReg数据接收成功标志位
 
             public UInt16[] InputRegs;
 
@@ -626,6 +634,9 @@ namespace SerialportSample
                 DistributeBits = new byte[NumOfDistributeBits];
                 StorageRegs = new UInt16[NumOfStorageRegs];
                 InputRegs = new UInt16[NumOfInputRegs];
+                WStorageRegFlag = new BitInByte("Bit",65536);
+                RStorageRegFlag = new BitInByte("Bit", 65536);
+                StorageRegRxDoneFlag = new BitInByte("Bit", 65536);
             }
           
         }
@@ -813,23 +824,51 @@ namespace SerialportSample
     public struct BitInByte //使用索引器取用byte中的位值
     {
         private UInt16 IndexOfByte;
-        private UInt16 IndexOfBit;
+        private byte IndexOfBit;
         public byte[] Bytes;        //连续的字数组
 
-        public BitInByte(UInt16 NumOfBytes)
+
+        public BitInByte(string InBitOrByte, UInt32 NumOfData)    //用字节数初始化结构体
         {
-            if (NumOfBytes < 1) NumOfBytes = 1;
-             Bytes = new byte[NumOfBytes];
+            if (NumOfData < 1) NumOfData = 1;
+            if (InBitOrByte == "Bit")
+                if ((NumOfData % 8) != 0)
+                    NumOfData = (UInt32)(NumOfData / 8 + 1);
+                else
+                    NumOfData = (UInt32)(NumOfData / 8);
+                          
+            Bytes = new byte[NumOfData];
             IndexOfByte = 0;
             IndexOfBit = 0;
         }
 
-        public bool this[UInt16 FullIndex]             //把连续字数组看成一长串的位数组，位数组中元素的索引下标 （此下标一定不能超过字数组长度*8）
+        //public BitInByte(UInt16 NumOfBytes)    //用字节数初始化结构体
+        //{
+        //    if (NumOfBytes < 1) NumOfBytes = 1;
+        //     Bytes = new byte[NumOfBytes];
+        //    IndexOfByte = 0;
+        //    IndexOfBit = 0;
+        //}
+
+        //public BitInByte(UInt32 NumOfBits) //用位数初始化结构体
+        //{
+        //    UInt16 NumOfBytes = new UInt16();
+        //    if (NumOfBits < 1) NumOfBits = 1;
+        //    if ((NumOfBits % 8) != 0)
+        //        NumOfBytes = (UInt16)(NumOfBits / 8 + 1);
+        //    else
+        //        NumOfBytes = (UInt16)(NumOfBits / 8);
+        //    Bytes = new byte[NumOfBytes];
+        //    IndexOfByte = 0;
+        //    IndexOfBit = 0;
+        //}
+
+        public bool this[UInt32 FullIndex]             //把连续字数组看成一长串的位数组，位数组中元素的索引下标 （此下标一定不能超过字数组长度*8）
         {
             get
             {
                 IndexOfByte = (UInt16)(FullIndex / 8);  //根据位的索引下标，确定该位所在的字节
-                IndexOfBit = (UInt16)(FullIndex % 8);   //根据位的索引下标，确定该位在该字节中所处的位置
+                IndexOfBit = (byte)(FullIndex % 8);   //根据位的索引下标，确定该位在该字节中所处的位置
 
                 return (Bytes[IndexOfByte] & (1 << IndexOfBit)) != 0;   //取出位数组中索引值所对应的位的值
             }
@@ -837,7 +876,7 @@ namespace SerialportSample
             set
             {
                 IndexOfByte = (UInt16)(FullIndex / 8);  //根据位的索引下标，确定该位所在的字节
-                IndexOfBit = (UInt16)(FullIndex % 8);   //根据位的索引下标，确定该位在该字节中所处的位置
+                IndexOfBit = (byte)(FullIndex % 8);   //根据位的索引下标，确定该位在该字节中所处的位置
 
                 if (value)
                     Bytes[IndexOfByte] |= (byte)(1 << IndexOfBit);   //设置位数组中索引值所对应的位的值

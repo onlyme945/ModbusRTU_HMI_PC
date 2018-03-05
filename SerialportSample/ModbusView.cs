@@ -285,47 +285,21 @@ namespace SerialportSample
 
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-          
-            ModbusRTU.AssembleRequestADU(_MyModbusIndex,false,_StationID,(byte)ReadFuncCode,ReadAddress, _ReadDataLengthInWord, null);
 
-            if (ModbusRTU.GetDataStorageFlag(_MyModbusIndex) == true)
+            //ModbusRTU.AssembleRequestADU(_MyModbusIndex,false,_StationID,(byte)ReadFuncCode,ReadAddress, _ReadDataLengthInWord, null);
+            ModbusRTU.SetFlagReg(ModbusRTU.MasterDataRepos.RStorageRegFlag,ReadAddress,true);//将读 StorageReg的相应标志位置位，待ModbusRTU类触发读操作
+
+
+
+            if (ModbusRTU.MasterDataRepos.StorageRegRxDoneFlag[ReadAddress] == true)   //如果StorageReg相应的读完成标志位置位则触发下面的更新text的操作
             {
-                switch (_ReadDataLengthInWord)
-                {
-                    case 1:
-                        TempWord.HByte = ModbusRTU.DataStorage[_MyModbusIndex][0];
-                        TempWord.LByte = ModbusRTU.DataStorage[_MyModbusIndex][1];
-                        StringInText = TempWord.Word.ToString();
-                       // Console.Write(StringInText);
-                        break;
-                    case 2:
-                        TempDWord.Byte3 = ModbusRTU.DataStorage[_MyModbusIndex][0];
-                        TempDWord.Byte2 = ModbusRTU.DataStorage[_MyModbusIndex][1];
-                        TempDWord.Byte1 = ModbusRTU.DataStorage[_MyModbusIndex][2];
-                        TempDWord.Byte0 = ModbusRTU.DataStorage[_MyModbusIndex][3];
-                        StringInText = TempDWord.Float32.ToString();
-                        break;
-                    case 4:
-                        TempFWord.Byte7 = ModbusRTU.DataStorage[_MyModbusIndex][7];
-                        TempFWord.Byte6 = ModbusRTU.DataStorage[_MyModbusIndex][6];
-                        TempFWord.Byte5 = ModbusRTU.DataStorage[_MyModbusIndex][5];
-                        TempFWord.Byte4 = ModbusRTU.DataStorage[_MyModbusIndex][4];
-                        TempFWord.Byte3 = ModbusRTU.DataStorage[_MyModbusIndex][3];
-                        TempFWord.Byte2 = ModbusRTU.DataStorage[_MyModbusIndex][2];
-                        TempFWord.Byte1 = ModbusRTU.DataStorage[_MyModbusIndex][1];
-                        TempFWord.Byte0 = ModbusRTU.DataStorage[_MyModbusIndex][0];
-                        StringInText = TempFWord.Float64.ToString();
-                        break;
-                    default:
-                        break;
-                }
-
-
                 this.Invoke((EventHandler)(delegate      //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
                 {
                     this.Text = StringInText;
                 }));
-            }
+                ModbusRTU.MasterDataRepos.StorageRegRxDoneFlag[ReadAddress] = false; //读完一次数据将相应的读完成标志位复位，以降低刷新界面数据的频次，优化性能
+            } 
+           
                
         }
 
