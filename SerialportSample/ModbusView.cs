@@ -293,7 +293,6 @@ namespace SerialportSample
                 switch (_ReadDataLengthInWord)
                 {
                     case 1:
-
                         TempWord.HByte = ModbusRTU.DataStorage[_MyModbusIndex][0];
                         TempWord.LByte = ModbusRTU.DataStorage[_MyModbusIndex][1];
                         StringInText = TempWord.Word.ToString();

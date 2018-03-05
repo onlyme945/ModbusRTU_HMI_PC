@@ -44,6 +44,7 @@ namespace SerialportSample
         public static bool HighPriorityFrameRdy = false;
         public static bool LowPriorityFrameRdy = false;
 
+        public static ModbusDataRepository MasterDataRepos = new ModbusDataRepository(8192,8192,65536,65536);
         public static byte[][] DataStorage;//以各控件的索引为序存储接收到的数据
         public static bool[] DataStorageFlag;
 
@@ -386,7 +387,7 @@ namespace SerialportSample
             switch (FuncCode)
             {
                 case (byte)ModbusFuncCode.ReadCoils:
-                case (byte)ModbusFuncCode.ReadDistrbuteBits:
+                case (byte)ModbusFuncCode.ReadDistributeBits:
                 case (byte)ModbusFuncCode.ReadStorageRegs:
                 case (byte)ModbusFuncCode.ReadInputRegs:   
                 case (byte)ModbusFuncCode.WriteSingleCoil:         
@@ -514,12 +515,15 @@ namespace SerialportSample
                         break;
 
                     case (byte)ModbusFuncCode.ReadCoils:
-                    case (byte)ModbusFuncCode.ReadDistrbuteBits:
+
+                    case (byte)ModbusFuncCode.ReadDistributeBits:
+
                     case (byte)ModbusFuncCode.ReadStorageRegs:
+
                     case (byte)ModbusFuncCode.ReadInputRegs:
                         DataByteNumber = TxRxBuffer[2];
-                        Console.Write(DataByteNumber.ToString());
-                        if((DataStorage[TempControlIndex]==null) || (DataStorage[TempControlIndex].Length!= DataByteNumber))
+                      //  Console.Write(DataByteNumber.ToString());
+                        if((DataStorage[TempControlIndex]==null) || (DataStorage[TempControlIndex].Length!= DataByteNumber))  //如果数组未定义或长度不匹配
                             DataStorage[TempControlIndex] = new byte[DataByteNumber];
                         for (byte i = 0; i < DataByteNumber; i++)
                         {
@@ -532,7 +536,7 @@ namespace SerialportSample
 
 
                     case ((byte)ModbusFuncCode.ReadCoils + 0x80):
-                    case ((byte)ModbusFuncCode.ReadDistrbuteBits + 0x80):
+                    case ((byte)ModbusFuncCode.ReadDistributeBits + 0x80):
                     case ((byte)ModbusFuncCode.ReadStorageRegs + 0x80):
                     case ((byte)ModbusFuncCode.ReadInputRegs + 0x80):
                     case ((byte)ModbusFuncCode.WriteSingleCoil + 0x80):
@@ -583,7 +587,7 @@ namespace SerialportSample
         public enum ModbusFuncCode
         {
             ReadCoils = 0x01,
-            ReadDistrbuteBits = 0x02,
+            ReadDistributeBits = 0x02,
             ReadStorageRegs = 0x03,
             ReadInputRegs = 0x04,
             WriteSingleCoil = 0x05,
@@ -593,6 +597,38 @@ namespace SerialportSample
         }
 
         #endregion
+
+        public struct ModbusDataRepository
+        {
+            public byte[] Coils;
+
+            public byte[] DistributeBits;
+
+            public UInt16[] StorageRegs;
+            //public bool[] WStorageRegFlags;//写StorageReg标志位                          *****待用最下面创建的位数组代替，以节约内存用量*****
+            //public bool[] RStorageRegFlags;//读StorageReg标志位
+            //public bool[] StorageRegRxDoneFlags;//StorageReg数据接收成功标志位
+
+            public UInt16[] InputRegs;
+
+
+            public ModbusDataRepository(short NumOfCoils,short NumOfDistributeBits,int NumOfStorageRegs,int NumOfInputRegs)
+            {
+                if (NumOfCoils > 8192) NumOfCoils = 8192; //限制Coil的数量
+                if (NumOfCoils <1) NumOfCoils = 1;
+                if (NumOfDistributeBits > 8192) NumOfDistributeBits = 8192; //限制DistributeBit的数量
+                if (NumOfDistributeBits < 1) NumOfDistributeBits = 1;
+                if (NumOfStorageRegs > 65536) NumOfStorageRegs = 65536; //限制StorageReg的数量
+                if (NumOfStorageRegs < 1) NumOfStorageRegs = 1;
+                if (NumOfInputRegs > 65536) NumOfInputRegs = 65536; //限制InputReg的数量
+                if (NumOfInputRegs < 1) NumOfInputRegs = 1;
+                Coils = new byte[NumOfCoils];
+                DistributeBits = new byte[NumOfDistributeBits];
+                StorageRegs = new UInt16[NumOfStorageRegs];
+                InputRegs = new UInt16[NumOfInputRegs];
+            }
+          
+        }
 
     }
     //ModbusRTU类到此结束
@@ -768,6 +804,45 @@ namespace SerialportSample
                     ALL |=(byte)(1 << index);
                 else
                     ALL &=(byte) (~(1 << index));
+            }
+
+        }
+
+    }
+
+    public struct BitInByte //使用索引器取用byte中的位值
+    {
+        private UInt16 IndexOfByte;
+        private UInt16 IndexOfBit;
+        public byte[] Bytes;        //连续的字数组
+
+        public BitInByte(UInt16 NumOfBytes)
+        {
+            if (NumOfBytes < 1) NumOfBytes = 1;
+             Bytes = new byte[NumOfBytes];
+            IndexOfByte = 0;
+            IndexOfBit = 0;
+        }
+
+        public bool this[UInt16 FullIndex]             //把连续字数组看成一长串的位数组，位数组中元素的索引下标 （此下标一定不能超过字数组长度*8）
+        {
+            get
+            {
+                IndexOfByte = (UInt16)(FullIndex / 8);  //根据位的索引下标，确定该位所在的字节
+                IndexOfBit = (UInt16)(FullIndex % 8);   //根据位的索引下标，确定该位在该字节中所处的位置
+
+                return (Bytes[IndexOfByte] & (1 << IndexOfBit)) != 0;   //取出位数组中索引值所对应的位的值
+            }
+
+            set
+            {
+                IndexOfByte = (UInt16)(FullIndex / 8);  //根据位的索引下标，确定该位所在的字节
+                IndexOfBit = (UInt16)(FullIndex % 8);   //根据位的索引下标，确定该位在该字节中所处的位置
+
+                if (value)
+                    Bytes[IndexOfByte] |= (byte)(1 << IndexOfBit);   //设置位数组中索引值所对应的位的值
+                else
+                    Bytes[IndexOfByte] &= (byte)(~(1 << IndexOfBit));
             }
 
         }

@@ -86,7 +86,7 @@ namespace SerialportSample
                 {
                     comm.Open();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     //捕获到异常信息，创建一个新的comm对象，之前的不能用了。
                     comm = new SerialPort();
