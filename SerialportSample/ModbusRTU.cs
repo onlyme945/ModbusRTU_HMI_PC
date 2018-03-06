@@ -250,11 +250,20 @@ namespace SerialportSample
             TargetFlagReg[TargetBit] = BitStatus;
         }
 
+        public static void IncreaseVoterReg(UInt16[] VoterReg, UInt16 Address)
+        {
+            VoterReg[Address] += 1;
+        }
+
+        public static void DecreaseVoterReg(UInt16[] VoterReg, UInt16 Address)
+        {
+            VoterReg[Address] -= 1;
+        }
 
         #endregion
 
         #region//////////////////////定时器Tick事件////////////////////////
-        
+
         private void PeriodicTxTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             MasterSendFrame();
@@ -615,6 +624,7 @@ namespace SerialportSample
             public UInt16[] StorageRegs;
             public BitInByte WStorageRegFlag;//写StorageReg标志位                          *****待用最下面创建的位数组代替，以节约内存用量*****
             public BitInByte RStorageRegFlag;//读StorageReg标志位
+            public UInt16[]  RStorageRegFlagVoter;//读StorageReg标志位
             public BitInByte StorageRegRxDoneFlag;//StorageReg数据接收成功标志位
 
             public UInt16[] InputRegs;
@@ -636,6 +646,7 @@ namespace SerialportSample
                 InputRegs = new UInt16[NumOfInputRegs];
                 WStorageRegFlag = new BitInByte("Bit",65536);
                 RStorageRegFlag = new BitInByte("Bit", 65536);
+                RStorageRegFlagVoter = new UInt16[65536];
                 StorageRegRxDoneFlag = new BitInByte("Bit", 65536);
             }
           

@@ -42,9 +42,10 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
-            this.modbusView4 = new SerialportSample.ModbusView();
-            this.modbusView3 = new SerialportSample.ModbusView();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.modbusView1 = new SerialportSample.ModbusView();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -56,7 +57,7 @@
             this.comboPortName.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.comboPortName.FormattingEnabled = true;
             this.comboPortName.Location = new System.Drawing.Point(104, 14);
-            this.comboPortName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboPortName.Margin = new System.Windows.Forms.Padding(4);
             this.comboPortName.Name = "comboPortName";
             this.comboPortName.Size = new System.Drawing.Size(160, 23);
             this.comboPortName.TabIndex = 4;
@@ -96,7 +97,7 @@
             "57600",
             "115200"});
             this.comboBaudrate.Location = new System.Drawing.Point(352, 14);
-            this.comboBaudrate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBaudrate.Margin = new System.Windows.Forms.Padding(4);
             this.comboBaudrate.Name = "comboBaudrate";
             this.comboBaudrate.Size = new System.Drawing.Size(160, 23);
             this.comboBaudrate.TabIndex = 5;
@@ -107,7 +108,7 @@
             this.buttonOpenClose.Font = new System.Drawing.Font("宋体", 9F);
             this.buttonOpenClose.ForeColor = System.Drawing.Color.Black;
             this.buttonOpenClose.Location = new System.Drawing.Point(540, 12);
-            this.buttonOpenClose.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonOpenClose.Margin = new System.Windows.Forms.Padding(4);
             this.buttonOpenClose.Name = "buttonOpenClose";
             this.buttonOpenClose.Size = new System.Drawing.Size(100, 29);
             this.buttonOpenClose.TabIndex = 0;
@@ -134,7 +135,7 @@
             this.buttonReset.Font = new System.Drawing.Font("宋体", 9F);
             this.buttonReset.ForeColor = System.Drawing.Color.Black;
             this.buttonReset.Location = new System.Drawing.Point(648, 12);
-            this.buttonReset.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonReset.Margin = new System.Windows.Forms.Padding(4);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(100, 29);
             this.buttonReset.TabIndex = 1;
@@ -149,9 +150,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.txGet);
             this.groupBox1.Location = new System.Drawing.Point(20, 46);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(728, 379);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
@@ -164,7 +165,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txGet.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txGet.Location = new System.Drawing.Point(9, 25);
-            this.txGet.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txGet.Margin = new System.Windows.Forms.Padding(4);
             this.txGet.Multiline = true;
             this.txGet.Name = "txGet";
             this.txGet.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -191,7 +192,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(352, 443);
+            this.textBox1.Location = new System.Drawing.Point(607, 443);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 25);
             this.textBox1.TabIndex = 18;
@@ -199,93 +200,81 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(489, 443);
+            this.textBox2.Location = new System.Drawing.Point(456, 443);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 25);
             this.textBox2.TabIndex = 19;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(614, 443);
+            this.textBox3.Location = new System.Drawing.Point(184, 443);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 25);
             this.textBox3.TabIndex = 20;
+            this.textBox3.Text = "10";
+            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
-            // modbusView4
+            // button1
             // 
-            this.modbusView4.EnablePeriodRequest = true;
-            this.modbusView4.Location = new System.Drawing.Point(164, 510);
-            this.modbusView4.Margin = new System.Windows.Forms.Padding(4);
-            this.modbusView4.MaxValue = 100D;
-            this.modbusView4.MinValue = 1D;
-            this.modbusView4.Name = "modbusView4";
-            this.modbusView4.ReadAddress = ((ushort)(0));
-            this.modbusView4.ReadDataLengthInWord = ((byte)(1));
-            this.modbusView4.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.UINT16;
-            this.modbusView4.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadInputRegs;
-            this.modbusView4.RequestPeriod = 100D;
-            this.modbusView4.Size = new System.Drawing.Size(132, 25);
-            this.modbusView4.StationID = ((byte)(1));
-            this.modbusView4.TabIndex = 16;
-            this.modbusView4.WriteAddress = ((ushort)(1));
-            this.modbusView4.WriteDataLengthInWord = ((byte)(1));
-            this.modbusView4.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
-            this.modbusView4.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            this.button1.Location = new System.Drawing.Point(618, 489);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // modbusView3
+            // button2
             // 
-            this.modbusView3.EnablePeriodRequest = true;
-            this.modbusView3.Location = new System.Drawing.Point(352, 510);
-            this.modbusView3.Margin = new System.Windows.Forms.Padding(4);
-            this.modbusView3.MaxValue = 100D;
-            this.modbusView3.MinValue = 1D;
-            this.modbusView3.Name = "modbusView3";
-            this.modbusView3.ReadAddress = ((ushort)(1));
-            this.modbusView3.ReadDataLengthInWord = ((byte)(1));
-            this.modbusView3.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.UINT16;
-            this.modbusView3.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadInputRegs;
-            this.modbusView3.RequestPeriod = 100D;
-            this.modbusView3.Size = new System.Drawing.Size(132, 25);
-            this.modbusView3.StationID = ((byte)(1));
-            this.modbusView3.TabIndex = 15;
-            this.modbusView3.WriteAddress = ((ushort)(1));
-            this.modbusView3.WriteDataLengthInWord = ((byte)(1));
-            this.modbusView3.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
-            this.modbusView3.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            this.button2.Location = new System.Drawing.Point(324, 489);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 23;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // modbusView1
             // 
-            this.modbusView1.EnablePeriodRequest = true;
-            this.modbusView1.Location = new System.Drawing.Point(164, 458);
-            this.modbusView1.Margin = new System.Windows.Forms.Padding(4);
+            this.modbusView1.EnablePeriodRequest = false;
+            this.modbusView1.Location = new System.Drawing.Point(184, 487);
             this.modbusView1.MaxValue = 100D;
             this.modbusView1.MinValue = 1D;
             this.modbusView1.Name = "modbusView1";
-            this.modbusView1.ReadAddress = ((ushort)(2));
-            this.modbusView1.ReadDataLengthInWord = ((byte)(2));
-            this.modbusView1.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.FLOAT32;
-            this.modbusView1.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadInputRegs;
+            this.modbusView1.ReadAddress = ((ushort)(0));
+            this.modbusView1.ReadDataLengthInWord = ((byte)(1));
+            this.modbusView1.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.UINT16;
+            this.modbusView1.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
             this.modbusView1.RequestPeriod = 100D;
-            this.modbusView1.Size = new System.Drawing.Size(132, 25);
+            this.modbusView1.Size = new System.Drawing.Size(100, 25);
             this.modbusView1.StationID = ((byte)(1));
-            this.modbusView1.TabIndex = 13;
-            this.modbusView1.WriteAddress = ((ushort)(1));
+            this.modbusView1.TabIndex = 21;
+            this.modbusView1.WriteAddress = ((ushort)(0));
             this.modbusView1.WriteDataLengthInWord = ((byte)(1));
             this.modbusView1.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
             this.modbusView1.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(456, 486);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(100, 25);
+            this.textBox4.TabIndex = 24;
             // 
             // SerialportSampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 585);
+            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.modbusView1);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.modbusView4);
-            this.Controls.Add(this.modbusView3);
-            this.Controls.Add(this.modbusView1);
             this.Controls.Add(this.labelGetCount);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonReset);
@@ -294,7 +283,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboPortName);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SerialportSampleForm";
             this.Text = "Serial tool Sample";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -318,14 +307,15 @@
         private System.Windows.Forms.Label labelGetCount;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txGet;
-        private ModbusView modbusView1;
-        private ModbusView modbusView3;
-        private ModbusView modbusView4;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3;
+        private ModbusView modbusView1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox textBox4;
     }
 }
 

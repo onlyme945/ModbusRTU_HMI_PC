@@ -111,11 +111,30 @@ namespace SerialportSample
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            testbitinbyte[Convert.ToUInt16(textBox1.Text)] =true;
-            textBox2.Text = testbitinbyte.Bytes[0].ToString();
-            textBox3.Text = testbitinbyte.Bytes.Length.ToString();
+            
         }
 
-       
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            textBox2.Text = ModbusRTU.MasterDataRepos.RStorageRegFlagVoter[0].ToString();
+            textBox1.Text = ModbusRTU.MasterDataRepos.RStorageRegFlagVoter[10].ToString();
+            textBox4.Text = modbusView1.ReadAddress.ToString();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            
+            modbusView1.ReadAddress = Convert.ToUInt16(textBox3.Text);
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

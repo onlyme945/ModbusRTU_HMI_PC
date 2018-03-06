@@ -23,9 +23,9 @@ namespace SerialportSample
 
         #region"/////////////////////自定义的属性///////////////////"
         private int _MyModbusIndex=-1;
-        private byte _StationID=1;
-        private UInt16 _WriteAddress=1;
-        private UInt16 _ReadAddress=1;
+        private byte _StationID=1;      
+        private UInt16 _WriteAddress=0;      
+        private UInt16 _ReadAddress=0;
         private double _MaxValue = 100;
         private double _MinValue = 1;
         private byte _ReadDataLengthInWord = 1;
@@ -182,6 +182,7 @@ namespace SerialportSample
         {
             set
             {
+                
                 _WriteAddress = value;
 
             }
@@ -197,8 +198,16 @@ namespace SerialportSample
         {
             set
             {
-                _ReadAddress = value;
+                ModbusRTU.DecreaseVoterReg(ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, _ReadAddress);//上次地址所对应的票决器减一
+                if (ModbusRTU.MasterDataRepos.RStorageRegFlagVoter[_ReadAddress] == 0)
+                    ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = false;
 
+                                    //ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = false;//让上次置位的读标志位失效
+                _ReadAddress = value;
+                ModbusRTU.IncreaseVoterReg(ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, _ReadAddress);//本次地址所对应的票决器加一
+                if (ModbusRTU.MasterDataRepos.RStorageRegFlagVoter[_ReadAddress] != 0)
+                    ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = true;
+                //ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = true;
             }
             get
             {
@@ -279,32 +288,26 @@ namespace SerialportSample
         public ModbusView()
         {
             PeriodicRequestTimer.Elapsed += PeriodicRequestTimer_Elapsed;
-            _MyModbusIndex=ModbusRTU.GetMyModbusIndex();//初始化控件时获得自己的Modbus索引值  重中之重
-
+          
+            ModbusRTU.IncreaseVoterReg(ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, _ReadAddress);//控件初始化时，票决器根据地址自动加1
+            ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = true;//控件初始化的时候，默认将对应的读标志位置位
         }
 
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-
-            //ModbusRTU.AssembleRequestADU(_MyModbusIndex,false,_StationID,(byte)ReadFuncCode,ReadAddress, _ReadDataLengthInWord, null);
-            ModbusRTU.SetFlagReg(ModbusRTU.MasterDataRepos.RStorageRegFlag,ReadAddress,true);//将读 StorageReg的相应标志位置位，待ModbusRTU类触发读操作
-
-
-
-            if (ModbusRTU.MasterDataRepos.StorageRegRxDoneFlag[ReadAddress] == true)   //如果StorageReg相应的读完成标志位置位则触发下面的更新text的操作
-            {
-                this.Invoke((EventHandler)(delegate      //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
+            //周期性刷新数据代码   待完成
+                this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
                 {
                     this.Text = StringInText;
                 }));
-                ModbusRTU.MasterDataRepos.StorageRegRxDoneFlag[ReadAddress] = false; //读完一次数据将相应的读完成标志位复位，以降低刷新界面数据的频次，优化性能
-            } 
-           
-               
+                      
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+
+            // 应立刻关闭text的刷新操作      待完成
+
             base.OnMouseDown(e);
             ShowCaret(this.Handle);
         }
@@ -312,15 +315,6 @@ namespace SerialportSample
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
             base.OnKeyPress(e);
-
-            //byte[] DataToTx;
-
-            //if (e.KeyChar == (char)Keys.Enter)
-            //{
-            //    HideCaret(this.Handle);
-            //    ModbusRTU.AssembleRequestADU(_MyModbusIndex, true, 1, (byte)WriteFuncCode, WriteAddress, 1, null);
-
-            //}
 
         }
       
