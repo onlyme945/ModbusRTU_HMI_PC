@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -36,6 +37,9 @@ namespace SerialportSample
         private byte[] testbytedata = { 8, 9, 10 };
         private UInt16[] testworddata = { 0x11,0x22,0x33,0x44};
 
+
+        private ArrayList testarrayList = new ArrayList();
+
         public SerialportSampleForm()
         {
             InitializeComponent();
@@ -64,6 +68,7 @@ namespace SerialportSample
             ModbusRTU.ModbusSendFrame += comm.Write;//为Modbus实例中的发送委托关联正确的发送函数
             ModbusRTU.SetDataStorage();
             //ModbusMaster.RxDataTimer = Timer_RxDone;
+
         }
 
 
@@ -109,32 +114,31 @@ namespace SerialportSample
            
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void textBox5_TextChanged(object sender, EventArgs e)
         {
-            
+            modbusView1.ReadAddress = Convert.ToUInt16(textBox5.Text);
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void textBox6_TextChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            textBox2.Text = ModbusRTU.MasterDataRepos.RStorageRegFlagVoter[0].ToString();
-            textBox1.Text = ModbusRTU.MasterDataRepos.RStorageRegFlagVoter[10].ToString();
-            textBox4.Text = modbusView1.ReadAddress.ToString();
+            modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            
-            modbusView1.ReadAddress = Convert.ToUInt16(textBox3.Text);
+            textBox1.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[0].ToString();
+
+            textBox2.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
+            textBox3.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65534].ToString();
+            textBox4.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65535].ToString();
+
+            testarrayList.Add(testbytedata);           
+            testarrayList.Add(new byte[] { 1,2, 3 });
+            byte[] testarray = testarrayList[0] as byte[];
+            textBox7.Text = testarray[1].ToString();
+
         }
 
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
+   
     }
 }

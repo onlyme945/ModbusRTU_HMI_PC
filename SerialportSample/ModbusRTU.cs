@@ -250,14 +250,35 @@ namespace SerialportSample
             TargetFlagReg[TargetBit] = BitStatus;
         }
 
-        public static void IncreaseVoterReg(UInt16[] VoterReg, UInt16 Address)
+        public static void VoteToConfirmTransmitRegs(char IncreaseOrDecrease, UInt16[] VoterReg, BitInByte DataStorageFlagReg , UInt16 FirstAddress , byte DataLength) //确定某一地址的数据传送与否的表决器
         {
-            VoterReg[Address] += 1;
-        }
+            byte tempCount=0;
+            UInt16 tempAddress = 0;
 
-        public static void DecreaseVoterReg(UInt16[] VoterReg, UInt16 Address)
-        {
-            VoterReg[Address] -= 1;
+            if (IncreaseOrDecrease == '+')
+            {
+                for (tempCount = 0; tempCount < DataLength; tempCount++)
+                {
+                    tempAddress =(UInt16) (FirstAddress + tempCount);
+                    VoterReg[tempAddress] += 1;//票选器投票加1
+                    DataStorageFlagReg[tempAddress] = true;//票选器投票增加，对应地址位显然是需要传输数据的
+                }
+            }
+                
+            else if (IncreaseOrDecrease == '-')
+            {
+                for ( tempCount = 0; tempCount < DataLength; tempCount++)
+                {
+                    tempAddress = (UInt16)(FirstAddress + tempCount);
+                    VoterReg[tempAddress] -= 1;//票选器投票减1
+                    if(VoterReg[tempAddress]==0)//如果票选器投票为0，说明当前的地址位未被使用，不需要进行数据传输
+                        DataStorageFlagReg[tempAddress] = false;//因而需要把与地址对应的数据传输请求标志位清0
+
+                }
+                    
+            }
+
+
         }
 
         #endregion
@@ -624,7 +645,7 @@ namespace SerialportSample
             public UInt16[] StorageRegs;
             public BitInByte WStorageRegFlag;//写StorageReg标志位                          *****待用最下面创建的位数组代替，以节约内存用量*****
             public BitInByte RStorageRegFlag;//读StorageReg标志位
-            public UInt16[]  RStorageRegFlagVoter;//读StorageReg标志位
+            public UInt16[]  RStorageRegFlagVoter;//读StorageReg标志位票选器
             public BitInByte StorageRegRxDoneFlag;//StorageReg数据接收成功标志位
 
             public UInt16[] InputRegs;
@@ -644,6 +665,7 @@ namespace SerialportSample
                 DistributeBits = new byte[NumOfDistributeBits];
                 StorageRegs = new UInt16[NumOfStorageRegs];
                 InputRegs = new UInt16[NumOfInputRegs];
+
                 WStorageRegFlag = new BitInByte("Bit",65536);
                 RStorageRegFlag = new BitInByte("Bit", 65536);
                 RStorageRegFlagVoter = new UInt16[65536];
@@ -853,26 +875,6 @@ namespace SerialportSample
             IndexOfBit = 0;
         }
 
-        //public BitInByte(UInt16 NumOfBytes)    //用字节数初始化结构体
-        //{
-        //    if (NumOfBytes < 1) NumOfBytes = 1;
-        //     Bytes = new byte[NumOfBytes];
-        //    IndexOfByte = 0;
-        //    IndexOfBit = 0;
-        //}
-
-        //public BitInByte(UInt32 NumOfBits) //用位数初始化结构体
-        //{
-        //    UInt16 NumOfBytes = new UInt16();
-        //    if (NumOfBits < 1) NumOfBits = 1;
-        //    if ((NumOfBits % 8) != 0)
-        //        NumOfBytes = (UInt16)(NumOfBits / 8 + 1);
-        //    else
-        //        NumOfBytes = (UInt16)(NumOfBits / 8);
-        //    Bytes = new byte[NumOfBytes];
-        //    IndexOfByte = 0;
-        //    IndexOfBit = 0;
-        //}
 
         public bool this[UInt32 FullIndex]             //把连续字数组看成一长串的位数组，位数组中元素的索引下标 （此下标一定不能超过字数组长度*8）
         {

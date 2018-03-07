@@ -28,7 +28,7 @@ namespace SerialportSample
         private UInt16 _ReadAddress=0;
         private double _MaxValue = 100;
         private double _MinValue = 1;
-        private byte _ReadDataLengthInWord = 1;
+        private byte _ReadDataLengthInWord = 1;//至少为1个字，不能为0，不能超过125个字
         private byte _WriteDataLengthInWord = 1;
         private WriteFunctionCodeEnum _WriteFunctionCode = WriteFunctionCodeEnum.WriteCoils;
         private ReadFunctionCodeEnum _ReadFunctionCode = ReadFunctionCodeEnum.ReadCoils;
@@ -50,6 +50,10 @@ namespace SerialportSample
 
             set
             {
+                //一帧数据中包含的字数据长度不能超过125，这一点需要特别注意，加以框定    待处理
+
+                ModbusRTU.VoteToConfirmTransmitRegs('-', ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, ModbusRTU.MasterDataRepos.RStorageRegFlag, _ReadAddress, _ReadDataLengthInWord);//数据长度改变前，将上次地址与数据长度共同决定的表决器值减1并判断票选结果
+
                 switch (_ReadDataType)     //此段代码保证了只有在数据类型为ManualSet的情况下_ReadDataLengthInWord才可以被手动修改，否则程序根据数据类型自动设定数据长度
                 {
                     case ReadDataTypeEnum.UINT16:
@@ -70,8 +74,9 @@ namespace SerialportSample
                     default:
                         break;
                 }
-               
-                
+
+                ModbusRTU.VoteToConfirmTransmitRegs('+', ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, ModbusRTU.MasterDataRepos.RStorageRegFlag, _ReadAddress, _ReadDataLengthInWord);//数据长度改变后，将本次地址与数据长度共同决定的表决器值加1并判断票选结果
+
             }
 
         }
@@ -182,7 +187,8 @@ namespace SerialportSample
         {
             set
             {
-                
+                if (value > 65535) value = 65535;  //对地址范围加以框定，否则在运行中输入超出范围的数据会弹出异常并中断执行
+                if(value<0) value = 0;             //地址范围本来就是0-65535，进行此框定也是合理的
                 _WriteAddress = value;
 
             }
@@ -198,16 +204,14 @@ namespace SerialportSample
         {
             set
             {
-                ModbusRTU.DecreaseVoterReg(ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, _ReadAddress);//上次地址所对应的票决器减一
-                if (ModbusRTU.MasterDataRepos.RStorageRegFlagVoter[_ReadAddress] == 0)
-                    ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = false;
+                ModbusRTU.VoteToConfirmTransmitRegs('-', ModbusRTU.MasterDataRepos.RStorageRegFlagVoter,ModbusRTU.MasterDataRepos.RStorageRegFlag, _ReadAddress, _ReadDataLengthInWord);//上次地址所对应的表决器值减1并判断票选结果
 
-                                    //ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = false;//让上次置位的读标志位失效
-                _ReadAddress = value;
-                ModbusRTU.IncreaseVoterReg(ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, _ReadAddress);//本次地址所对应的票决器加一
-                if (ModbusRTU.MasterDataRepos.RStorageRegFlagVoter[_ReadAddress] != 0)
-                    ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = true;
-                //ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = true;
+                if (value > 65535) value = 65535;  //对地址范围加以框定，否则在运行中输入超出范围的数据会弹出异常并中断执行
+                if (value < 0) value = 0;             //地址范围本来就是0-65535，进行此框定也是合理的
+                _ReadAddress = value;//新设置的地址存入地址属性
+
+                ModbusRTU.VoteToConfirmTransmitRegs('+', ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, ModbusRTU.MasterDataRepos.RStorageRegFlag, _ReadAddress, _ReadDataLengthInWord);//本次地址所对应的表决器值加1并判断票选结果
+
             }
             get
             {
@@ -289,8 +293,8 @@ namespace SerialportSample
         {
             PeriodicRequestTimer.Elapsed += PeriodicRequestTimer_Elapsed;
           
-            ModbusRTU.IncreaseVoterReg(ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, _ReadAddress);//控件初始化时，票决器根据地址自动加1
-            ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] = true;//控件初始化的时候，默认将对应的读标志位置位
+            ModbusRTU.VoteToConfirmTransmitRegs('+',ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, ModbusRTU.MasterDataRepos.RStorageRegFlag, _ReadAddress,_ReadDataLengthInWord);//控件初始化时，票决器根据地址值自动加1，并判断票选结果
+     
         }
 
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
