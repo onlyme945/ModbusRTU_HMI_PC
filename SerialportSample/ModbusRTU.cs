@@ -75,6 +75,7 @@ namespace SerialportSample
         public ByteBits[] ByteBitsExchange=new ByteBits[2];
 
         public static ArrayList LowSpeedADU = new ArrayList();
+        private static UInt16 LowSpeedADUIndex = 0;
         public static ArrayList HighSpeedADU = new ArrayList();
 
         private static System.Timers.Timer RxDataTimer =new System.Timers.Timer();
@@ -339,7 +340,9 @@ namespace SerialportSample
                     }
                     else
                     {                       
-                         TxBuffer = (byte[])LowSpeedADU[0];
+                         TxBuffer = (byte[])LowSpeedADU[LowSpeedADUIndex++];
+                        if (LowSpeedADUIndex >= LowSpeedADU.Count)
+                            LowSpeedADUIndex = 0;
 
                     }
 
