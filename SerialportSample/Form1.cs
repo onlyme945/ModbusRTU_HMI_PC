@@ -110,7 +110,7 @@ namespace SerialportSample
         {
             //复位接受和发送的字节数计数器并更新界面。
             send_count = received_count = 0;
-            labelGetCount.Text = "Get:0";
+            
            
         }
 
@@ -127,17 +127,57 @@ namespace SerialportSample
 
         private void button2_Click(object sender, EventArgs e)
         {
-            textBox1.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[0].ToString();
+            //textBox1.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[0].ToString();
 
-            textBox2.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
-            textBox3.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65534].ToString();
-            textBox4.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65535].ToString();
-            textBox7.Text = ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag).Count.ToString();
+            //textBox2.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
+            //textBox3.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65534].ToString();
+            //textBox4.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65535].ToString();
+            textBox9.Text = ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag).Count.ToString();
         }
 
         private void textBox7_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+           modbusView1.ReadAddress= Convert.ToUInt16(textBox1.Text);
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            modbusView2.ReadAddress = Convert.ToUInt16(textBox2.Text);
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            modbusView3.ReadAddress = Convert.ToUInt16(textBox3.Text);
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            modbusView4.ReadAddress = Convert.ToUInt16(textBox4.Text);
+        }
+
+        private void textBox5_TextChanged_1(object sender, EventArgs e)
+        {
+            modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox5.Text);
+        }
+
+        private void textBox6_TextChanged_1(object sender, EventArgs e)
+        {
+            modbusView2.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
+        }
+
+        private void textBox7_TextChanged_1(object sender, EventArgs e)
+        {
+            modbusView3.ReadDataLengthInWord = Convert.ToByte(textBox7.Text);
+        }
+
+        private void textBox8_TextChanged(object sender, EventArgs e)
+        {
+            modbusView4.ReadDataLengthInWord = Convert.ToByte(textBox8.Text);
         }
     }
 }

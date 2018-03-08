@@ -33,10 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.comboBaudrate = new System.Windows.Forms.ComboBox();
             this.buttonOpenClose = new System.Windows.Forms.Button();
-            this.labelGetCount = new System.Windows.Forms.Label();
             this.buttonReset = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txGet = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -44,18 +41,17 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
             this.modbusView1 = new SerialportSample.ModbusView();
             this.modbusView2 = new SerialportSample.ModbusView();
-            this.groupBox1.SuspendLayout();
+            this.modbusView3 = new SerialportSample.ModbusView();
+            this.modbusView4 = new SerialportSample.ModbusView();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.textBox9 = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,17 +116,6 @@
             this.buttonOpenClose.UseVisualStyleBackColor = true;
             this.buttonOpenClose.Click += new System.EventHandler(this.buttonOpenClose_Click);
             // 
-            // labelGetCount
-            // 
-            this.labelGetCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelGetCount.AutoSize = true;
-            this.labelGetCount.Font = new System.Drawing.Font("宋体", 9F);
-            this.labelGetCount.Location = new System.Drawing.Point(476, 38);
-            this.labelGetCount.Name = "labelGetCount";
-            this.labelGetCount.Size = new System.Drawing.Size(35, 12);
-            this.labelGetCount.TabIndex = 9;
-            this.labelGetCount.Text = "Get:0";
-            // 
             // buttonReset
             // 
             this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -144,32 +129,6 @@
             this.buttonReset.Text = "Reset";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.txGet);
-            this.groupBox1.Location = new System.Drawing.Point(15, 37);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(546, 303);
-            this.groupBox1.TabIndex = 6;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Data received ";
-            // 
-            // txGet
-            // 
-            this.txGet.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txGet.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txGet.Location = new System.Drawing.Point(7, 20);
-            this.txGet.Multiline = true;
-            this.txGet.Name = "txGet";
-            this.txGet.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txGet.Size = new System.Drawing.Size(533, 277);
-            this.txGet.TabIndex = 0;
             // 
             // statusStrip1
             // 
@@ -190,35 +149,39 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(115, 360);
+            this.textBox1.Location = new System.Drawing.Point(133, 58);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 21);
             this.textBox1.TabIndex = 18;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(234, 360);
+            this.textBox2.Location = new System.Drawing.Point(133, 101);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 21);
             this.textBox2.TabIndex = 19;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(353, 360);
+            this.textBox3.Location = new System.Drawing.Point(133, 144);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 21);
             this.textBox3.TabIndex = 20;
+            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(461, 360);
+            this.textBox4.Location = new System.Drawing.Point(133, 186);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(100, 21);
             this.textBox4.TabIndex = 21;
+            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(478, 404);
+            this.button2.Location = new System.Drawing.Point(434, 252);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 25;
@@ -226,88 +189,19 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(160, 345);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(11, 12);
-            this.label3.TabIndex = 26;
-            this.label3.Text = "0";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(278, 345);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(11, 12);
-            this.label4.TabIndex = 27;
-            this.label4.Text = "1";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(394, 345);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(35, 12);
-            this.label5.TabIndex = 28;
-            this.label5.Text = "65534";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(500, 343);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 12);
-            this.label6.TabIndex = 29;
-            this.label6.Text = "65535";
-            // 
-            // textBox7
-            // 
-            this.textBox7.Location = new System.Drawing.Point(353, 406);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(100, 21);
-            this.textBox7.TabIndex = 33;
-            this.textBox7.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(253, 393);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(53, 12);
-            this.label8.TabIndex = 32;
-            this.label8.Text = "长度取值";
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(137, 395);
+            this.label7.Location = new System.Drawing.Point(146, 210);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(53, 12);
+            this.label7.Size = new System.Drawing.Size(41, 12);
             this.label7.TabIndex = 30;
-            this.label7.Text = "地址取值";
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(234, 408);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 21);
-            this.textBox6.TabIndex = 31;
-            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(115, 410);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 21);
-            this.textBox5.TabIndex = 22;
-            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
+            this.label7.Text = "读地址";
             // 
             // modbusView1
             // 
             this.modbusView1.EnablePeriodRequest = false;
-            this.modbusView1.Location = new System.Drawing.Point(9, 360);
+            this.modbusView1.Location = new System.Drawing.Point(12, 58);
             this.modbusView1.MaxValue = 100D;
             this.modbusView1.MinValue = 1D;
             this.modbusView1.Name = "modbusView1";
@@ -327,7 +221,7 @@
             // modbusView2
             // 
             this.modbusView2.EnablePeriodRequest = false;
-            this.modbusView2.Location = new System.Drawing.Point(9, 408);
+            this.modbusView2.Location = new System.Drawing.Point(12, 101);
             this.modbusView2.MaxValue = 100D;
             this.modbusView2.MinValue = 1D;
             this.modbusView2.Name = "modbusView2";
@@ -344,30 +238,116 @@
             this.modbusView2.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
             this.modbusView2.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
             // 
+            // modbusView3
+            // 
+            this.modbusView3.EnablePeriodRequest = false;
+            this.modbusView3.Location = new System.Drawing.Point(12, 144);
+            this.modbusView3.MaxValue = 100D;
+            this.modbusView3.MinValue = 1D;
+            this.modbusView3.Name = "modbusView3";
+            this.modbusView3.ReadAddress = ((ushort)(0));
+            this.modbusView3.ReadDataLengthInWord = ((byte)(1));
+            this.modbusView3.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
+            this.modbusView3.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
+            this.modbusView3.RequestPeriod = 100D;
+            this.modbusView3.Size = new System.Drawing.Size(100, 21);
+            this.modbusView3.StationID = ((byte)(1));
+            this.modbusView3.TabIndex = 35;
+            this.modbusView3.WriteAddress = ((ushort)(0));
+            this.modbusView3.WriteDataLengthInWord = ((byte)(1));
+            this.modbusView3.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
+            this.modbusView3.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            // 
+            // modbusView4
+            // 
+            this.modbusView4.EnablePeriodRequest = false;
+            this.modbusView4.Location = new System.Drawing.Point(12, 186);
+            this.modbusView4.MaxValue = 100D;
+            this.modbusView4.MinValue = 1D;
+            this.modbusView4.Name = "modbusView4";
+            this.modbusView4.ReadAddress = ((ushort)(0));
+            this.modbusView4.ReadDataLengthInWord = ((byte)(1));
+            this.modbusView4.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
+            this.modbusView4.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
+            this.modbusView4.RequestPeriod = 100D;
+            this.modbusView4.Size = new System.Drawing.Size(100, 21);
+            this.modbusView4.StationID = ((byte)(1));
+            this.modbusView4.TabIndex = 36;
+            this.modbusView4.WriteAddress = ((ushort)(0));
+            this.modbusView4.WriteDataLengthInWord = ((byte)(1));
+            this.modbusView4.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
+            this.modbusView4.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(285, 210);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(53, 12);
+            this.label8.TabIndex = 32;
+            this.label8.Text = "长度取值";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(264, 58);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(100, 21);
+            this.textBox5.TabIndex = 37;
+            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged_1);
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(264, 101);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(100, 21);
+            this.textBox6.TabIndex = 38;
+            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged_1);
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(264, 144);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(100, 21);
+            this.textBox7.TabIndex = 39;
+            this.textBox7.TextChanged += new System.EventHandler(this.textBox7_TextChanged_1);
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(264, 186);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(100, 21);
+            this.textBox8.TabIndex = 40;
+            this.textBox8.TextChanged += new System.EventHandler(this.textBox8_TextChanged);
+            // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(423, 122);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.Size = new System.Drawing.Size(100, 21);
+            this.textBox9.TabIndex = 41;
+            // 
             // SerialportSampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 468);
-            this.Controls.Add(this.modbusView2);
+            this.Controls.Add(this.textBox9);
+            this.Controls.Add(this.textBox8);
             this.Controls.Add(this.textBox7);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.textBox6);
+            this.Controls.Add(this.textBox5);
+            this.Controls.Add(this.modbusView4);
+            this.Controls.Add(this.modbusView3);
+            this.Controls.Add(this.modbusView2);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.modbusView1);
-            this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.labelGetCount);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonOpenClose);
             this.Controls.Add(this.comboBaudrate);
@@ -377,8 +357,6 @@
             this.Name = "SerialportSampleForm";
             this.Text = "Serial tool Sample";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -394,9 +372,6 @@
         private System.Windows.Forms.ComboBox comboBaudrate;
         private System.Windows.Forms.Button buttonOpenClose;
         private System.Windows.Forms.Button buttonReset;
-        private System.Windows.Forms.Label labelGetCount;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox txGet;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.TextBox textBox1;
@@ -405,16 +380,16 @@
         private System.Windows.Forms.TextBox textBox4;
         private ModbusView modbusView1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox5;
         private ModbusView modbusView2;
+        private ModbusView modbusView3;
+        private ModbusView modbusView4;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.TextBox textBox9;
     }
 }
 
