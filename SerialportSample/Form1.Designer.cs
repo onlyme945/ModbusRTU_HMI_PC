@@ -42,16 +42,17 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
-            this.modbusView1 = new SerialportSample.ModbusView();
-            this.modbusView2 = new SerialportSample.ModbusView();
-            this.modbusView3 = new SerialportSample.ModbusView();
-            this.modbusView4 = new SerialportSample.ModbusView();
             this.label8 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
+            this.modbusView4 = new SerialportSample.ModbusView();
+            this.modbusView3 = new SerialportSample.ModbusView();
+            this.modbusView2 = new SerialportSample.ModbusView();
+            this.modbusView1 = new SerialportSample.ModbusView();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -198,86 +199,6 @@
             this.label7.TabIndex = 30;
             this.label7.Text = "读地址";
             // 
-            // modbusView1
-            // 
-            this.modbusView1.EnablePeriodRequest = false;
-            this.modbusView1.Location = new System.Drawing.Point(12, 58);
-            this.modbusView1.MaxValue = 100D;
-            this.modbusView1.MinValue = 1D;
-            this.modbusView1.Name = "modbusView1";
-            this.modbusView1.ReadAddress = ((ushort)(0));
-            this.modbusView1.ReadDataLengthInWord = ((byte)(1));
-            this.modbusView1.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
-            this.modbusView1.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
-            this.modbusView1.RequestPeriod = 100D;
-            this.modbusView1.Size = new System.Drawing.Size(100, 21);
-            this.modbusView1.StationID = ((byte)(1));
-            this.modbusView1.TabIndex = 23;
-            this.modbusView1.WriteAddress = ((ushort)(0));
-            this.modbusView1.WriteDataLengthInWord = ((byte)(1));
-            this.modbusView1.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
-            this.modbusView1.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // modbusView2
-            // 
-            this.modbusView2.EnablePeriodRequest = false;
-            this.modbusView2.Location = new System.Drawing.Point(12, 101);
-            this.modbusView2.MaxValue = 100D;
-            this.modbusView2.MinValue = 1D;
-            this.modbusView2.Name = "modbusView2";
-            this.modbusView2.ReadAddress = ((ushort)(10));
-            this.modbusView2.ReadDataLengthInWord = ((byte)(1));
-            this.modbusView2.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
-            this.modbusView2.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
-            this.modbusView2.RequestPeriod = 100D;
-            this.modbusView2.Size = new System.Drawing.Size(100, 21);
-            this.modbusView2.StationID = ((byte)(1));
-            this.modbusView2.TabIndex = 34;
-            this.modbusView2.WriteAddress = ((ushort)(0));
-            this.modbusView2.WriteDataLengthInWord = ((byte)(1));
-            this.modbusView2.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
-            this.modbusView2.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // modbusView3
-            // 
-            this.modbusView3.EnablePeriodRequest = false;
-            this.modbusView3.Location = new System.Drawing.Point(12, 144);
-            this.modbusView3.MaxValue = 100D;
-            this.modbusView3.MinValue = 1D;
-            this.modbusView3.Name = "modbusView3";
-            this.modbusView3.ReadAddress = ((ushort)(0));
-            this.modbusView3.ReadDataLengthInWord = ((byte)(1));
-            this.modbusView3.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
-            this.modbusView3.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
-            this.modbusView3.RequestPeriod = 100D;
-            this.modbusView3.Size = new System.Drawing.Size(100, 21);
-            this.modbusView3.StationID = ((byte)(1));
-            this.modbusView3.TabIndex = 35;
-            this.modbusView3.WriteAddress = ((ushort)(0));
-            this.modbusView3.WriteDataLengthInWord = ((byte)(1));
-            this.modbusView3.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
-            this.modbusView3.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // modbusView4
-            // 
-            this.modbusView4.EnablePeriodRequest = false;
-            this.modbusView4.Location = new System.Drawing.Point(12, 186);
-            this.modbusView4.MaxValue = 100D;
-            this.modbusView4.MinValue = 1D;
-            this.modbusView4.Name = "modbusView4";
-            this.modbusView4.ReadAddress = ((ushort)(0));
-            this.modbusView4.ReadDataLengthInWord = ((byte)(1));
-            this.modbusView4.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
-            this.modbusView4.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
-            this.modbusView4.RequestPeriod = 100D;
-            this.modbusView4.Size = new System.Drawing.Size(100, 21);
-            this.modbusView4.StationID = ((byte)(1));
-            this.modbusView4.TabIndex = 36;
-            this.modbusView4.WriteAddress = ((ushort)(0));
-            this.modbusView4.WriteDataLengthInWord = ((byte)(1));
-            this.modbusView4.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
-            this.modbusView4.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -326,11 +247,100 @@
             this.textBox9.Size = new System.Drawing.Size(100, 21);
             this.textBox9.TabIndex = 41;
             // 
+            // modbusView4
+            // 
+            this.modbusView4.EnablePeriodRequest = false;
+            this.modbusView4.Location = new System.Drawing.Point(12, 186);
+            this.modbusView4.MaxValue = 100D;
+            this.modbusView4.MinValue = 1D;
+            this.modbusView4.Name = "modbusView4";
+            this.modbusView4.ReadAddress = ((ushort)(0));
+            this.modbusView4.ReadDataLengthInWord = ((byte)(1));
+            this.modbusView4.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
+            this.modbusView4.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
+            this.modbusView4.RequestPeriod = 100D;
+            this.modbusView4.Size = new System.Drawing.Size(100, 21);
+            this.modbusView4.StationID = ((byte)(1));
+            this.modbusView4.TabIndex = 36;
+            this.modbusView4.WriteAddress = ((ushort)(0));
+            this.modbusView4.WriteDataLengthInWord = ((byte)(1));
+            this.modbusView4.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
+            this.modbusView4.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            // 
+            // modbusView3
+            // 
+            this.modbusView3.EnablePeriodRequest = false;
+            this.modbusView3.Location = new System.Drawing.Point(12, 144);
+            this.modbusView3.MaxValue = 100D;
+            this.modbusView3.MinValue = 1D;
+            this.modbusView3.Name = "modbusView3";
+            this.modbusView3.ReadAddress = ((ushort)(0));
+            this.modbusView3.ReadDataLengthInWord = ((byte)(1));
+            this.modbusView3.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
+            this.modbusView3.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
+            this.modbusView3.RequestPeriod = 100D;
+            this.modbusView3.Size = new System.Drawing.Size(100, 21);
+            this.modbusView3.StationID = ((byte)(1));
+            this.modbusView3.TabIndex = 35;
+            this.modbusView3.WriteAddress = ((ushort)(0));
+            this.modbusView3.WriteDataLengthInWord = ((byte)(1));
+            this.modbusView3.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
+            this.modbusView3.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            // 
+            // modbusView2
+            // 
+            this.modbusView2.EnablePeriodRequest = false;
+            this.modbusView2.Location = new System.Drawing.Point(12, 101);
+            this.modbusView2.MaxValue = 100D;
+            this.modbusView2.MinValue = 1D;
+            this.modbusView2.Name = "modbusView2";
+            this.modbusView2.ReadAddress = ((ushort)(10));
+            this.modbusView2.ReadDataLengthInWord = ((byte)(1));
+            this.modbusView2.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
+            this.modbusView2.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
+            this.modbusView2.RequestPeriod = 100D;
+            this.modbusView2.Size = new System.Drawing.Size(100, 21);
+            this.modbusView2.StationID = ((byte)(1));
+            this.modbusView2.TabIndex = 34;
+            this.modbusView2.WriteAddress = ((ushort)(0));
+            this.modbusView2.WriteDataLengthInWord = ((byte)(1));
+            this.modbusView2.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
+            this.modbusView2.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            // 
+            // modbusView1
+            // 
+            this.modbusView1.EnablePeriodRequest = false;
+            this.modbusView1.Location = new System.Drawing.Point(12, 58);
+            this.modbusView1.MaxValue = 100D;
+            this.modbusView1.MinValue = 1D;
+            this.modbusView1.Name = "modbusView1";
+            this.modbusView1.ReadAddress = ((ushort)(0));
+            this.modbusView1.ReadDataLengthInWord = ((byte)(1));
+            this.modbusView1.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
+            this.modbusView1.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
+            this.modbusView1.RequestPeriod = 100D;
+            this.modbusView1.Size = new System.Drawing.Size(100, 21);
+            this.modbusView1.StationID = ((byte)(1));
+            this.modbusView1.TabIndex = 23;
+            this.modbusView1.WriteAddress = ((ushort)(0));
+            this.modbusView1.WriteDataLengthInWord = ((byte)(1));
+            this.modbusView1.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
+            this.modbusView1.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(16, 238);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(348, 164);
+            this.richTextBox1.TabIndex = 44;
+            this.richTextBox1.Text = "";
+            // 
             // SerialportSampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 468);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox9);
             this.Controls.Add(this.textBox8);
             this.Controls.Add(this.textBox7);
@@ -390,6 +400,7 @@
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 

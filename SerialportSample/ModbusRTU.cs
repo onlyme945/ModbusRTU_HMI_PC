@@ -37,13 +37,8 @@ namespace SerialportSample
 
         #endregion
 
-        public static Queue<byte[]> HighPriorityTxBufferQueue = new Queue<byte[]>(502); //注意限制FIFO的数量，以免占用太多的内存
-        public static Queue<byte[]> LowPriorityTxBufferQueue = new Queue<byte[]>(502);//注意限制FIFO的数量，以免占用太多的内存
-        public static Queue<int> HPControlsIndexQueue = new Queue<int>(502);//存储使用Modbus的控件的索引
-        public static Queue<int> LPControlsIndexQueue = new Queue<int>(502);//存储使用Modbus的控件的索引
         private static int TempControlIndex;
-        public static bool HighPriorityFrameRdy = false;
-        public static bool LowPriorityFrameRdy = false;
+
 
         public static ModbusDataRepository MasterDataRepos = new ModbusDataRepository(8192,8192,65536,65536);
         public static byte[][] DataStorage;//以各控件的索引为序存储接收到的数据
@@ -63,16 +58,24 @@ namespace SerialportSample
         private Boolean IsACKTimeout = false;
         private Boolean IsBroadcastTimeout = false;
         private Boolean IsRxDone = false;
+
+
+        //这里开始动刀子   2018.03.08————HS
         public byte StationID = 1;
-        public byte FunctionCode = 0;
-        public UInt16 ErrorCode = 0;
-        public UInt16 CRCCode = 0;
+        public byte FunctionCode = 0;   
+        public UInt16 qErrorCode = 0;
+        public UInt16 wCRCCode = 0;
         public UInt16 Address = 0;
+
+
         private static UInt16 NumOrData = 0;//存放读取（写入）的寄存器数量或者写入单个线圈（寄存器）的值
         private static UInt16 DataByteNumber = 0;
         public UInt16 DataWordNumber = 0;
         private static Word2Byte TempWord;
         public ByteBits[] ByteBitsExchange=new ByteBits[2];
+
+        public static ArrayList LowSpeedADU = new ArrayList();
+        public static ArrayList HighSpeedADU = new ArrayList();
 
         private static System.Timers.Timer RxDataTimer =new System.Timers.Timer();
         private static System.Timers.Timer ACKTimer = new System.Timers.Timer();
@@ -223,11 +226,7 @@ namespace SerialportSample
         #endregion
 
         #region//////////////////////ModbusRTU类方法//////////////////////////
-        public static int GetMyModbusIndex() //让外部使用本ModbusRTU类的控件都获得一个唯一的编号
-        {
-            _ControlIndex += 1;
-            return _ControlIndex;
-        }
+       
 
         public static void SetDataStorage()
         {
@@ -329,42 +328,19 @@ namespace SerialportSample
             Console.Write(TxRxStatus+"\n");
             if (TxRxStatus == TransmitingStatus.Idle)
             {
-                if ((HighPriorityFrameRdy == true) || (LowPriorityFrameRdy == true))
+                if ((HighSpeedADU.Count != 0) || (LowSpeedADU.Count != 0))//高速、低速ADU数组非空则开始发送
                 {
-                    Console.Write(LowPriorityTxBufferQueue.Count+" "+ LPControlsIndexQueue.Count+"\n");
+                    Console.Write(HighSpeedADU.Count+" "+ LowSpeedADU.Count+"\n");
                    
-                    if (HighPriorityFrameRdy == true)
-                    {
-                        if (HighPriorityTxBufferQueue.Count <= 0)//如果FIFO空，则复位Ready标志位，禁止周期行为
-                        {
-                            HighPriorityFrameRdy = false;
-                            return true;
-                        }
-                        lock (HighPriorityTxBufferQueue)//锁定，防止线程间串扰（非常重要）
-                        {
-                            lock (HPControlsIndexQueue)
-                            {
-                                TxBuffer = HighPriorityTxBufferQueue.Dequeue();//从FIFO中取用待发送的帧                         
-                                TempControlIndex = HPControlsIndexQueue.Dequeue();//取用待发送帧对应的控件的索引
-                            }
-                        }
+                    if (HighSpeedADU.Count != 0)
+                    {                       
+                         TxBuffer =(byte[]) HighSpeedADU[0];//从FIFO中取用待发送的帧                         
+                         HighSpeedADU.RemoveAt(0);//控制指令等高速指令，发送完 且 成功 之后即丢弃   这里需要改进，增加发送出错，多次尝试机制————2018.03.08 HS
                     }
                     else
-                    {
-                        if (LowPriorityTxBufferQueue.Count <= 0)
-                        {
-                            LowPriorityFrameRdy = false;
-                            return true;
-                        }
-                        lock (LowPriorityTxBufferQueue)
-                        {
-                            lock (LPControlsIndexQueue)
-                            {
-                                TxBuffer = LowPriorityTxBufferQueue.Dequeue();
-                                TempControlIndex = LPControlsIndexQueue.Dequeue();
-                            } 
-                            
-                        }
+                    {                       
+                         TxBuffer = (byte[])LowSpeedADU[0];
+
                     }
 
                     //Console.Write(TxBuffer.Length);
@@ -415,87 +391,84 @@ namespace SerialportSample
         #endregion
 
         #region/////////////////////////ModbusRTU(主)读写帧组装方法/////////////////////////
-        public static void AssembleRequestADU(int ControlIndex,Boolean IsHighPriority, byte ID,byte FuncCode,UInt16 Addr,UInt16 NumCmdData,byte[] DataToTx)
+        public static void AssembleRequestADU(Boolean IsHighPriority, byte StationID,byte FuncCode,ArrayList DataTransmitBuses,byte[] DataToTx)
         {
             byte[] TxFrame;
-            //FunctionCode = FuncCode;
-            NumOrData = NumCmdData;
+
+            UInt16 Addr;
+            UInt16 NumCmdData;
             UInt16 DataByteNumber = 0;
             UInt16 Pointer = 0;
+            //UInt16 tempCount;
 
-            switch (FuncCode)
+            if (DataTransmitBuses.Count > 0)
             {
-                case (byte)ModbusFuncCode.ReadCoils:
-                case (byte)ModbusFuncCode.ReadDistributeBits:
-                case (byte)ModbusFuncCode.ReadStorageRegs:
-                case (byte)ModbusFuncCode.ReadInputRegs:   
-                case (byte)ModbusFuncCode.WriteSingleCoil:         
-                case (byte)ModbusFuncCode.WriteSingleReg:
-                    TxLength = 8;
-                    break;
-
-                case (byte)ModbusFuncCode.WriteCoils:
-                    DataByteNumber= (UInt16)( NumCmdData / 8 + (NumCmdData % 8 == 0 ? 0 : 1));
-                    TxLength =(UInt16)(9 + DataByteNumber);
-                    break;
-
-                case (byte)ModbusFuncCode.WriteRegs:
-                    DataByteNumber = (UInt16)( 2 * NumCmdData);
-                    TxLength = (UInt16)( 9 + DataByteNumber);
-                    break;
-
-                default:
-                    break;
-            }
-            TxFrame = new byte[TxLength];
-            TxFrame[0] = ID;
-            TxFrame[1] = FuncCode;
-            TempWord.Word = Addr;
-            TxFrame[2] = TempWord.HByte;
-            TxFrame[3] = TempWord.LByte;
-            TempWord.Word = NumCmdData;
-            TxFrame[4] = TempWord.HByte;
-            TxFrame[5] = TempWord.LByte;
-            Pointer = 6;
-            if (DataByteNumber != 0)
-            {
-                TxFrame[Pointer++] = (byte)DataByteNumber;//填入字节数           
-                for (UInt16 i = 0; i < DataByteNumber; i++)
-                    TxFrame[Pointer++] = DataToTx[i];//bytes
-            }
-            TempWord.Word = CRCCaculation.CRC16(TxFrame, Pointer);
-            TxFrame[Pointer++] = TempWord.HByte;//crc code
-            TxFrame[Pointer++] = TempWord.LByte;
-            Pointer = 0;//为接收逻辑的使用复位
-
-            if (IsHighPriority == true)
-            {
-                if (HighPriorityTxBufferQueue.Count >= _DepthOfFIFO) return;//禁止FIFO无节制扩大
-                lock (HighPriorityTxBufferQueue)
+                foreach (UInt16[] TansmitBus in DataTransmitBuses)
                 {
-                    lock (HPControlsIndexQueue)
+                    Addr = TansmitBus[0];
+                    NumCmdData = TansmitBus[1];
+
+                    switch (FuncCode)
                     {
-                        HighPriorityTxBufferQueue.Enqueue(TxFrame);//高优先级的帧进高优先级FIFO                 
-                        HPControlsIndexQueue.Enqueue(ControlIndex);//高优先级帧所对应的控件索引进高优先级FIFO
+                        case (byte)ModbusFuncCode.ReadCoils:
+                        case (byte)ModbusFuncCode.ReadDistributeBits:
+                        case (byte)ModbusFuncCode.ReadStorageRegs:
+                        case (byte)ModbusFuncCode.ReadInputRegs:
+                        case (byte)ModbusFuncCode.WriteSingleCoil:
+                        case (byte)ModbusFuncCode.WriteSingleReg:
+                            TxLength = 8;
+                            break;
+
+                        case (byte)ModbusFuncCode.WriteCoils:
+                            DataByteNumber = (UInt16)(NumCmdData / 8 + (NumCmdData % 8 == 0 ? 0 : 1));
+                            TxLength = (UInt16)(9 + DataByteNumber);
+                            break;
+
+                        case (byte)ModbusFuncCode.WriteRegs:
+                            DataByteNumber = (UInt16)(2 * NumCmdData);
+                            TxLength = (UInt16)(9 + DataByteNumber);
+                            break;
+
+                        default:
+                            break;
                     }
+                    TxFrame = new byte[TxLength];
+                    TxFrame[0] = StationID;
+                    TxFrame[1] = FuncCode;
+                    TempWord.Word = Addr;
+                    TxFrame[2] = TempWord.HByte;
+                    TxFrame[3] = TempWord.LByte;
+                    TempWord.Word = NumCmdData;
+                    TxFrame[4] = TempWord.HByte;
+                    TxFrame[5] = TempWord.LByte;
+                    Pointer = 6;
+                    if (DataByteNumber != 0)
+                    {
+                        TxFrame[Pointer++] = (byte)DataByteNumber;//填入字节数           
+                        for (UInt16 i = 0; i < DataByteNumber; i++)
+                            TxFrame[Pointer++] = DataToTx[i];//bytes
+                    }
+                    TempWord.Word = CRCCaculation.CRC16(TxFrame, Pointer);
+                    TxFrame[Pointer++] = TempWord.HByte;//crc code
+                    TxFrame[Pointer] = TempWord.LByte;
+                   
+
+                    if (IsHighPriority == true)
+                    {
+
+                    }
+                    else
+                    {
+                        LowSpeedADU.Add((byte[]) TxFrame.Clone());
+                    }
+                //Pointer = 0;//为接收逻辑的使用复位   好像不需要用到啊，先注释掉 ————  2018.03.08  HS
+
                 }
-                if (HighPriorityTxBufferQueue.Count != 0)//检查高优先级帧FIFO是否有数据，如果有则Ready标志位置位
-                    HighPriorityFrameRdy = true;
+
+
             }
-            else
-            {
-                if (LowPriorityTxBufferQueue.Count >= _DepthOfFIFO) return;//禁止FIFO无节制扩大
-                lock (LowPriorityTxBufferQueue)
-                {
-                    lock (LPControlsIndexQueue)
-                    { 
-                        LowPriorityTxBufferQueue.Enqueue(TxFrame);//低优先级的帧进低优先级FIFO
-                        LPControlsIndexQueue.Enqueue(ControlIndex);//低优先级帧所对应的控件索引进低优先级FIFO
-                     }
-                }
-                if (LowPriorityTxBufferQueue.Count != 0)//检查低优先级帧FIFO是否有数据，如果有则Ready标志位置位
-                    LowPriorityFrameRdy = true;
-            }         
+
+           
 
         }
 
@@ -676,10 +649,11 @@ namespace SerialportSample
         }
 
 
-        public static ArrayList LoadUnmannedBuses(BitInByte DataStorageRegFlag)
+        public static ArrayList LoadUnmannedBuses(BitInByte DataStorageRegFlag,char ReadOrWrite)//无人巴士 功能      可以把允许的无效字（位）间隔作为形参传进来*****待添加
         {
             ArrayList TransmitBuses = new ArrayList();
             UInt32 tempAddress = 0;
+            byte FrameDataLimitInWord = 150;
             UInt16 tempFirstAddress = 0;
             UInt16 tempLastAddress = 0;          
             byte tempCount = 0;
@@ -688,103 +662,117 @@ namespace SerialportSample
 
             for (tempAddress = 0; tempAddress < 65536; tempAddress++)
             {
-                if (IsFirstSeatFree == true)//Bus第一个位置是空的
+                if (('R' == ReadOrWrite)||('r' == ReadOrWrite))
                 {
-                    if (DataStorageRegFlag[tempAddress] == true)
+                    if (IsFirstSeatFree == true)//Bus第一个位置是空的
                     {
-                        TransmitBus[0] =(UInt16) tempAddress;//记录地址
-                        tempFirstAddress = TransmitBus[0];//用于计算传输数据长度
-                        tempLastAddress  = TransmitBus[0];//用于计算传输数据长度
-                        if (tempAddress == 65535) //如果是最后一个地址，则装载bus后退出循环
+                        if (DataStorageRegFlag[tempAddress] == true)
                         {
-                            TransmitBus[1] = 1;//数据长度只为1
-                            TransmitBuses.Add(TransmitBus);
-                            break;
-                        }
-                        IsFirstSeatFree = false;
-                    }
-
-                }
-                else
-                {
-              
-                    if (DataStorageRegFlag[tempAddress] == true)
-                    {
-                        if (tempAddress - tempFirstAddress + 1 < 150)
-                        {
-                            if (tempAddress < 65535)
+                            TransmitBus[0] = (UInt16)tempAddress;//记录地址
+                            tempFirstAddress = TransmitBus[0];//用于计算传输数据长度
+                            tempLastAddress = TransmitBus[0];//用于计算传输数据长度
+                            if (tempAddress == 65535) //如果是最后一个地址，则装载bus后退出循环
                             {
-                                if (tempCount < 9)
+                                TransmitBus[1] = 1;//数据长度只为1
+                                TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });//见下文注释  ArrayList 像是动态的指针数组
+                                break;
+                            }
+                            IsFirstSeatFree = false;
+                        }
+
+                    }
+                    else
+                    {
+
+                        if (DataStorageRegFlag[tempAddress] == true)
+                        {
+                            if (tempAddress - tempFirstAddress + 1 < FrameDataLimitInWord)
+                            {
+                                if (tempAddress < 65535)
+                                {
+                                    if (tempCount < 9)//=8+1  8见下文
+                                    {
+                                        tempCount = 0;
+                                        tempLastAddress = (UInt16)tempAddress;
+                                    }
+                                }
+                                else//tempAddress==65535  扫描到最后一个地址
                                 {
                                     tempCount = 0;
                                     tempLastAddress = (UInt16)tempAddress;
+                                    TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                                    TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });// 必须用这种新声明数组的方法，用后面这种方法TransmitBuses.Add(TransmitBus)，最终会让ArrayList中的所有数组元素都一样
+
+                                    IsFirstSeatFree = true;
+                                    break;
                                 }
                             }
-                            else//tempAddress==65535  扫描到最后一个地址
+                            else  //tempAddress - tempFirstAddress + 1==150    传输数据的字长如果到了150则自动停止继续装车
                             {
                                 tempCount = 0;
                                 tempLastAddress = (UInt16)tempAddress;
                                 TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                                TransmitBuses.Add(TransmitBus);
+                                TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });
                                 IsFirstSeatFree = true;
-                                break;
+                                if (tempAddress < 65535)
+                                    continue;
+                                else
+                                    break;
                             }
-                        }
-                        else  //tempAddress - tempFirstAddress + 1==150    传输数据的字长如果到了150则自动停止继续装车
-                        {
-                            tempCount = 0;
-                            tempLastAddress = (UInt16)tempAddress;
-                            TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                            TransmitBuses.Add(TransmitBus);
-                            IsFirstSeatFree = true;
-                            if (tempAddress < 65535)
-                                continue;
-                            else
-                                break;
-                        }
-                        
-                    }
-                    else //DataStorageRegFlag[tempAddress] == false
-                    {
 
-                        if (tempAddress - tempFirstAddress + 1 < 150)
+                        }
+                        else //DataStorageRegFlag[tempAddress] == false
                         {
-                            if (tempAddress < 65535)
+
+                            if (tempAddress - tempFirstAddress + 1 < FrameDataLimitInWord)
                             {
-                                if (tempCount == 8)
+                                if (tempAddress < 65535)
+                                {
+                                    if (tempCount == 8)//后面将这个8用变量代替，让它可被调整，来控制bus的大小
+                                    {
+                                        tempCount = 0;
+                                        TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                                        TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });//
+                                        IsFirstSeatFree = true;
+                                    }
+                                    else
+                                        tempCount++;
+                                }
+                                else//tempAddress == 65535
                                 {
                                     tempCount = 0;
                                     TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                                    TransmitBuses.Add(TransmitBus);
+                                    TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });//
                                     IsFirstSeatFree = true;
+                                    break;
                                 }
-                                else
-                                tempCount++;
                             }
-                            else//tempAddress == 65535
+                            else//tempAddress - tempFirstAddress + 1 == 150
                             {
                                 tempCount = 0;
                                 TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                                TransmitBuses.Add(TransmitBus);
+                                TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });//
                                 IsFirstSeatFree = true;
-                                break;
+                                if (tempAddress < 65535)
+                                    continue;
+                                else
+                                    break;
                             }
                         }
-                        else//tempAddress - tempFirstAddress + 1 == 150
-                        {
-                            tempCount = 0;
-                            TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                            TransmitBuses.Add(TransmitBus);
-                            IsFirstSeatFree = true;
-                            if (tempAddress < 65535)
-                                continue;
-                            else
-                                break;
-                        }
                     }
+
                 }
-            }                    
-                return TransmitBuses;
+
+                if (('W' == ReadOrWrite)||('w' == ReadOrWrite))
+                {
+
+
+                }
+
+                
+            }             
+                      
+            return TransmitBuses;
         }
 
     }

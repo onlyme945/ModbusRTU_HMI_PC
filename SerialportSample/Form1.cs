@@ -132,7 +132,18 @@ namespace SerialportSample
             //textBox2.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
             //textBox3.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65534].ToString();
             //textBox4.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65535].ToString();
-            textBox9.Text = ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag).Count.ToString();
+            ArrayList temparraylist = new ArrayList();
+            UInt16[] temparray1 = new UInt16[2];
+            UInt16[] temparray2 = new UInt16[2];
+            UInt16 tempcount = 0;
+            temparraylist = ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag,'r');
+            textBox9.Text = temparraylist.Count.ToString();
+
+            richTextBox1.Text = "";          
+            foreach (UInt16[] tempa in temparraylist)
+            {             
+                richTextBox1.Text = richTextBox1.Text+ tempa[0].ToString() + " " + tempa[1].ToString() + "\n";
+            }
         }
 
         private void textBox7_TextChanged(object sender, EventArgs e)

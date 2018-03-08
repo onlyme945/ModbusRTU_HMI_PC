@@ -22,7 +22,6 @@ namespace SerialportSample
         private System.Timers.Timer PeriodicRequestTimer =new System.Timers.Timer();
 
         #region"/////////////////////自定义的属性///////////////////"
-        private int _MyModbusIndex=-1;
         private byte _StationID=1;      
         private UInt16 _WriteAddress=0;      
         private UInt16 _ReadAddress=0;
@@ -249,14 +248,6 @@ namespace SerialportSample
 
         }
 
-        [Category("ModbusRTU"), Description("本控件的Modbus索引值")]
-        public int MyModbusIndex
-        {
-            get
-            {
-                return _MyModbusIndex;
-            }
-        }
         [Category("ModbusRTU"), Description("输入数据上限值（MaxValue）")]
         public double MaxValue
         {
