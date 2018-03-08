@@ -43,17 +43,18 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox6 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
             this.modbusView1 = new SerialportSample.ModbusView();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.modbusView2 = new SerialportSample.ModbusView();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -215,14 +216,6 @@
             this.textBox4.Size = new System.Drawing.Size(100, 21);
             this.textBox4.TabIndex = 21;
             // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(115, 410);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 21);
-            this.textBox5.TabIndex = 22;
-            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
-            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(478, 404);
@@ -269,6 +262,23 @@
             this.label6.TabIndex = 29;
             this.label6.Text = "65535";
             // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(353, 406);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(100, 21);
+            this.textBox7.TabIndex = 33;
+            this.textBox7.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(253, 393);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(53, 12);
+            this.label8.TabIndex = 32;
+            this.label8.Text = "长度取值";
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -286,19 +296,18 @@
             this.textBox6.TabIndex = 31;
             this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
-            // label8
+            // textBox5
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(253, 393);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(53, 12);
-            this.label8.TabIndex = 32;
-            this.label8.Text = "长度取值";
+            this.textBox5.Location = new System.Drawing.Point(115, 410);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(100, 21);
+            this.textBox5.TabIndex = 22;
+            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             // 
             // modbusView1
             // 
             this.modbusView1.EnablePeriodRequest = false;
-            this.modbusView1.Location = new System.Drawing.Point(12, 383);
+            this.modbusView1.Location = new System.Drawing.Point(9, 360);
             this.modbusView1.MaxValue = 100D;
             this.modbusView1.MinValue = 1D;
             this.modbusView1.Name = "modbusView1";
@@ -315,18 +324,32 @@
             this.modbusView1.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
             this.modbusView1.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
             // 
-            // textBox7
+            // modbusView2
             // 
-            this.textBox7.Location = new System.Drawing.Point(353, 406);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(100, 21);
-            this.textBox7.TabIndex = 33;
+            this.modbusView2.EnablePeriodRequest = false;
+            this.modbusView2.Location = new System.Drawing.Point(9, 408);
+            this.modbusView2.MaxValue = 100D;
+            this.modbusView2.MinValue = 1D;
+            this.modbusView2.Name = "modbusView2";
+            this.modbusView2.ReadAddress = ((ushort)(10));
+            this.modbusView2.ReadDataLengthInWord = ((byte)(1));
+            this.modbusView2.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
+            this.modbusView2.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
+            this.modbusView2.RequestPeriod = 100D;
+            this.modbusView2.Size = new System.Drawing.Size(100, 21);
+            this.modbusView2.StationID = ((byte)(1));
+            this.modbusView2.TabIndex = 34;
+            this.modbusView2.WriteAddress = ((ushort)(0));
+            this.modbusView2.WriteDataLengthInWord = ((byte)(1));
+            this.modbusView2.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
+            this.modbusView2.WriteFuncCode = SerialportSample.ModbusView.WriteFunctionCodeEnum.WriteCoils;
             // 
             // SerialportSampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 468);
+            this.Controls.Add(this.modbusView2);
             this.Controls.Add(this.textBox7);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.textBox6);
@@ -380,17 +403,18 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
         private ModbusView modbusView1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox textBox5;
+        private ModbusView modbusView2;
     }
 }
 

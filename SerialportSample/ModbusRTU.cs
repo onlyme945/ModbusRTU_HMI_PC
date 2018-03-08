@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -672,6 +673,118 @@ namespace SerialportSample
                 StorageRegRxDoneFlag = new BitInByte("Bit", 65536);
             }
           
+        }
+
+
+        public static ArrayList LoadUnmannedBuses(BitInByte DataStorageRegFlag)
+        {
+            ArrayList TransmitBuses = new ArrayList();
+            UInt32 tempAddress = 0;
+            UInt16 tempFirstAddress = 0;
+            UInt16 tempLastAddress = 0;          
+            byte tempCount = 0;
+            UInt16[] TransmitBus = new UInt16[2];//第0个数存地址；第1个数存待传输的数据长度
+            bool IsFirstSeatFree = true;
+
+            for (tempAddress = 0; tempAddress < 65536; tempAddress++)
+            {
+                if (IsFirstSeatFree == true)//Bus第一个位置是空的
+                {
+                    if (DataStorageRegFlag[tempAddress] == true)
+                    {
+                        TransmitBus[0] =(UInt16) tempAddress;//记录地址
+                        tempFirstAddress = TransmitBus[0];//用于计算传输数据长度
+                        tempLastAddress  = TransmitBus[0];//用于计算传输数据长度
+                        if (tempAddress == 65535) //如果是最后一个地址，则装载bus后退出循环
+                        {
+                            TransmitBus[1] = 1;//数据长度只为1
+                            TransmitBuses.Add(TransmitBus);
+                            break;
+                        }
+                        IsFirstSeatFree = false;
+                    }
+
+                }
+                else
+                {
+              
+                    if (DataStorageRegFlag[tempAddress] == true)
+                    {
+                        if (tempAddress - tempFirstAddress + 1 < 150)
+                        {
+                            if (tempAddress < 65535)
+                            {
+                                if (tempCount < 9)
+                                {
+                                    tempCount = 0;
+                                    tempLastAddress = (UInt16)tempAddress;
+                                }
+                            }
+                            else//tempAddress==65535  扫描到最后一个地址
+                            {
+                                tempCount = 0;
+                                tempLastAddress = (UInt16)tempAddress;
+                                TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                                TransmitBuses.Add(TransmitBus);
+                                IsFirstSeatFree = true;
+                                break;
+                            }
+                        }
+                        else  //tempAddress - tempFirstAddress + 1==150    传输数据的字长如果到了150则自动停止继续装车
+                        {
+                            tempCount = 0;
+                            tempLastAddress = (UInt16)tempAddress;
+                            TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                            TransmitBuses.Add(TransmitBus);
+                            IsFirstSeatFree = true;
+                            if (tempAddress < 65535)
+                                continue;
+                            else
+                                break;
+                        }
+                        
+                    }
+                    else //DataStorageRegFlag[tempAddress] == false
+                    {
+
+                        if (tempAddress - tempFirstAddress + 1 < 150)
+                        {
+                            if (tempAddress < 65535)
+                            {
+                                if (tempCount == 8)
+                                {
+                                    tempCount = 0;
+                                    TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                                    TransmitBuses.Add(TransmitBus);
+                                    IsFirstSeatFree = true;
+                                }
+                                else
+                                tempCount++;
+                            }
+                            else//tempAddress == 65535
+                            {
+                                tempCount = 0;
+                                TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                                TransmitBuses.Add(TransmitBus);
+                                IsFirstSeatFree = true;
+                                break;
+                            }
+                        }
+                        else//tempAddress - tempFirstAddress + 1 == 150
+                        {
+                            tempCount = 0;
+                            TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                            TransmitBuses.Add(TransmitBus);
+                            IsFirstSeatFree = true;
+                            if (tempAddress < 65535)
+                                continue;
+                            else
+                                break;
+                        }
+                    }
+                }
+            }                    
+                return TransmitBuses;
         }
 
     }

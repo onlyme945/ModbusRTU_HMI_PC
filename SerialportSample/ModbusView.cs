@@ -68,7 +68,7 @@ namespace SerialportSample
                         break;
                     case ReadDataTypeEnum.ManualSet:  //直接取用  ReadDataLengthInWord 中设置的值，无需修改    
                         if (value < 1) value = 1;     //手动设置时数据长度不能低于1word
-                        if (value > 100) value = 100; //不能大于100word
+                        if (value > 150) value = 150; //不能大于150word
                         _ReadDataLengthInWord = value;
                         break;
                     default:

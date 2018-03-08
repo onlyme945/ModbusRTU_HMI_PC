@@ -122,6 +122,7 @@ namespace SerialportSample
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
             modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
+            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -131,14 +132,12 @@ namespace SerialportSample
             textBox2.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
             textBox3.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65534].ToString();
             textBox4.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65535].ToString();
-
-            testarrayList.Add(testbytedata);           
-            testarrayList.Add(new byte[] { 1,2, 3 });
-            byte[] testarray = testarrayList[0] as byte[];
-            textBox7.Text = testarray[1].ToString();
-
+            textBox7.Text = ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag).Count.ToString();
         }
 
-   
+        private void textBox7_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
