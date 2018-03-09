@@ -290,10 +290,39 @@ namespace SerialportSample
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //周期性刷新数据代码   待完成
-            
-                this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
+
+            switch (_ReadDataType)
+            {
+                case ReadDataTypeEnum.UINT16://显示正确
+                    StringInText = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress].ToString();
+                    break;
+                case ReadDataTypeEnum.INT16://显示正确
+
+                    TempWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress];
+                    StringInText = TempWord.SignedWord.ToString();
+                    break;
+                case ReadDataTypeEnum.FLOAT32://显示正确
+                    TempDWord.LWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress];
+                    TempDWord.HWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress+1];
+                    StringInText = TempDWord.Float32.ToString();
+                    break;
+                case ReadDataTypeEnum.FLOAT64: //显示不正确 20180309 HS
+                    TempFWord.LLWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress+1];
+                    TempFWord.LWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress + 0];
+                    TempFWord.HWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress + 3];
+                    TempFWord.HHWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress + 2];
+                    StringInText = TempFWord.Float64.ToString();
+                    break;
+                case ReadDataTypeEnum.ManualSet:  //直接取用  ReadDataLengthInWord 中设置的值，无需修改   
+                    StringInText = "暂未提供";
+                    break;
+                default:
+                    break;
+            }
+
+            this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
                 {
-                    this.Text = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress].ToString();
+                    this.Text = StringInText;
                 }));
                       
         }

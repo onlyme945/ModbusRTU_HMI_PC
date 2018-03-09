@@ -286,7 +286,7 @@
             this.modbusView4.Size = new System.Drawing.Size(100, 21);
             this.modbusView4.StationID = ((byte)(1));
             this.modbusView4.TabIndex = 36;
-            this.modbusView4.Text = "0";
+            this.modbusView4.Text = "暂未提供";
             this.modbusView4.WriteAddress = ((ushort)(0));
             this.modbusView4.WriteDataLengthInWord = ((byte)(1));
             this.modbusView4.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
@@ -307,7 +307,7 @@
             this.modbusView3.Size = new System.Drawing.Size(100, 21);
             this.modbusView3.StationID = ((byte)(1));
             this.modbusView3.TabIndex = 35;
-            this.modbusView3.Text = "0";
+            this.modbusView3.Text = "暂未提供";
             this.modbusView3.WriteAddress = ((ushort)(0));
             this.modbusView3.WriteDataLengthInWord = ((byte)(1));
             this.modbusView3.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
@@ -320,7 +320,7 @@
             this.modbusView2.MaxValue = 100D;
             this.modbusView2.MinValue = 1D;
             this.modbusView2.Name = "modbusView2";
-            this.modbusView2.ReadAddress = ((ushort)(1));
+            this.modbusView2.ReadAddress = ((ushort)(10));
             this.modbusView2.ReadDataLengthInWord = ((byte)(1));
             this.modbusView2.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
             this.modbusView2.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadStorageRegs;
@@ -328,7 +328,7 @@
             this.modbusView2.Size = new System.Drawing.Size(100, 21);
             this.modbusView2.StationID = ((byte)(1));
             this.modbusView2.TabIndex = 34;
-            this.modbusView2.Text = "0";
+            this.modbusView2.Text = "暂未提供";
             this.modbusView2.WriteAddress = ((ushort)(0));
             this.modbusView2.WriteDataLengthInWord = ((byte)(1));
             this.modbusView2.WriteDataType = SerialportSample.ModbusView.WriteDataTypeEnum.UINT16;
@@ -342,9 +342,9 @@
             this.modbusView1.MinValue = 1D;
             this.modbusView1.Name = "modbusView1";
             this.modbusView1.ReadAddress = ((ushort)(0));
-            this.modbusView1.ReadDataLengthInWord = ((byte)(1));
-            this.modbusView1.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.ManualSet;
-            this.modbusView1.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadCoils;
+            this.modbusView1.ReadDataLengthInWord = ((byte)(4));
+            this.modbusView1.ReadDataType = SerialportSample.ModbusView.ReadDataTypeEnum.FLOAT64;
+            this.modbusView1.ReadFuncCode = SerialportSample.ModbusView.ReadFunctionCodeEnum.ReadStorageRegs;
             this.modbusView1.RequestPeriod = 100D;
             this.modbusView1.Size = new System.Drawing.Size(100, 21);
             this.modbusView1.StationID = ((byte)(1));

@@ -76,6 +76,7 @@ namespace SerialportSample
         public ByteBits[] ByteBitsExchange=new ByteBits[2];
 
         public static ArrayList LowSpeedADU = new ArrayList();
+        private static UInt16 LowSpeedADUIndex = 0;
         public static ArrayList HighSpeedADU = new ArrayList();
 
         private static System.Timers.Timer RxDataTimer =new System.Timers.Timer();
@@ -152,7 +153,7 @@ namespace SerialportSample
         #region///////////////////////ModbusRTU类属性//////////////////////////
         private static Boolean _IsMaster = true;
         private static int _ControlIndex =-1;
-        public static double _ACKTimerInterval = 50;
+        public static double _ACKTimerInterval = 200;
         public static double _BroadcastTimerInterval = 200;
         public static double _RxTimerInterval = 10;
         public static UInt16 _DepthOfFIFO = 500;
@@ -347,17 +348,14 @@ namespace SerialportSample
                         TransmitTxBuffer = (byte[]) HighSpeedADU[0];//从FIFO中取用待发送的帧                         
                          HighSpeedADU.RemoveAt(0);//控制指令等高速指令，发送完 且 成功 之后即丢弃   这里需要改进，增加发送出错，多次尝试机制————2018.03.08 HS
                     }
-                    else
+                    else//LowSpeedADU.Count != 0
                     {
-                        TransmitTxBuffer = (byte[])LowSpeedADU[0];
-                        string str="";
-                        for (byte i = 0; i < TransmitTxBuffer.Length; i++)
-                            str = str + TransmitTxBuffer[i]+ ' ';
-                        Console.Write(str+'\n');
+                        if (LowSpeedADUIndex == LowSpeedADU.Count)
+                            LowSpeedADUIndex = 0;
+                         TransmitTxBuffer = (byte[])LowSpeedADU[LowSpeedADUIndex++];
 
                     }
 
-                    //Console.Write(TxBuffer.Length);
                     try //此处不能用if语句简化
                     {
                         ModbusSendFrame(TransmitTxBuffer, 0, TransmitTxBuffer.Length);//调用发送函数（委托）
@@ -383,8 +381,13 @@ namespace SerialportSample
 
                 }
 
-            }        
-           
+            }//TxRxStatus == TransmitingStatus.Idle
+
+            if (TxRxStatus == TransmitingStatus.Receiving)
+                RxDataTimer.Enabled = true;
+
+
+
             return true;
 
         }
@@ -462,7 +465,7 @@ namespace SerialportSample
                     {
                         TxFrame[Pointer++] = (byte)DataByteNumber;//填入字节数           
                         for (UInt16 i = 0; i < DataByteNumber; i++)
-                            TxFrame[Pointer++] = DataToTx[i];//bytes
+                            TxFrame[Pointer++] =DataToTx[i];//bytes
                     }
                     TempWord.Word = CRCCaculation.CRC16(TxFrame, Pointer);
                     TxFrame[Pointer++] = TempWord.HByte;//crc code
@@ -549,7 +552,6 @@ namespace SerialportSample
                         break;
                     case (byte)ModbusFuncCode.ReadStorageRegs:
                         DataWordNumber = (UInt16)(TransmitRxBuffer[2] >> 1);//从字节数中获取字长
-                        Console.Write('*'+DataWordNumber.ToString()+"*\n");
                         TempWord.HByte = TransmitTxBuffer[2];//从发送帧中获取读取的字串的首地址
                         TempWord.LByte = TransmitTxBuffer[3];
                         firstAddress = TempWord.Word;
@@ -913,6 +915,7 @@ namespace SerialportSample
 
         [FieldOffset(0)]
         public Int16 SignedWord;
+
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -929,6 +932,12 @@ namespace SerialportSample
 
         [FieldOffset(3)]
         public byte Byte3;
+
+        [FieldOffset(0)]
+        public Word2Byte LWord;
+
+        [FieldOffset(2)]
+        public Word2Byte HWord;
 
         [FieldOffset(0)]
         public float Float32;
@@ -966,6 +975,18 @@ namespace SerialportSample
 
         [FieldOffset(7)]
         public byte Byte7;
+
+        [FieldOffset(0)]
+        public Word2Byte LLWord;
+
+        [FieldOffset(2)]
+        public Word2Byte LWord;
+
+        [FieldOffset(4)]
+        public Word2Byte HWord;
+
+        [FieldOffset(5)]
+        public Word2Byte HHWord;
 
         [FieldOffset(0)]
         public double Float64;
