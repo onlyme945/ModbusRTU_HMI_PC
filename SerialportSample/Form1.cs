@@ -84,6 +84,10 @@ namespace SerialportSample
             }
             else
             {
+
+                byte[] temptx = new byte[1];
+                ModbusRTU.AssembleRequestADU(false, 1, (byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs, ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag, 'r'), temptx);
+
                 //关闭时点击，则设置好端口，波特率后打开
                 comm.PortName = comboPortName.Text;
                 comm.BaudRate = int.Parse(comboBaudrate.Text);
@@ -138,6 +142,8 @@ namespace SerialportSample
             UInt16 tempcount = 0;
             temparraylist = ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag,'r');
             textBox9.Text = temparraylist.Count.ToString();
+            textBox10.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[0].ToString();
+            textBox11.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
 
             richTextBox1.Text = "";          
             foreach (UInt16[] tempa in temparraylist)

@@ -285,15 +285,15 @@ namespace SerialportSample
             PeriodicRequestTimer.Elapsed += PeriodicRequestTimer_Elapsed;
           
             ModbusRTU.VoteToConfirmTransmitRegs('+',ModbusRTU.MasterDataRepos.RStorageRegFlagVoter, ModbusRTU.MasterDataRepos.RStorageRegFlag, _ReadAddress,_ReadDataLengthInWord);//控件初始化时，票决器根据地址值自动加1，并判断票选结果
-     
         }
 
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //周期性刷新数据代码   待完成
+            
                 this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
                 {
-                    this.Text = StringInText;
+                    this.Text = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress].ToString();
                 }));
                       
         }
@@ -325,7 +325,6 @@ namespace SerialportSample
             this.ModbusTextBox.Size = new System.Drawing.Size(100, 21);
             this.ModbusTextBox.TabIndex = 0;
             this.ResumeLayout(false);
-
         }
 
         #region"////////////////////////枚举量或结构体////////////////////////"
