@@ -119,12 +119,12 @@ namespace SerialportSample
 
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-            modbusView1.ReadAddress = Convert.ToUInt16(textBox5.Text);
+            //modbusView1.ReadAddress = Convert.ToUInt16(textBox5.Text);
         }
 
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
-            modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
+            //modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
             
         }
 
@@ -158,42 +158,42 @@ namespace SerialportSample
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-           modbusView1.ReadAddress= Convert.ToUInt16(textBox1.Text);
+           //modbusView1.ReadAddress= Convert.ToUInt16(textBox1.Text);
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            modbusView2.ReadAddress = Convert.ToUInt16(textBox2.Text);
+            modbusView1.ReadAddress = Convert.ToUInt16(textBox2.Text);
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            modbusView3.ReadAddress = Convert.ToUInt16(textBox3.Text);
+            //modbusView3.ReadAddress = Convert.ToUInt16(textBox3.Text);
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
-            modbusView4.ReadAddress = Convert.ToUInt16(textBox4.Text);
+            //modbusView4.ReadAddress = Convert.ToUInt16(textBox4.Text);
         }
 
         private void textBox5_TextChanged_1(object sender, EventArgs e)
         {
-            modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox5.Text);
+            //modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox5.Text);
         }
 
         private void textBox6_TextChanged_1(object sender, EventArgs e)
         {
-            modbusView2.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
+            modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
         }
 
         private void textBox7_TextChanged_1(object sender, EventArgs e)
         {
-            modbusView3.ReadDataLengthInWord = Convert.ToByte(textBox7.Text);
+            //modbusView3.ReadDataLengthInWord = Convert.ToByte(textBox7.Text);
         }
 
         private void textBox8_TextChanged(object sender, EventArgs e)
         {
-            modbusView4.ReadDataLengthInWord = Convert.ToByte(textBox8.Text);
+            //modbusView4.ReadDataLengthInWord = Convert.ToByte(textBox8.Text);
         }
     }
 }

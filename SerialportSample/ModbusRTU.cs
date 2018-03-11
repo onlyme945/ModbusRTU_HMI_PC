@@ -40,7 +40,7 @@ namespace SerialportSample
         private static int TempControlIndex;
 
 
-        public static ModbusDataRepository MasterDataRepos = new ModbusDataRepository(8192,8192,65536,65536);
+        public static ModbusDataRepository MasterDataRepos = new ModbusDataRepository(65536);
         public static byte[][] DataStorage;//以各控件的索引为序存储接收到的数据
         public static bool[] DataStorageFlag;
 
@@ -262,15 +262,56 @@ namespace SerialportSample
             TargetFlagReg[TargetBit] = BitStatus;
         }
 
-        public static void VoteToConfirmTransmitRegs(char IncreaseOrDecrease, UInt16[] VoterReg, BitInByte DataStorageFlagReg , UInt16 FirstAddress , byte DataLength) //确定某一地址的数据传送与否的表决器
+        public static bool VoteToConfirmTransmitRegs(char IncreaseOrDecrease, byte FuncCode , UInt16 FirstAddress , byte DataLength) //确定某一地址的数据传送与否的表决器
         {
             byte tempCount=0;
             UInt16 tempAddress = 0;
+            UInt16[] VoterReg;
+            BitInByte DataStorageFlagReg;
+
+            switch (FuncCode)//根据功能码选择对应的票选器 以及标志位寄存器
+            {
+                case (byte)ModbusFuncCode.ReadCoils:
+                    VoterReg = MasterDataRepos.RCoilFlagVoter;
+                    DataStorageFlagReg = MasterDataRepos.RCoilFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadDistributeBits:
+                    VoterReg = MasterDataRepos.RDistributeBitFlagVoter;
+                    DataStorageFlagReg = MasterDataRepos.RDistributeBitFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadStorageRegs:
+                    VoterReg = MasterDataRepos.RStorageRegFlagVoter;
+                    DataStorageFlagReg = MasterDataRepos.RStorageRegFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadInputRegs:
+                    VoterReg = MasterDataRepos.RInputRegFlagVoter;
+                    DataStorageFlagReg = MasterDataRepos.RInputRegFlag;
+                    break;
+
+                case (byte)ModbusFuncCode.WriteSingleCoil://方案待定
+                    VoterReg = MasterDataRepos.WCoilFlagVoter;
+                    DataStorageFlagReg = MasterDataRepos.WCoilFlag;
+                    break;
+                case (byte)ModbusFuncCode.WriteCoils:
+                    VoterReg = MasterDataRepos.WCoilFlagVoter;
+                    DataStorageFlagReg = MasterDataRepos.WCoilFlag;
+                    break;
+                case (byte)ModbusFuncCode.WriteSingleReg://方案待定
+                    VoterReg = MasterDataRepos.WStorageRegFlagVoter;
+                    DataStorageFlagReg = MasterDataRepos.WStorageRegFlag;
+                    break;
+                case (byte)ModbusFuncCode.WriteRegs:
+                    VoterReg = MasterDataRepos.WStorageRegFlagVoter;
+                    DataStorageFlagReg = MasterDataRepos.WStorageRegFlag;
+                    break;
+                default:
+                    return false;
+            }
 
             if (IncreaseOrDecrease == '+')
             {
                 for (tempCount = 0; tempCount < DataLength; tempCount++)
-                {
+                {                   
                     tempAddress =(UInt16) (FirstAddress + tempCount);
                     VoterReg[tempAddress] += 1;//票选器投票加1
                     DataStorageFlagReg[tempAddress] = true;//票选器投票增加，对应地址位显然是需要传输数据的
@@ -290,7 +331,7 @@ namespace SerialportSample
                     
             }
 
-
+            return true;
         }
 
         #endregion
@@ -654,41 +695,81 @@ namespace SerialportSample
 
         public struct ModbusDataRepository
         {
-            public byte[] Coils;   //需要换成BitInByte结构体
+            public BitInByte Coils;   
+            public BitInByte RCoilFlag;//读Coil标志位
+            public UInt16[]  RCoilFlagVoter;//读Coil标志位票选器
+            public BitInByte CoilRxDoneFlag;//Coil数据接收成功标志位
+            public DoubleWord2Byte RCoilAddrRange;
+            public BitInByte WCoilFlag;//写Coil标志位                          *****待用最下面创建的位数组代替，以节约内存用量*****
+            public UInt16[]  WCoilFlagVoter;//读Coil标志位票选器          
+            public BitInByte CoilTxDoneFlag;//Coil数据发送成功标志位
+            public DoubleWord2Byte WCoilAddrRange;
 
-            public byte[] DistributeBits; //需要换成BitInByte结构体
 
-            public UInt16[] StorageRegs;
+            public BitInByte DistributeBits;  
+            public BitInByte RDistributeBitFlag;//读DistributeBit标志位
+            public UInt16[]  RDistributeBitFlagVoter;//读DistributeBit标志位票选器
+            public BitInByte DistributeBitRxDoneFlag;//DistributeBit数据接收成功标志位
+            public DoubleWord2Byte RDistributeBitAddrRange;
+
+
+
+            public UInt16[]  StorageRegs;
             public BitInByte WStorageRegFlag;//写StorageReg标志位                          *****待用最下面创建的位数组代替，以节约内存用量*****
             public BitInByte RStorageRegFlag;//读StorageReg标志位
             public UInt16[]  RStorageRegFlagVoter;//读StorageReg标志位票选器
+            public UInt16[]  WStorageRegFlagVoter;//读StorageReg标志位票选器
             public BitInByte StorageRegRxDoneFlag;//StorageReg数据接收成功标志位
+            public BitInByte StorageRegTxDoneFlag;//StorageReg数据发送成功标志位
+            public DoubleWord2Byte RStorageRegAddrRange;
+            public DoubleWord2Byte WStorageRegAddrRange;
 
-            public UInt16[] InputRegs;
+
+            public UInt16[]  InputRegs;
+            public BitInByte RInputRegFlag;//读InputReg标志位
+            public UInt16[]  RInputRegFlagVoter;//读InputReg标志位票选器
+            public BitInByte InputRegRxDoneFlag;//InputReg数据接收成功标志位
+            public DoubleWord2Byte RInputRegAddrRange;
 
 
-            public ModbusDataRepository(short NumOfCoils,short NumOfDistributeBits,int NumOfStorageRegs,int NumOfInputRegs)
+            public ModbusDataRepository(UInt32 NumOfRegs)
             {
-                if (NumOfCoils > 8192) NumOfCoils = 8192; //限制Coil的数量
-                if (NumOfCoils <1) NumOfCoils = 1;
-                if (NumOfDistributeBits > 8192) NumOfDistributeBits = 8192; //限制DistributeBit的数量
-                if (NumOfDistributeBits < 1) NumOfDistributeBits = 1;
-                if (NumOfStorageRegs > 65536) NumOfStorageRegs = 65536; //限制StorageReg的数量
-                if (NumOfStorageRegs < 1) NumOfStorageRegs = 1;
-                if (NumOfInputRegs > 65536) NumOfInputRegs = 65536; //限制InputReg的数量
-                if (NumOfInputRegs < 1) NumOfInputRegs = 1;
-                Coils = new byte[NumOfCoils];
-                DistributeBits = new byte[NumOfDistributeBits];
-                StorageRegs = new UInt16[NumOfStorageRegs];
-                InputRegs = new UInt16[NumOfInputRegs];
+                if (NumOfRegs > 65536) NumOfRegs = 65536; //限制InputReg的数量
+                if (NumOfRegs < 1) NumOfRegs = 1;
+                Coils = new BitInByte("Bit", NumOfRegs);
+                WCoilFlag = new BitInByte("Bit", NumOfRegs);
+                RCoilFlag = new BitInByte("Bit", NumOfRegs);
+                RCoilFlagVoter = new UInt16[NumOfRegs];
+                WCoilFlagVoter = new UInt16[NumOfRegs];
+                CoilRxDoneFlag = new BitInByte("Bit", NumOfRegs);
+                CoilTxDoneFlag = new BitInByte("Bit", NumOfRegs);
+                RCoilAddrRange = new DoubleWord2Byte();
+                WCoilAddrRange = new DoubleWord2Byte();
 
-                WStorageRegFlag = new BitInByte("Bit",65536);
-                RStorageRegFlag = new BitInByte("Bit", 65536);
-                RStorageRegFlagVoter = new UInt16[65536];
-                StorageRegRxDoneFlag = new BitInByte("Bit", 65536);
+                DistributeBits = new BitInByte("Bit", NumOfRegs);
+                RDistributeBitFlag = new BitInByte("Bit", NumOfRegs);
+                RDistributeBitFlagVoter = new UInt16[NumOfRegs];
+                DistributeBitRxDoneFlag = new BitInByte("Bit", NumOfRegs);
+                RDistributeBitAddrRange = new DoubleWord2Byte();
+
+                InputRegs = new UInt16[NumOfRegs];
+                RInputRegFlag = new BitInByte("Bit", NumOfRegs);
+                RInputRegFlagVoter = new UInt16[NumOfRegs];
+                InputRegRxDoneFlag = new BitInByte("Bit", NumOfRegs);
+                RInputRegAddrRange = new DoubleWord2Byte();
+
+                StorageRegs = new UInt16[NumOfRegs];
+                WStorageRegFlag = new BitInByte("Bit", NumOfRegs);
+                RStorageRegFlag = new BitInByte("Bit", NumOfRegs);
+                RStorageRegFlagVoter = new UInt16[NumOfRegs];
+                WStorageRegFlagVoter = new UInt16[NumOfRegs];
+                StorageRegRxDoneFlag = new BitInByte("Bit", NumOfRegs);
+                StorageRegTxDoneFlag = new BitInByte("Bit", NumOfRegs);
+                RStorageRegAddrRange = new DoubleWord2Byte();
+                WStorageRegAddrRange = new DoubleWord2Byte();
             }
           
-        }
+        }  //Modbus 数据存储库产生器
 
 
         public static ArrayList LoadUnmannedBuses(BitInByte DataStorageRegFlag,char ReadOrWrite)//无人巴士 功能      可以把允许的无效字（位）间隔作为形参传进来*****待添加
