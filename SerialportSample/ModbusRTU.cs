@@ -51,7 +51,7 @@ namespace SerialportSample
         private static byte[] TransmitTxBuffer;
         public byte[] DatasInByte = new byte[250];
         public UInt16[] DatasInWord = new UInt16[250];
-        public static UInt16 TransmitTxLength = 0;
+        
         public static UInt16 TransmitRxLength = 0;
         private static UInt16 TransmitPointerRX = 0;
         public UInt16 RetryCNT = 0;
@@ -64,14 +64,14 @@ namespace SerialportSample
         //这里开始动刀子   2018.03.08————HS
         public byte StationID = 1;
         public byte FunctionCode = 0;   
-        public UInt16 qErrorCode = 0;
-        public UInt16 wCRCCode = 0;
-        public UInt16 Address = 0;
+        //public UInt16 qErrorCode = 0;//暂未使用
+        //public UInt16 wCRCCode = 0;//暂未使用
+        public UInt16 TxAddress = 0;
 
 
         private static UInt16 NumOrData = 0;//存放读取（写入）的寄存器数量或者写入单个线圈（寄存器）的值
         private static UInt16 DataByteNumber = 0;
-        public UInt16 DataWordNumber = 0;
+        public UInt16 NumOfTransmitData = 0;
         private static Word2Byte TempWord;
         public ByteBits[] ByteBitsExchange=new ByteBits[2];
 
@@ -128,16 +128,28 @@ namespace SerialportSample
             switch (FunctionCode)
             {
                 case (byte)ModbusFuncCode.WriteSingleCoil:
-                    DataStorageFlag[TempControlIndex] = true; //这一句需要被修改，仿照这一句把相应的标志位清掉
+                    MasterDataRepos.WCoilFlag[TxAddress] = false; //写指令结束后把对应的标志位清掉
+                    ResumeRead((byte)ModbusFuncCode.ReadCoils, TxAddress,1);
                     break;
                 case (byte)ModbusFuncCode.WriteCoils:
-                    DataStorageFlag[TempControlIndex] = true; //这一句需要被修改，仿照这一句把相应的标志位清掉
+                    TempWord.HByte = TransmitTxBuffer[4];
+                    TempWord.LByte = TransmitTxBuffer[5];
+                    NumOfTransmitData = TempWord.Word;
+                    for(UInt16 tempCount=0;tempCount< NumOfTransmitData;tempCount++)
+                    MasterDataRepos.WCoilFlag[(uint)TxAddress+tempCount] = false; //
+                    ResumeRead((byte)ModbusFuncCode.ReadCoils, TxAddress,(byte)NumOfTransmitData);
                     break;
                 case (byte)ModbusFuncCode.WriteRegs:
-                    DataStorageFlag[TempControlIndex] = true; //这一句需要被修改，仿照这一句把相应的标志位清掉
+                    TempWord.HByte = TransmitTxBuffer[4];
+                    TempWord.LByte = TransmitTxBuffer[5];
+                    NumOfTransmitData = TempWord.Word;
+                    for (UInt16 tempCount = 0; tempCount < NumOfTransmitData; tempCount++)
+                        MasterDataRepos.WStorageRegFlag[(uint)TxAddress + tempCount] = false;
+                    ResumeRead((byte)ModbusFuncCode.ReadStorageRegs, TxAddress, (byte)NumOfTransmitData);
                     break;
                 case (byte)ModbusFuncCode.WriteSingleReg:
-                    DataStorageFlag[TempControlIndex] = true; //这一句需要被修改，仿照这一句把相应的标志位清掉
+                    MasterDataRepos.WStorageRegFlag[TxAddress] = false; //
+                    ResumeRead((byte)ModbusFuncCode.ReadStorageRegs, TxAddress, 1);
                     break;
 
                 default:
@@ -334,6 +346,59 @@ namespace SerialportSample
             return true;
         }
 
+        public static bool SuspendRead(byte FuncCode,UInt16 FirstAddress,byte DataLength)
+        {
+            BitInByte bitInByte;
+            switch (FuncCode)//根据功能码选择对应的票选器 以及标志位寄存器
+            {
+                case (byte)ModbusFuncCode.ReadCoils:
+                    bitInByte=MasterDataRepos.RCoilFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadDistributeBits:
+                    bitInByte = MasterDataRepos.RDistributeBitFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadStorageRegs:
+                    bitInByte = MasterDataRepos.RStorageRegFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadInputRegs:
+                    bitInByte = MasterDataRepos.RInputRegFlag;
+                    break;
+    
+                default:
+                    return  false;
+            }
+            for (UInt16 tempCount = 0; tempCount < DataLength; tempCount++)
+                bitInByte[(uint)FirstAddress+ tempCount] = false;
+
+            return true;
+        }
+
+        public static bool ResumeRead(byte FuncCode, UInt16 FirstAddress, byte DataLength)
+        {
+            BitInByte bitInByte;
+            switch (FuncCode)//根据功能码选择对应的票选器 以及标志位寄存器
+            {
+                case (byte)ModbusFuncCode.ReadCoils:
+                    bitInByte = MasterDataRepos.RCoilFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadDistributeBits:
+                    bitInByte = MasterDataRepos.RDistributeBitFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadStorageRegs:
+                    bitInByte = MasterDataRepos.RStorageRegFlag;
+                    break;
+                case (byte)ModbusFuncCode.ReadInputRegs:
+                    bitInByte = MasterDataRepos.RInputRegFlag;
+                    break;
+
+                default:
+                    return false;
+            }
+            for (UInt16 tempCount = 0; tempCount < DataLength; tempCount++)
+                bitInByte[(uint)FirstAddress + tempCount] = true;
+
+            return true;
+        }
         #endregion
 
         #region//////////////////////定时器Tick事件////////////////////////
@@ -449,15 +514,17 @@ namespace SerialportSample
         #endregion
 
         #region/////////////////////////ModbusRTU(主)读写帧组装方法/////////////////////////
-        public static void AssembleRequestADU(Boolean IsHighPriority, byte StationID,byte FuncCode,ArrayList DataTransmitBuses,byte[] DataToTx)
+        public static void AssembleRequestADU(byte StationID,ArrayList DataTransmitBuses)
         {
             byte[] TxFrame; //组装发送请求帧的时候用局部的数组，免得破坏当前时刻的发送帧（全局数组TransmitTxFrame中的数据）
-
+            byte FuncCode;
+            byte tempCount = 0;
             UInt16 Addr;
             UInt16 NumCmdData;
             UInt16 DataByteNumber = 0;
             UInt16 Pointer = 0;
-            //UInt16 tempCount;
+            UInt16 TransmitTxLength = 0;
+            BitInByte tempBit2Byte=new BitInByte("Byte",1);
 
             if (DataTransmitBuses.Count > 0)
             {
@@ -465,6 +532,7 @@ namespace SerialportSample
                 {
                     Addr = TansmitBus[0];
                     NumCmdData = TansmitBus[1];
+                    FuncCode=(byte)TansmitBus[2];
 
                     Console.Write("数据长度："+ NumCmdData.ToString());
 
@@ -474,8 +542,17 @@ namespace SerialportSample
                         case (byte)ModbusFuncCode.ReadDistributeBits:
                         case (byte)ModbusFuncCode.ReadStorageRegs:
                         case (byte)ModbusFuncCode.ReadInputRegs:
+                            TransmitTxLength = 8;
+                            break;
                         case (byte)ModbusFuncCode.WriteSingleCoil:
+                            if (MasterDataRepos.Coils[Addr] == true)
+                                NumCmdData = 0xFF00;
+                            else
+                                NumCmdData = 0;
+                            TransmitTxLength = 8;
+                            break;
                         case (byte)ModbusFuncCode.WriteSingleReg:
+                            NumCmdData = MasterDataRepos.StorageRegs[Addr];
                             TransmitTxLength = 8;
                             break;
 
@@ -504,22 +581,55 @@ namespace SerialportSample
                     Pointer = 6;
                     if (DataByteNumber != 0)
                     {
-                        TxFrame[Pointer++] = (byte)DataByteNumber;//填入字节数           
-                        for (UInt16 i = 0; i < DataByteNumber; i++)
-                            TxFrame[Pointer++] =DataToTx[i];//bytes
+                        TxFrame[Pointer++] = (byte)DataByteNumber;//填入字节数 
+                        tempBit2Byte.Bytes[0] = 0;
+
+                        for (UInt16 i = 0; i < NumCmdData; i++)
+                        {
+
+                                if (FuncCode == (byte)ModbusFuncCode.WriteRegs)
+                                {
+                                    TempWord.Word = MasterDataRepos.StorageRegs[Addr + i];
+                                    TxFrame[Pointer++] = TempWord.HByte;//bytes
+                                    TxFrame[Pointer++] = TempWord.LByte;//bytes
+
+                                }
+                                else
+                                {
+                                    tempBit2Byte[tempCount++] = MasterDataRepos.Coils[(UInt32)Addr + i];
+                                    if ((tempCount == 8) || (i== (NumCmdData-1)))
+                                    {
+                                        TxFrame[Pointer++] = tempBit2Byte.Bytes[0];
+                                        tempBit2Byte.Bytes[0]=0;
+                                        tempCount = 0;
+                                    }
+                                                               
+                                }
+                        }
+                        
+                            
                     }
                     TempWord.Word = CRCCaculation.CRC16(TxFrame, Pointer);
                     TxFrame[Pointer++] = TempWord.HByte;//crc code
                     TxFrame[Pointer] = TempWord.LByte;
-                   
 
-                    if (IsHighPriority == true)
-                    {
 
-                    }
-                    else
+                    switch (FuncCode)
                     {
-                        LowSpeedADU.Add((byte[]) TxFrame.Clone());
+                        case (byte)ModbusFuncCode.ReadCoils:
+                        case (byte)ModbusFuncCode.ReadDistributeBits:
+                        case (byte)ModbusFuncCode.ReadStorageRegs:
+                        case (byte)ModbusFuncCode.ReadInputRegs:
+                            LowSpeedADU.Add(TxFrame.Clone());
+                            break;
+                        case (byte)ModbusFuncCode.WriteSingleCoil:
+                        case (byte)ModbusFuncCode.WriteSingleReg:
+                        case (byte)ModbusFuncCode.WriteCoils:
+                        case (byte)ModbusFuncCode.WriteRegs:
+                            HighSpeedADU.Add(TxFrame.Clone());
+                            break;
+                        default:
+                            break;
                     }
                 //Pointer = 0;//为接收逻辑的使用复位   好像不需要用到啊，先注释掉 ————  2018.03.08  HS
 
@@ -553,6 +663,7 @@ namespace SerialportSample
         {
             UInt16 tempAddress;
             UInt16 firstAddress;
+            BitInByte bitInByte = new BitInByte("Byte",1);
             byte tempIndex=0;
             if (IsMaster == true)
             {
@@ -570,6 +681,9 @@ namespace SerialportSample
                     return (byte)ErrorStatus.ERR_CRCCode;//检测CRC是否错误
 
                 FunctionCode = TransmitRxBuffer[1];//记录功能码
+                TempWord.HByte= TransmitRxBuffer[2];
+                TempWord.LByte = TransmitRxBuffer[3];
+                TxAddress = TempWord.Word;
                 switch (FunctionCode)
                 {
                     case (byte)ModbusFuncCode.WriteSingleCoil:
@@ -578,7 +692,7 @@ namespace SerialportSample
                     case (byte)ModbusFuncCode.WriteSingleReg:
                         TempWord.HByte = TransmitRxBuffer[2];//检查地址是否正确
                         TempWord.LByte = TransmitRxBuffer[3];
-                        if (TempWord.Word != Address)
+                        if (TempWord.Word != TxAddress) //这里的address没有被赋过值，估计会有问题    20180312——HS
                             return (byte)ErrorStatus.ERR_Address;
                         TempWord.HByte = TransmitRxBuffer[4];//检查写入单元数量或写入的单个数据是否正确
                         TempWord.LByte = TransmitRxBuffer[5];
@@ -587,16 +701,44 @@ namespace SerialportSample
                         break;
 
                     case (byte)ModbusFuncCode.ReadCoils:
-
-                    case (byte)ModbusFuncCode.ReadDistributeBits:
-
-                        break;
-                    case (byte)ModbusFuncCode.ReadStorageRegs:
-                        DataWordNumber = (UInt16)(TransmitRxBuffer[2] >> 1);//从字节数中获取字长
                         TempWord.HByte = TransmitTxBuffer[2];//从发送帧中获取读取的字串的首地址
                         TempWord.LByte = TransmitTxBuffer[3];
                         firstAddress = TempWord.Word;
-                        for (UInt16 i = 0; i < DataWordNumber; i++)
+                        DataByteNumber = TransmitRxBuffer[2];//读到数据的字节数
+                        tempAddress = firstAddress;
+                        for (UInt16 i = 0; i < DataByteNumber; i++)
+                        {
+                            bitInByte.Bytes[0] = TransmitRxBuffer[3+i];  //读取接收到的数据到位拆分字节                          
+                            for(byte tempCount=0;tempCount<8;tempCount++)//判断每一位所对应的读标志寄存器是否置位
+                            if (MasterDataRepos.RCoilFlag[(UInt32)tempAddress + tempCount] == true)//如果读标志寄存器置位  说明需要读取位值  否则不操作，即不读值
+                                MasterDataRepos.Coils[(UInt32)tempAddress + tempCount] = bitInByte[tempCount];
+
+                            tempAddress += 8;//一个字节的数据读完后，位地址值加8
+                        }
+                        break;
+
+                    case (byte)ModbusFuncCode.ReadDistributeBits:
+                        TempWord.HByte = TransmitTxBuffer[2];//从发送帧中获取读取的字串的首地址
+                        TempWord.LByte = TransmitTxBuffer[3];
+                        firstAddress = TempWord.Word;
+                        DataByteNumber = TransmitRxBuffer[2];//读到数据的字节数
+                        tempAddress = firstAddress;
+                        for (UInt16 i = 0; i < DataByteNumber; i++)
+                        {
+                            bitInByte.Bytes[0] = TransmitRxBuffer[3 + i];  //读取接收到的数据到位拆分字节                          
+                            for (byte tempCount = 0; tempCount < 8; tempCount++)//判断每一位所对应的读标志寄存器是否置位
+                                if (MasterDataRepos.RCoilFlag[(UInt32)tempAddress + tempCount] == true)//如果读标志寄存器置位  说明需要读取位值  否则不操作，即不读值
+                                    MasterDataRepos.Coils[(UInt32)tempAddress + tempCount] = bitInByte[tempCount];
+
+                            tempAddress += 8;//一个字节的数据读完后，位地址值加8
+                        }
+                        break;
+                    case (byte)ModbusFuncCode.ReadStorageRegs:
+                        NumOfTransmitData = (UInt16)(TransmitRxBuffer[2] >> 1);//从字节数中获取字长
+                        TempWord.HByte = TransmitTxBuffer[2];//从发送帧中获取读取的字串的首地址
+                        TempWord.LByte = TransmitTxBuffer[3];
+                        firstAddress = TempWord.Word;
+                        for (UInt16 i = 0; i < NumOfTransmitData; i++)
                         {
                             tempAddress = (UInt16)(firstAddress + i);
                             if (MasterDataRepos.RStorageRegFlag[tempAddress] == true)
@@ -609,11 +751,11 @@ namespace SerialportSample
                         }
                         break;
                     case (byte)ModbusFuncCode.ReadInputRegs:
-                        DataWordNumber = (UInt16)(TransmitRxBuffer[2] >> 1);//从字节数中获取字长
+                        NumOfTransmitData = (UInt16)(TransmitRxBuffer[2] >> 1);//从字节数中获取字长
                         TempWord.HByte = TransmitTxBuffer[2];//从发送帧中获取读取的字串的首地址
                         TempWord.LByte = TransmitTxBuffer[3];
                         firstAddress = TempWord.Word;
-                        for (UInt16 i = 0; i < DataWordNumber; i++)
+                        for (UInt16 i = 0; i < NumOfTransmitData; i++)
                         {
                             tempAddress = (UInt16)(firstAddress + i);
                             if (MasterDataRepos.RStorageRegFlag[tempAddress] == true)
@@ -772,7 +914,7 @@ namespace SerialportSample
         }  //Modbus 数据存储库产生器
 
 
-        public static ArrayList LoadUnmannedBuses(BitInByte DataStorageRegFlag,char ReadOrWrite)//无人巴士 功能      可以把允许的无效字（位）间隔作为形参传进来*****待添加
+        public static ArrayList LoadUnmannedBuses(byte FuncCode,UInt16 IntervalBetweenDatas)//无人巴士 功能      可以把允许的无效字（位）间隔作为形参传进来*****待添加
         {
             ArrayList TransmitBuses = new ArrayList();
             UInt32 tempAddress = 0;
@@ -780,125 +922,161 @@ namespace SerialportSample
             UInt16 tempFirstAddress = 0;
             UInt16 tempLastAddress = 0;          
             byte tempCount = 0;
-            UInt16[] TransmitBus = new UInt16[2];//第0个数存地址；第1个数存待传输的数据长度
+            UInt16[] TransmitBus = new UInt16[3];//第0个数存地址；第1个数存待传输的数据长度
             bool IsFirstSeatFree = true;
+            BitInByte DataStorageFlagReg;
 
-            for (tempAddress = 0; tempAddress < 65536; tempAddress++)
-            {
-                if (('R' == ReadOrWrite)||('r' == ReadOrWrite))
+                switch (FuncCode)//根据功能码选择对应的票选器 以及标志位寄存器
                 {
-                    if (IsFirstSeatFree == true)//Bus第一个位置是空的
-                    {
-                        if (DataStorageRegFlag[tempAddress] == true)
-                        {
-                            TransmitBus[0] = (UInt16)tempAddress;//记录地址
-                            tempFirstAddress = TransmitBus[0];//用于计算传输数据长度
-                            tempLastAddress = TransmitBus[0];//用于计算传输数据长度
-                            if (tempAddress == 65535) //如果是最后一个地址，则装载bus后退出循环
-                            {
-                                TransmitBus[1] = 1;//数据长度只为1
-                                TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });//见下文注释  ArrayList 像是动态的指针数组
-                                break;
-                            }
-                            IsFirstSeatFree = false;
-                        }
+                    case (byte)ModbusFuncCode.ReadCoils:
+                    if (IntervalBetweenDatas > 1184) IntervalBetweenDatas = 1184;
+                        DataStorageFlagReg = MasterDataRepos.RCoilFlag;
+                        break;
+                    case (byte)ModbusFuncCode.ReadDistributeBits:
+                    if (IntervalBetweenDatas > 1184) IntervalBetweenDatas = 1184;
+                    DataStorageFlagReg = MasterDataRepos.RDistributeBitFlag;
+                        break;
+                    case (byte)ModbusFuncCode.ReadStorageRegs:
+                    if (IntervalBetweenDatas > 148) IntervalBetweenDatas = 148;
+                    DataStorageFlagReg = MasterDataRepos.RStorageRegFlag;
+                        break;
+                    case (byte)ModbusFuncCode.ReadInputRegs:
+                    if (IntervalBetweenDatas > 148) IntervalBetweenDatas = 148;
+                    DataStorageFlagReg = MasterDataRepos.RInputRegFlag;
+                        break;
 
-                    }
-                    else
-                    {
+                    case (byte)ModbusFuncCode.WriteSingleCoil://方案待定
+                        IntervalBetweenDatas = 0;
+                        DataStorageFlagReg = MasterDataRepos.WCoilFlag;
+                        break;
+                    case (byte)ModbusFuncCode.WriteCoils:
+                    if (IntervalBetweenDatas > 1184) IntervalBetweenDatas = 1184;
+                    DataStorageFlagReg = MasterDataRepos.WCoilFlag;
+                        break;
+                    case (byte)ModbusFuncCode.WriteSingleReg://方案待定
+                        IntervalBetweenDatas = 0;
+                        DataStorageFlagReg = MasterDataRepos.WStorageRegFlag;
+                        break;
+                    case (byte)ModbusFuncCode.WriteRegs:
+                    if (IntervalBetweenDatas > 148) IntervalBetweenDatas = 148;
+                    DataStorageFlagReg = MasterDataRepos.WStorageRegFlag;
+                        break;
+                    default:
+                        return TransmitBuses;
+                }
 
-                        if (DataStorageRegFlag[tempAddress] == true)
+           
+                for (tempAddress = 0; tempAddress < 65536; tempAddress++)
+                {                   
+                        if (IsFirstSeatFree == true)//Bus第一个位置是空的
                         {
-                            if (tempAddress - tempFirstAddress + 1 < FrameDataLimitInWord)
+                            if (DataStorageFlagReg[tempAddress] == true)
                             {
-                                if (tempAddress < 65535)
+                                TransmitBus[0] = (UInt16)tempAddress;//记录地址
+                                tempFirstAddress = TransmitBus[0];//用于计算传输数据长度
+                                tempLastAddress = TransmitBus[0];//用于计算传输数据长度
+                                if (tempAddress == 65535) //如果是最后一个地址，则装载bus后退出循环
                                 {
-                                    if (tempCount < 9)//=8+1  8见下文
+                                    TransmitBus[1] = 1;//数据长度只为1
+                                    TransmitBus[2] = FuncCode;
+                                    TransmitBuses.Add(TransmitBus.Clone());//见下文注释  ArrayList 像是动态的指针数组
+                                    break;
+                                }
+                                IsFirstSeatFree = false;
+                            }
+
+                        }
+                        else
+                        {
+
+                            if (DataStorageFlagReg[tempAddress] == true)
+                            {
+                                if (tempAddress - tempFirstAddress + 1 < FrameDataLimitInWord)
+                                {
+                                    if (tempAddress < 65535)
+                                    {
+                                        if (tempCount < IntervalBetweenDatas+1)//有效数据间无效数据的间隔+1
+                                        {
+                                            tempCount = 0;
+                                            tempLastAddress = (UInt16)tempAddress;
+                                        }
+                                    }
+                                    else//tempAddress==65535  扫描到最后一个地址
                                     {
                                         tempCount = 0;
                                         tempLastAddress = (UInt16)tempAddress;
+                                        TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                                        TransmitBus[2] = FuncCode;
+                                        TransmitBuses.Add(TransmitBus.Clone());// 必须用这种新声明数组的方法，用后面这种方法TransmitBuses.Add(TransmitBus)，最终会让ArrayList中的所有数组元素都一样
+
+                                        IsFirstSeatFree = true;
+                                        break;
                                     }
                                 }
-                                else//tempAddress==65535  扫描到最后一个地址
+                                else  //tempAddress - tempFirstAddress + 1==150    传输数据的字长如果到了150则自动停止继续装车
                                 {
                                     tempCount = 0;
                                     tempLastAddress = (UInt16)tempAddress;
                                     TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                                    TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });// 必须用这种新声明数组的方法，用后面这种方法TransmitBuses.Add(TransmitBus)，最终会让ArrayList中的所有数组元素都一样
-
+                                    TransmitBus[2] = FuncCode;
+                                    TransmitBuses.Add(TransmitBus.Clone());
                                     IsFirstSeatFree = true;
-                                    break;
+                                    if (tempAddress < 65535)
+                                        continue;
+                                    else
+                                        break;
                                 }
-                            }
-                            else  //tempAddress - tempFirstAddress + 1==150    传输数据的字长如果到了150则自动停止继续装车
-                            {
-                                tempCount = 0;
-                                tempLastAddress = (UInt16)tempAddress;
-                                TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                                TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });
-                                IsFirstSeatFree = true;
-                                if (tempAddress < 65535)
-                                    continue;
-                                else
-                                    break;
-                            }
 
-                        }
-                        else //DataStorageRegFlag[tempAddress] == false
-                        {
-
-                            if (tempAddress - tempFirstAddress + 1 < FrameDataLimitInWord)
+                            }
+                            else //DataStorageRegFlag[tempAddress] == false
                             {
-                                if (tempAddress < 65535)
+
+                                if (tempAddress - tempFirstAddress + 1 < FrameDataLimitInWord)
                                 {
-                                    if (tempCount == 8)//后面将这个8用变量代替，让它可被调整，来控制bus的大小
+                                    if (tempAddress < 65535)
+                                    {
+                                        if (tempCount == IntervalBetweenDatas)//有效数据间的间隔，可被调整，来控制bus的大小
+                                        {
+                                            tempCount = 0;
+                                            TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
+                                            TransmitBus[2] = FuncCode;
+                                            TransmitBuses.Add(TransmitBus.Clone());//
+                                            IsFirstSeatFree = true;
+                                        }
+                                        else
+                                            tempCount++;
+                                    }
+                                    else//tempAddress == 65535
                                     {
                                         tempCount = 0;
                                         TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                                        TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });//
+                                        TransmitBus[2] = FuncCode;
+                                        TransmitBuses.Add(TransmitBus.Clone());//
                                         IsFirstSeatFree = true;
+                                        break;
                                     }
-                                    else
-                                        tempCount++;
                                 }
-                                else//tempAddress == 65535
+                                else//tempAddress - tempFirstAddress + 1 == 150
                                 {
                                     tempCount = 0;
                                     TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                                    TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });//
+                                    TransmitBus[2] = FuncCode;
+                                    TransmitBuses.Add(TransmitBus.Clone());//
                                     IsFirstSeatFree = true;
-                                    break;
+                                    if (tempAddress < 65535)
+                                        continue;
+                                    else
+                                        break;
                                 }
                             }
-                            else//tempAddress - tempFirstAddress + 1 == 150
-                            {
-                                tempCount = 0;
-                                TransmitBus[1] = (UInt16)(tempLastAddress - tempFirstAddress + 1);
-                                TransmitBuses.Add(new UInt16[2] { TransmitBus[0], TransmitBus[1] });//
-                                IsFirstSeatFree = true;
-                                if (tempAddress < 65535)
-                                    continue;
-                                else
-                                    break;
-                            }
+
                         }
-                    }
-
-                }
-
-                if (('W' == ReadOrWrite)||('w' == ReadOrWrite))
-                {
-
-
-                }
-
-                
-            }             
-                      
+                  
+                }//End for (tempAddress = 0; tempAddress < 65536; tempAddress++)             
             return TransmitBuses;
         }
 
-    }
+    }//End of Class ModbusRTU
     //ModbusRTU类到此结束
 
     #region/////////////////////////ModbusRTU类之外 自定义结构体及附加功能/////////////////////

@@ -228,7 +228,10 @@ namespace SerialportSample
             }
             set
             {
+                ModbusRTU.VoteToConfirmTransmitRegs('-', (byte)_ReadFunctionCode, _ReadAddress, _ReadDataLengthInWord);//本次地址所对应的表决器值加1并判断票选结果
                 _ReadFunctionCode = value;
+                ModbusRTU.VoteToConfirmTransmitRegs('+', (byte)_ReadFunctionCode, _ReadAddress, _ReadDataLengthInWord);//本次地址所对应的表决器值加1并判断票选结果
+
             }
 
         }
@@ -283,34 +286,80 @@ namespace SerialportSample
         public ModbusView()
         {
             PeriodicRequestTimer.Elapsed += PeriodicRequestTimer_Elapsed;
+            this.MouseClick += ModbusView_MouseClick1;
+            this.KeyPress += ModbusView_KeyPress;
           
             ModbusRTU.VoteToConfirmTransmitRegs('+', (byte)_ReadFunctionCode, _ReadAddress,_ReadDataLengthInWord);//控件初始化时，票决器根据地址值自动加1，并判断票选结果
+        }
+
+        private void ModbusView_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)//如果按下了Enter键，则进入发数据状态
+            {
+                ModbusRTU.MasterDataRepos.StorageRegs[_WriteAddress]=Convert.ToUInt16(this.Text);
+                ModbusRTU.VoteToConfirmTransmitRegs('+', (byte)_WriteFunctionCode, _WriteAddress, _WriteDataLengthInWord);
+                ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)_WriteFunctionCode, 8));
+                HideCaret(this.Handle);
+            }
+                
+            if (e.KeyChar == (char)Keys.Escape)//通过Esc键取消写操作，恢复周期性读数据状态
+            {
+                ModbusRTU.ResumeRead((byte)_ReadFunctionCode, _ReadAddress, _ReadDataLengthInWord);
+                HideCaret(this.Handle);
+            }
+        }
+
+        private void ModbusView_MouseClick1(object sender, MouseEventArgs e)
+        {
+            ShowCaret(this.Handle);
+            ModbusRTU.SuspendRead((byte)_ReadFunctionCode, _ReadAddress, _ReadDataLengthInWord);//鼠标单击本控件后，进入写寄存器状态，暂停寄存器的读操作
         }
 
         private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //周期性刷新数据代码   待完成
+            UInt16[] tempRegs;           
 
-            switch (_ReadDataType)
+            switch (_ReadFunctionCode)
+            {
+                case ReadFunctionCodeEnum.ReadInputRegs:
+                      if(ModbusRTU.MasterDataRepos.RInputRegFlag[_ReadAddress] == false) return;
+                    tempRegs = ModbusRTU.MasterDataRepos.InputRegs;
+                    break;
+                    
+                case ReadFunctionCodeEnum.ReadStorageRegs:
+                        if (ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] == false) return;
+                    tempRegs = ModbusRTU.MasterDataRepos.StorageRegs;
+                    break;
+
+
+                default:
+                    this.Text = "读功能码错误";
+                    return;
+               
+            }
+
+            
+                switch (_ReadDataType)
             {
                 case ReadDataTypeEnum.UINT16://显示正确
-                    StringInText = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress].ToString();
+                    StringInText = tempRegs[_ReadAddress].ToString();
                     break;
                 case ReadDataTypeEnum.INT16://显示正确
 
-                    TempWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress];
+                    TempWord.Word = tempRegs[_ReadAddress];
                     StringInText = TempWord.SignedWord.ToString();
                     break;
                 case ReadDataTypeEnum.FLOAT32://显示正确
-                    TempDWord.LWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress];
-                    TempDWord.HWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress+1];
+                    TempDWord.LWord.Word = tempRegs[_ReadAddress];
+                    TempDWord.HWord.Word = tempRegs[_ReadAddress+1];
                     StringInText = TempDWord.Float32.ToString();
                     break;
                 case ReadDataTypeEnum.FLOAT64: //显示不正确 20180309 HS
-                    TempFWord.LLWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress+1];
-                    TempFWord.LWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress + 0];
-                    TempFWord.HWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress + 3];
-                    TempFWord.HHWord.Word = ModbusRTU.MasterDataRepos.StorageRegs[_ReadAddress + 2];
+                    TempFWord.LLWord.Word = tempRegs[_ReadAddress+1];
+                    TempFWord.LWord.Word = tempRegs[_ReadAddress + 0];
+                    TempFWord.HWord.Word = tempRegs[_ReadAddress + 3];
+                    TempFWord.HHWord.Word = tempRegs[_ReadAddress + 2];
                     StringInText = TempFWord.Float64.ToString();
                     break;
                 case ReadDataTypeEnum.ManualSet:  //直接取用  ReadDataLengthInWord 中设置的值，无需修改   
@@ -327,20 +376,20 @@ namespace SerialportSample
                       
         }
 
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
+        //protected override void OnMouseDown(MouseEventArgs e)
+        //{
 
-            // 应立刻关闭text的刷新操作      待完成
+        //    // 应立刻关闭text的刷新操作      待完成
 
-            base.OnMouseDown(e);
-            ShowCaret(this.Handle);
-        }
+        //    base.OnMouseDown(e);
+        //    ShowCaret(this.Handle);
+        //}
 
-        protected override void OnKeyPress(KeyPressEventArgs e)
-        {
-            base.OnKeyPress(e);
+        //protected override void OnKeyPress(KeyPressEventArgs e)
+        //{
+        //    base.OnKeyPress(e);
 
-        }
+        //}
       
         private void InitializeComponent()
         {
@@ -354,6 +403,7 @@ namespace SerialportSample
             this.ModbusTextBox.Size = new System.Drawing.Size(100, 21);
             this.ModbusTextBox.TabIndex = 0;
             this.ResumeLayout(false);
+
         }
 
         #region"////////////////////////枚举量或结构体////////////////////////"
@@ -412,6 +462,7 @@ namespace SerialportSample
 
         }
         #endregion
+
 
     }
 }

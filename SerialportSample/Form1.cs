@@ -85,8 +85,8 @@ namespace SerialportSample
             else
             {
                 
-                ModbusRTU.AssembleRequestADU(false, 1, (byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs, ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag, 'r'), null);
-
+                ModbusRTU.AssembleRequestADU( 1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs, 8));
+                ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadInputRegs, 8));
                 //关闭时点击，则设置好端口，波特率后打开
                 comm.PortName = comboPortName.Text;
                 comm.BaudRate = int.Parse(comboBaudrate.Text);
@@ -139,7 +139,7 @@ namespace SerialportSample
             UInt16[] temparray1 = new UInt16[2];
             UInt16[] temparray2 = new UInt16[2];
             UInt16 tempcount = 0;
-            temparraylist = ModbusRTU.LoadUnmannedBuses(ModbusRTU.MasterDataRepos.RStorageRegFlag,'r');
+            temparraylist = ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs,8);
             textBox9.Text = temparraylist.Count.ToString();
             textBox10.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[0].ToString();
             textBox11.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
@@ -147,7 +147,12 @@ namespace SerialportSample
             richTextBox1.Text = "";          
             foreach (UInt16[] tempa in temparraylist)
             {             
-                richTextBox1.Text = richTextBox1.Text+ tempa[0].ToString() + " " + tempa[1].ToString() + "\n";
+                richTextBox1.Text = richTextBox1.Text+ tempa[0].ToString() + " " + tempa[1].ToString() + " " + tempa[2].ToString() + "\n";
+            }
+            temparraylist = ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadInputRegs, 8);
+            foreach (UInt16[] tempa in temparraylist)
+            {
+                richTextBox1.Text = richTextBox1.Text + tempa[0].ToString() + " " + tempa[1].ToString() + " " + tempa[2].ToString() + "\n";
             }
         }
 
@@ -195,5 +200,6 @@ namespace SerialportSample
         {
             //modbusView4.ReadDataLengthInWord = Convert.ToByte(textBox8.Text);
         }
+
     }
 }
