@@ -104,7 +104,7 @@ namespace SerialportSample
             ACKTimer.Interval= ACKTimerInterval;
             BroadcastTimer.Interval= BroadcastTimerInterval;
             RxDataTimer.Interval = RxTimerInterval;
-            PeriodicTxTimer.Interval = 10;//待修改
+            PeriodicTxTimer.Interval = 1000;//待修改
             PeriodicTxTimer.Enabled = true;
 
             RxDataTimer.Elapsed += RxDataTimer_Elapsed;//为接收数据定时器创建定时函数
@@ -124,39 +124,8 @@ namespace SerialportSample
 
         private void ModbusRTU_ModbusTransmitSuccessEvent()
         {
-           //目前只是Master的功能   Slave的需要添加
-            switch (FunctionCode)
-            {
-                case (byte)ModbusFuncCode.WriteSingleCoil:
-                    MasterDataRepos.WCoilFlag[TxAddress] = false; //写指令结束后把对应的标志位清掉
-                    ResumeRead((byte)ModbusFuncCode.ReadCoils, TxAddress,1);
-                    break;
-                case (byte)ModbusFuncCode.WriteCoils:
-                    TempWord.HByte = TransmitTxBuffer[4];
-                    TempWord.LByte = TransmitTxBuffer[5];
-                    NumOfTransmitData = TempWord.Word;
-                    for(UInt16 tempCount=0;tempCount< NumOfTransmitData;tempCount++)
-                    MasterDataRepos.WCoilFlag[(uint)TxAddress+tempCount] = false; //
-                    ResumeRead((byte)ModbusFuncCode.ReadCoils, TxAddress,(byte)NumOfTransmitData);
-                    break;
-                case (byte)ModbusFuncCode.WriteRegs:
-                    TempWord.HByte = TransmitTxBuffer[4];
-                    TempWord.LByte = TransmitTxBuffer[5];
-                    NumOfTransmitData = TempWord.Word;
-                    for (UInt16 tempCount = 0; tempCount < NumOfTransmitData; tempCount++)
-                        MasterDataRepos.WStorageRegFlag[(uint)TxAddress + tempCount] = false;
-                    ResumeRead((byte)ModbusFuncCode.ReadStorageRegs, TxAddress, (byte)NumOfTransmitData);
-                    break;
-                case (byte)ModbusFuncCode.WriteSingleReg:
-                    MasterDataRepos.WStorageRegFlag[TxAddress] = false; //
-                    ResumeRead((byte)ModbusFuncCode.ReadStorageRegs, TxAddress, 1);
-                    break;
-
-                default:
-                    break;
-
-            }
-
+            //目前只是Master的功能   Slave的需要添加
+           
                     TxRxStatus = TransmitingStatus.Idle;
         }
 
@@ -665,6 +634,7 @@ namespace SerialportSample
             UInt16 firstAddress;
             BitInByte bitInByte = new BitInByte("Byte",1);
             byte tempIndex=0;
+            byte funcCode = 0;
             if (IsMaster == true)
             {
                 if (StationID != TransmitRxBuffer[0]) //站号错误不进行任何处理，立即返回（ACKTimeout定时器继续定时）
@@ -680,11 +650,14 @@ namespace SerialportSample
                 if (TempWord.Word != CRCCaculation.CRC16(TransmitRxBuffer, (UInt16)(TransmitRxLength - 2)))
                     return (byte)ErrorStatus.ERR_CRCCode;//检测CRC是否错误
 
-                FunctionCode = TransmitRxBuffer[1];//记录功能码
+                funcCode = TransmitRxBuffer[1];//记录功能码
                 TempWord.HByte= TransmitRxBuffer[2];
                 TempWord.LByte = TransmitRxBuffer[3];
                 TxAddress = TempWord.Word;
-                switch (FunctionCode)
+
+                Console.Write(funcCode.ToString()+'\n');
+
+                switch (funcCode)
                 {
                     case (byte)ModbusFuncCode.WriteSingleCoil:
                     case (byte)ModbusFuncCode.WriteCoils:
@@ -786,7 +759,39 @@ namespace SerialportSample
                         return (byte)ErrorStatus.ERR_FunctionCode;//检测FunctionCode是否错误
                        
                 }
-                
+                Console.Write(funcCode.ToString()+'\n');
+
+                switch (funcCode)
+                {
+                    case (byte)ModbusFuncCode.WriteSingleCoil:
+                        MasterDataRepos.WCoilFlag[TxAddress] = false; //写指令结束后把对应的标志位清掉
+                        ResumeRead((byte)ModbusFuncCode.ReadCoils, TxAddress, 1);
+                        break;
+                    case (byte)ModbusFuncCode.WriteCoils:
+                        TempWord.HByte = TransmitTxBuffer[4];
+                        TempWord.LByte = TransmitTxBuffer[5];
+                        NumOfTransmitData = TempWord.Word;
+                        for (UInt16 tempCount = 0; tempCount < NumOfTransmitData; tempCount++)
+                            MasterDataRepos.WCoilFlag[(uint)TxAddress + tempCount] = false; //
+                        ResumeRead((byte)ModbusFuncCode.ReadCoils, TxAddress, (byte)NumOfTransmitData);
+                        break;
+                    case (byte)ModbusFuncCode.WriteRegs:
+                        TempWord.HByte = TransmitTxBuffer[4];
+                        TempWord.LByte = TransmitTxBuffer[5];
+                        NumOfTransmitData = TempWord.Word;
+                        for (UInt16 tempCount = 0; tempCount < NumOfTransmitData; tempCount++)
+                            MasterDataRepos.WStorageRegFlag[(uint)TxAddress + tempCount] = false;
+                        ResumeRead((byte)ModbusFuncCode.ReadStorageRegs, TxAddress, (byte)NumOfTransmitData);
+                        break;
+                    case (byte)ModbusFuncCode.WriteSingleReg:
+                        MasterDataRepos.WStorageRegFlag[TxAddress] = false; //
+                        ResumeRead((byte)ModbusFuncCode.ReadStorageRegs, TxAddress, 1);
+                        break;
+
+                    default:
+                        break;
+
+                }
 
             }
             else
