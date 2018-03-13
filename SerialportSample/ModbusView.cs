@@ -298,7 +298,7 @@ namespace SerialportSample
             {
                 ModbusRTU.MasterDataRepos.StorageRegs[_WriteAddress]=Convert.ToUInt16(this.Text);
                 ModbusRTU.VoteToConfirmTransmitRegs('+', (byte)_WriteFunctionCode, _WriteAddress, _WriteDataLengthInWord);
-                ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)_WriteFunctionCode, 8));
+                ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)_WriteFunctionCode, 0));
                 HideCaret(this.Handle);
             }
                 
@@ -376,20 +376,6 @@ namespace SerialportSample
                       
         }
 
-        //protected override void OnMouseDown(MouseEventArgs e)
-        //{
-
-        //    // 应立刻关闭text的刷新操作      待完成
-
-        //    base.OnMouseDown(e);
-        //    ShowCaret(this.Handle);
-        //}
-
-        //protected override void OnKeyPress(KeyPressEventArgs e)
-        //{
-        //    base.OnKeyPress(e);
-
-        //}
       
         private void InitializeComponent()
         {
