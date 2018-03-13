@@ -104,7 +104,7 @@ namespace SerialportSample
             ACKTimer.Interval= ACKTimerInterval;
             BroadcastTimer.Interval= BroadcastTimerInterval;
             RxDataTimer.Interval = RxTimerInterval;
-            PeriodicTxTimer.Interval = 1000;//待修改
+            PeriodicTxTimer.Interval = 100;//待修改
             PeriodicTxTimer.Enabled = true;
 
             RxDataTimer.Elapsed += RxDataTimer_Elapsed;//为接收数据定时器创建定时函数
@@ -125,8 +125,7 @@ namespace SerialportSample
         private void ModbusRTU_ModbusTransmitSuccessEvent()
         {
             //目前只是Master的功能   Slave的需要添加
-           
-                    TxRxStatus = TransmitingStatus.Idle;
+            TxRxStatus = TransmitingStatus.Idle;
         }
 
         #endregion
@@ -374,6 +373,9 @@ namespace SerialportSample
 
         private void PeriodicTxTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            //if (TxRxStatus == TransmitingStatus.Receiving)
+            //    RxDataTimer.Enabled = true;
+                Console.Write(RxDataTimer.Enabled.ToString()) ;
             MasterSendFrame();
         }
 
@@ -403,6 +405,7 @@ namespace SerialportSample
         private void ModbusReceiveData_SerialPort_Done()
         {
             Disassemble_ReceivedADU();//解析收到的帧
+            TxRxStatus = TransmitingStatus.Idle;
             TransmitPointerRX = 0;
         }
 
@@ -641,7 +644,6 @@ namespace SerialportSample
                     return (byte)ErrorStatus.ERR_Station;
 
                 ACKTimer.Enabled = false;//通过上面站号检测的说明是期望子节点发送来的响应帧，因而停止ACKTimeout倒计时。
-                TxRxStatus = TransmitingStatus.Idle;//总线状态置为空闲，允许发送其他帧（会不会放在本函数最后好，不然要是Modbus发送了其他的帧，并接收了返回的帧，上一次此处的处理还未完成怎么办？）
 
                 if (TransmitRxLength < 5) return (byte)ErrorStatus.ERR_BreakFrame;
 
@@ -801,6 +803,8 @@ namespace SerialportSample
             }
 
             ModbusTransmitSuccessEvent();//（触发事件）如果以上均正确，说明Modbus收发正确无误，触发传输成功事件
+            //TxRxStatus = TransmitingStatus.Idle;//总线状态置为空闲，允许发送其他帧（会不会放在本函数最后好，不然要是Modbus发送了其他的帧，并接收了返回的帧，上一次此处的处理还未完成怎么办？）
+
             return (byte)ErrorStatus.ERR_OK;
         }
 
@@ -811,7 +815,8 @@ namespace SerialportSample
         {
             Sending = 0x00,
             Receiving = 0x01,
-            Idle = 0x02
+            Idle = 0x02,
+            Disassembling=0x03
         }
 
         public enum ErrorStatus
