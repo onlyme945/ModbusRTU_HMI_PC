@@ -404,8 +404,10 @@ namespace SerialportSample
         }
         private void ModbusReceiveData_SerialPort_Done()
         {
+            TxRxStatus = TransmitingStatus.Idle;//通过RxDataTimer定时器的超时行为判断一帧接收完成后，立即将总线状态置为Idle  运行新一轮的发送接收
+                                                //但是要非常注意  万一前面接收到帧还没有解析完，新的发送帧已发送完成并且开始接收新的应答帧  会导致目前唯一的放置接收数据的数组被覆盖，导致前一帧的解析出错
+                                                //！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
             Disassemble_ReceivedADU();//解析收到的帧
-            TxRxStatus = TransmitingStatus.Idle;
             TransmitPointerRX = 0;
         }
 
@@ -460,12 +462,6 @@ namespace SerialportSample
                 }
 
             }//TxRxStatus == TransmitingStatus.Idle
-
-            if (TxRxStatus == TransmitingStatus.Receiving)
-                RxDataTimer.Enabled = true;
-
-
-
             return true;
 
         }
@@ -639,7 +635,7 @@ namespace SerialportSample
             byte tempIndex=0;
             byte funcCode = 0;
             if (IsMaster == true)
-            {
+            {               
                 if (StationID != TransmitRxBuffer[0]) //站号错误不进行任何处理，立即返回（ACKTimeout定时器继续定时）
                     return (byte)ErrorStatus.ERR_Station;
 
@@ -661,14 +657,18 @@ namespace SerialportSample
 
                 switch (funcCode)
                 {
-                    case (byte)ModbusFuncCode.WriteSingleCoil:
-                    case (byte)ModbusFuncCode.WriteCoils:
-                    case (byte)ModbusFuncCode.WriteRegs:
+                    case (byte)ModbusFuncCode.WriteSingleCoil:                        
+                    case (byte)ModbusFuncCode.WriteCoils:                 
+                    case (byte)ModbusFuncCode.WriteRegs:                       
                     case (byte)ModbusFuncCode.WriteSingleReg:
                         TempWord.HByte = TransmitRxBuffer[2];//检查地址是否正确
                         TempWord.LByte = TransmitRxBuffer[3];
                         if (TempWord.Word != TxAddress) //这里的address没有被赋过值，估计会有问题    20180312——HS
                             return (byte)ErrorStatus.ERR_Address;
+
+                        TempWord.HByte = TransmitTxBuffer[4];
+                        TempWord.LByte = TransmitTxBuffer[5];
+                        NumOrData = TempWord.Word;//获取写指令发送帧中 写出数据的个数 或者 写单个寄存器的指令
                         TempWord.HByte = TransmitRxBuffer[4];//检查写入单元数量或写入的单个数据是否正确
                         TempWord.LByte = TransmitRxBuffer[5];
                         if (TempWord.Word != NumOrData)
