@@ -46,40 +46,40 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="窗体类\MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="窗体类\MainForm.Designer.cs">
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="自定义控件类\LabelModbus.cs">
+    <Compile Include="Custom_Controls\LabelModbus.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="自定义控件类\LabelModbus.Designer.cs">
+    <Compile Include="Custom_Controls\LabelModbus.Designer.cs">
       <DependentUpon>LabelModbus.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModbusRTU类\ModbusRTU.cs" />
-    <Compile Include="自定义控件类\ButtonModbus.cs">
+    <Compile Include="ModbusRTU_Class\ModbusRTU.cs" />
+    <Compile Include="Custom_Controls\ButtonModbus.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="自定义控件类\ButtonModbus.Designer.cs">
+    <Compile Include="Custom_Controls\ButtonModbus.Designer.cs">
       <DependentUpon>ButtonModbus.cs</DependentUpon>
     </Compile>
-    <Compile Include="自定义控件类\TextBoxModbus.cs">
+    <Compile Include="Custom_Controls\TextBoxModbus.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="窗体类\MainForm.resx">
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="自定义控件类\LabelModbus.resx">
+    <EmbeddedResource Include="Custom_Controls\LabelModbus.resx">
       <DependentUpon>LabelModbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="自定义控件类\ButtonModbus.resx">
+    <EmbeddedResource Include="Custom_Controls\ButtonModbus.resx">
       <DependentUpon>ButtonModbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="自定义控件类\TextBoxModbus.resx">
+    <EmbeddedResource Include="Custom_Controls\TextBoxModbus.resx">
       <DependentUpon>TextBoxModbus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
