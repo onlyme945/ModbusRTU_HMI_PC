@@ -46,40 +46,40 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainForm.cs">
+    <Compile Include="窗体类\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="窗体类\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LabelModbus.cs">
+    <Compile Include="自定义控件类\LabelModbus.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="LabelModbus.Designer.cs">
+    <Compile Include="自定义控件类\LabelModbus.Designer.cs">
       <DependentUpon>LabelModbus.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModbusRTU.cs" />
-    <Compile Include="ButtonModbus.cs">
+    <Compile Include="ModbusRTU类\ModbusRTU.cs" />
+    <Compile Include="自定义控件类\ButtonModbus.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ButtonModbus.Designer.cs">
+    <Compile Include="自定义控件类\ButtonModbus.Designer.cs">
       <DependentUpon>ButtonModbus.cs</DependentUpon>
     </Compile>
-    <Compile Include="TextBoxModbus.cs">
+    <Compile Include="自定义控件类\TextBoxModbus.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="窗体类\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LabelModbus.resx">
+    <EmbeddedResource Include="自定义控件类\LabelModbus.resx">
       <DependentUpon>LabelModbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ButtonModbus.resx">
+    <EmbeddedResource Include="自定义控件类\ButtonModbus.resx">
       <DependentUpon>ButtonModbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TextBoxModbus.resx">
+    <EmbeddedResource Include="自定义控件类\TextBoxModbus.resx">
       <DependentUpon>TextBoxModbus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -109,6 +109,7 @@
     </Content>
     <Content Include="控件需求.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

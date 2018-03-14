@@ -45,6 +45,7 @@
             this.modbusView3 = new SerialportSample.TextBoxModbus();
             this.modbusView2 = new SerialportSample.TextBoxModbus();
             this.modbusView1 = new SerialportSample.TextBoxModbus();
+            this.labelModbus2 = new SerialportSample.LabelModbus();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -287,11 +288,28 @@
             this.modbusView1.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
             this.modbusView1.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteRegs;
             // 
+            // labelModbus2
+            // 
+            this.labelModbus2.AutoSize = true;
+            this.labelModbus2.EnablePeriodRequest = true;
+            this.labelModbus2.Location = new System.Drawing.Point(238, 164);
+            this.labelModbus2.Name = "labelModbus2";
+            this.labelModbus2.ReadAddress = ((ushort)(1));
+            this.labelModbus2.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus2.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus2.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus2.RequestPeriod = 100D;
+            this.labelModbus2.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus2.StationID = ((byte)(1));
+            this.labelModbus2.TabIndex = 54;
+            this.labelModbus2.Text = "0";
+            // 
             // SerialportSampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 468);
+            this.Controls.Add(this.labelModbus2);
             this.Controls.Add(this.buttonModbus1);
             this.Controls.Add(this.labelModbus1);
             this.Controls.Add(this.modbusView5);
@@ -337,6 +355,7 @@
         private TextBoxModbus modbusView5;
         private LabelModbus labelModbus1;
         private ButtonModbus buttonModbus1;
+        private LabelModbus labelModbus2;
     }
 }
 
