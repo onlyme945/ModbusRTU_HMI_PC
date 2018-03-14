@@ -52,14 +52,20 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="LabelModbus.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LabelModbus.Designer.cs">
+      <DependentUpon>LabelModbus.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModbusRTU.cs" />
-    <Compile Include="ModbusTxtBoxUserControl.cs">
+    <Compile Include="ButtonModbus.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ModbusTxtBoxUserControl.Designer.cs">
-      <DependentUpon>ModbusTxtBoxUserControl.cs</DependentUpon>
+    <Compile Include="ButtonModbus.Designer.cs">
+      <DependentUpon>ButtonModbus.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModbusView.cs">
+    <Compile Include="TextBoxModbus.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
@@ -67,11 +73,14 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ModbusTxtBoxUserControl.resx">
-      <DependentUpon>ModbusTxtBoxUserControl.cs</DependentUpon>
+    <EmbeddedResource Include="LabelModbus.resx">
+      <DependentUpon>LabelModbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ModbusView.resx">
-      <DependentUpon>ModbusView.cs</DependentUpon>
+    <EmbeddedResource Include="ButtonModbus.resx">
+      <DependentUpon>ButtonModbus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxModbus.resx">
+      <DependentUpon>TextBoxModbus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

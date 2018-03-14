@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace SerialportSample
 {
-    public partial class ModbusTxtBoxUserControl : UserControl
+    public partial class ButtonModbus : UserControl
     {
-        public ModbusTxtBoxUserControl()
+        public ButtonModbus()
         {
             InitializeComponent();
         }

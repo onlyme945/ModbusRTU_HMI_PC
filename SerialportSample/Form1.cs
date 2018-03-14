@@ -140,9 +140,7 @@ namespace SerialportSample
             UInt16[] temparray2 = new UInt16[2];
             UInt16 tempcount = 0;
             temparraylist = ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs,8);
-            textBox9.Text = temparraylist.Count.ToString();
-            textBox10.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[0].ToString();
-            textBox11.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
+            //textBox9.Text = temparraylist.Count.ToString();
 
             richTextBox1.Text = "";          
             foreach (UInt16[] tempa in temparraylist)
@@ -156,50 +154,7 @@ namespace SerialportSample
             }
         }
 
-        private void textBox7_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-           //modbusView1.ReadAddress= Convert.ToUInt16(textBox1.Text);
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-            modbusView1.ReadAddress = Convert.ToUInt16(textBox2.Text);
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-            //modbusView3.ReadAddress = Convert.ToUInt16(textBox3.Text);
-        }
-
-        private void textBox4_TextChanged(object sender, EventArgs e)
-        {
-            //modbusView4.ReadAddress = Convert.ToUInt16(textBox4.Text);
-        }
-
-        private void textBox5_TextChanged_1(object sender, EventArgs e)
-        {
-            //modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox5.Text);
-        }
-
-        private void textBox6_TextChanged_1(object sender, EventArgs e)
-        {
-            modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
-        }
-
-        private void textBox7_TextChanged_1(object sender, EventArgs e)
-        {
-            //modbusView3.ReadDataLengthInWord = Convert.ToByte(textBox7.Text);
-        }
-
-        private void textBox8_TextChanged(object sender, EventArgs e)
-        {
-            //modbusView4.ReadDataLengthInWord = Convert.ToByte(textBox8.Text);
-        }
 
     }
 }

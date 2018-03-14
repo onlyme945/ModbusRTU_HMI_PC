@@ -10,7 +10,7 @@ using System.ComponentModel;
 namespace SerialportSample
 {
     [ToolboxBitmap(typeof(TextBox))]
-    public  class ModbusView:System.Windows.Forms.TextBox
+    public  class TextBoxModbus:System.Windows.Forms.TextBox
     {
         [DllImport("user32.dll")]
         public static extern bool HideCaret(IntPtr hWnd);//隐藏textbox的光标
@@ -18,8 +18,7 @@ namespace SerialportSample
         public static extern bool ShowCaret(IntPtr hWnd);//显示textbox的光标
 
         private TextBox ModbusTextBox;
-        //private ModbusRTU modbus1=new ModbusRTU();
-        private System.Timers.Timer PeriodicRequestTimer =new System.Timers.Timer();
+        private System.Timers.Timer PeriodicRefreshTimer =new System.Timers.Timer();
 
         #region"/////////////////////自定义的属性///////////////////"
         private byte _StationID=1;      
@@ -145,11 +144,11 @@ namespace SerialportSample
         {
             get
             {
-                return PeriodicRequestTimer.Interval;
+                return PeriodicRefreshTimer.Interval;
             }
             set
             {
-                PeriodicRequestTimer.Interval = value;
+                PeriodicRefreshTimer.Interval = value;
             }
         }
         [Category("ModbusRTU"), Description("周期查询使能")]
@@ -157,11 +156,11 @@ namespace SerialportSample
         {
             get
             {
-                return PeriodicRequestTimer.Enabled;
+                return PeriodicRefreshTimer.Enabled;
             }
             set
             {
-                PeriodicRequestTimer.Enabled = value;
+                PeriodicRefreshTimer.Enabled = value;
             }
         }
 
@@ -283,9 +282,9 @@ namespace SerialportSample
 
         #endregion
 
-        public ModbusView()
+        public TextBoxModbus()
         {
-            PeriodicRequestTimer.Elapsed += PeriodicRequestTimer_Elapsed;
+            PeriodicRefreshTimer.Elapsed += PeriodicRefreshTimer_Elapsed;
             this.MouseClick += ModbusView_MouseClick1;
             this.KeyPress += ModbusView_KeyPress;
           
@@ -300,22 +299,25 @@ namespace SerialportSample
                 ModbusRTU.VoteToConfirmTransmitRegs('+', (byte)_WriteFunctionCode, _WriteAddress, _WriteDataLengthInWord);
                 ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)_WriteFunctionCode, 0));
                 HideCaret(this.Handle);
+                PeriodicRefreshTimer.Enabled = true;
             }
                 
             if (e.KeyChar == (char)Keys.Escape)//通过Esc键取消写操作，恢复周期性读数据状态
             {
                 ModbusRTU.ResumeRead((byte)_ReadFunctionCode, _ReadAddress, _ReadDataLengthInWord);
                 HideCaret(this.Handle);
+                PeriodicRefreshTimer.Enabled = true;
             }
         }
 
         private void ModbusView_MouseClick1(object sender, MouseEventArgs e)
         {
+            this.PeriodicRefreshTimer.Enabled = false;
             ShowCaret(this.Handle);
             ModbusRTU.SuspendRead((byte)_ReadFunctionCode, _ReadAddress, _ReadDataLengthInWord);//鼠标单击本控件后，进入写寄存器状态，暂停寄存器的读操作
         }
 
-        private void PeriodicRequestTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void PeriodicRefreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //周期性刷新数据代码   待完成
             UInt16[] tempRegs;           
@@ -323,12 +325,14 @@ namespace SerialportSample
             switch (_ReadFunctionCode)
             {
                 case ReadFunctionCodeEnum.ReadInputRegs:
-                      if(ModbusRTU.MasterDataRepos.RInputRegFlag[_ReadAddress] == false) return;
+                    if (ModbusRTU.MasterDataRepos.RInputRegFlag[_ReadAddress] == false)
+                        return;
                     tempRegs = ModbusRTU.MasterDataRepos.InputRegs;
                     break;
                     
                 case ReadFunctionCodeEnum.ReadStorageRegs:
-                        if (ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] == false) return;
+                    if (ModbusRTU.MasterDataRepos.RStorageRegFlag[_ReadAddress] == false)
+                        return;
                     tempRegs = ModbusRTU.MasterDataRepos.StorageRegs;
                     break;
 
@@ -376,7 +380,7 @@ namespace SerialportSample
                       
         }
 
-      
+
         private void InitializeComponent()
         {
             this.ModbusTextBox = new System.Windows.Forms.TextBox();
