@@ -154,7 +154,6 @@ namespace SerialportSample
             }
         }
 
-
-
+      
     }
 }
