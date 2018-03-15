@@ -14,15 +14,6 @@ namespace SerialportSample
 {
     public partial class SerialportSampleForm : Form
     {
-        /*在master_child1中能看到*/
-        /*子1进1*/
-        /*子1进2*/
-        /*子1进3*/
-        /*子1进4*/
-        /*子1进5*/
-
-        /*子1进7*/
-
         private BitInByte testbitinbyte = new BitInByte("Bit",65536);
         private ModbusRTU ModbusMaster = new ModbusRTU();
         private SerialPort comm = new SerialPort();
@@ -60,14 +51,10 @@ namespace SerialportSample
             comm.RtsEnable = true;//根据实际情况吧。
 
             //添加事件注册
-            //comm.DataReceived += comm_DataReceived;
-            //comm.DataReceived += Modbus_DataReceived;
-
             ModbusRTU.IsMaster = true;
             comm.DataReceived += ModbusMaster.ModbusReceiveData_SerialPort;
             ModbusRTU.ModbusSendFrame += comm.Write;//为Modbus实例中的发送委托关联正确的发送函数
             ModbusRTU.SetDataStorage();
-            //ModbusMaster.RxDataTimer = Timer_RxDone;
 
         }
 
@@ -85,7 +72,7 @@ namespace SerialportSample
             else
             {
                 
-                ModbusRTU.AssembleRequestADU( 1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs, 8));
+                ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs, 8));
                 ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadInputRegs, 8));
                 ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadCoils, 8));
                 //关闭时点击，则设置好端口，波特率后打开
@@ -118,30 +105,13 @@ namespace SerialportSample
            
         }
 
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
-            //modbusView1.ReadAddress = Convert.ToUInt16(textBox5.Text);
-        }
-
-        private void textBox6_TextChanged(object sender, EventArgs e)
-        {
-            //modbusView1.ReadDataLengthInWord = Convert.ToByte(textBox6.Text);
-            
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
-            //textBox1.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[0].ToString();
-
-            //textBox2.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[1].ToString();
-            //textBox3.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65534].ToString();
-            //textBox4.Text = ModbusRTU.MasterDataRepos.RStorageRegFlag[65535].ToString();
             ArrayList temparraylist = new ArrayList();
             UInt16[] temparray1 = new UInt16[2];
             UInt16[] temparray2 = new UInt16[2];
             UInt16 tempcount = 0;
             temparraylist = ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs,8);
-            //textBox9.Text = temparraylist.Count.ToString();
 
             richTextBox1.Text = "";          
             foreach (UInt16[] tempa in temparraylist)
