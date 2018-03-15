@@ -38,13 +38,14 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.button2 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.bitStatus2 = new SerialportSample.Custom_Controls.BitStatus();
+            this.bitStatus1 = new SerialportSample.Custom_Controls.BitStatus();
             this.modbusView5 = new SerialportSample.TextBoxModbus();
             this.modbusView4 = new SerialportSample.TextBoxModbus();
             this.modbusView3 = new SerialportSample.TextBoxModbus();
             this.modbusView2 = new SerialportSample.TextBoxModbus();
             this.modbusView1 = new SerialportSample.TextBoxModbus();
-            this.bitStatus1 = new SerialportSample.Custom_Controls.BitStatus();
-            this.bitStatus2 = new SerialportSample.Custom_Controls.BitStatus();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -158,6 +159,36 @@
             this.richTextBox1.TabIndex = 44;
             this.richTextBox1.Text = "";
             // 
+            // bitStatus2
+            // 
+            this.bitStatus2.BackColor = System.Drawing.Color.Gray;
+            this.bitStatus2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bitStatus2.EnablePeriodRequest = true;
+            this.bitStatus2.Location = new System.Drawing.Point(436, 195);
+            this.bitStatus2.Name = "bitStatus2";
+            this.bitStatus2.ReadAddress = ((ushort)(1));
+            this.bitStatus2.ReadDataLengthInBit = ((byte)(1));
+            this.bitStatus2.ReadFuncCode = SerialportSample.Custom_Controls.BitStatus.ReadFunctionCodeEnum.ReadCoils;
+            this.bitStatus2.RefreshPeriod = 100D;
+            this.bitStatus2.Size = new System.Drawing.Size(26, 25);
+            this.bitStatus2.StationID = ((byte)(1));
+            this.bitStatus2.TabIndex = 53;
+            // 
+            // bitStatus1
+            // 
+            this.bitStatus1.BackColor = System.Drawing.Color.Gray;
+            this.bitStatus1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.bitStatus1.EnablePeriodRequest = true;
+            this.bitStatus1.Location = new System.Drawing.Point(436, 151);
+            this.bitStatus1.Name = "bitStatus1";
+            this.bitStatus1.ReadAddress = ((ushort)(0));
+            this.bitStatus1.ReadDataLengthInBit = ((byte)(1));
+            this.bitStatus1.ReadFuncCode = SerialportSample.Custom_Controls.BitStatus.ReadFunctionCodeEnum.ReadCoils;
+            this.bitStatus1.RefreshPeriod = 100D;
+            this.bitStatus1.Size = new System.Drawing.Size(26, 25);
+            this.bitStatus1.StationID = ((byte)(1));
+            this.bitStatus1.TabIndex = 52;
+            // 
             // modbusView5
             // 
             this.modbusView5.EnablePeriodRequest = true;
@@ -263,41 +294,19 @@
             this.modbusView1.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
             this.modbusView1.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteRegs;
             // 
-            // bitStatus1
+            // textBox1
             // 
-            this.bitStatus1.BackColor = System.Drawing.Color.Gray;
-            this.bitStatus1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bitStatus1.EnablePeriodRequest = true;
-            this.bitStatus1.Location = new System.Drawing.Point(436, 151);
-            this.bitStatus1.Name = "bitStatus1";
-            this.bitStatus1.ReadAddress = ((ushort)(0));
-            this.bitStatus1.ReadDataLengthInBit = ((byte)(1));
-            this.bitStatus1.ReadFuncCode = SerialportSample.Custom_Controls.BitStatus.ReadFunctionCodeEnum.ReadCoils;
-            this.bitStatus1.RefreshPeriod = 100D;
-            this.bitStatus1.Size = new System.Drawing.Size(26, 25);
-            this.bitStatus1.StationID = ((byte)(1));
-            this.bitStatus1.TabIndex = 52;
-            // 
-            // bitStatus2
-            // 
-            this.bitStatus2.BackColor = System.Drawing.Color.Gray;
-            this.bitStatus2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bitStatus2.EnablePeriodRequest = true;
-            this.bitStatus2.Location = new System.Drawing.Point(436, 195);
-            this.bitStatus2.Name = "bitStatus2";
-            this.bitStatus2.ReadAddress = ((ushort)(1));
-            this.bitStatus2.ReadDataLengthInBit = ((byte)(1));
-            this.bitStatus2.ReadFuncCode = SerialportSample.Custom_Controls.BitStatus.ReadFunctionCodeEnum.ReadCoils;
-            this.bitStatus2.RefreshPeriod = 100D;
-            this.bitStatus2.Size = new System.Drawing.Size(26, 25);
-            this.bitStatus2.StationID = ((byte)(1));
-            this.bitStatus2.TabIndex = 53;
+            this.textBox1.Location = new System.Drawing.Point(194, 170);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 21);
+            this.textBox1.TabIndex = 54;
             // 
             // SerialportSampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 468);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.bitStatus2);
             this.Controls.Add(this.bitStatus1);
             this.Controls.Add(this.modbusView5);
@@ -317,6 +326,7 @@
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Name = "SerialportSampleForm";
             this.Text = "Serial tool Sample";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SerialportSampleForm_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -344,6 +354,7 @@
         private TextBoxModbus modbusView5;
         private Custom_Controls.BitStatus bitStatus1;
         private Custom_Controls.BitStatus bitStatus2;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

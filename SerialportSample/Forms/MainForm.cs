@@ -40,13 +40,21 @@ namespace SerialportSample
         //窗体初始化
         private void Form1_Load(object sender, EventArgs e)
         {
+            string PortNameStored = ConfigurationManager.AppSettings["ComPort"];
+            string LastBaudrate = ConfigurationManager.AppSettings["Baudrate"];
             //初始化下拉串口名称列表框
             string[] ports = SerialPort.GetPortNames();
             Array.Sort(ports);
             comboPortName.Items.AddRange(ports);
-            comboPortName.SelectedIndex = comboPortName.Items.Count > 0 ? 0 : -1;
-            comboBaudrate.SelectedIndex = comboBaudrate.Items.IndexOf("9600");
 
+
+            if (comboPortName.Items.Contains(PortNameStored) == true)
+                comboPortName.SelectedIndex = comboPortName.Items.IndexOf(PortNameStored);
+            else
+                comboPortName.SelectedIndex = comboPortName.Items.Count > 0 ? 0 : -1;
+            comboBaudrate.SelectedIndex = comboBaudrate.Items.IndexOf(LastBaudrate);
+
+            
             //初始化SerialPort对象
             comm.NewLine = "\r\n";
             comm.RtsEnable = true;//根据实际情况吧。
@@ -124,8 +132,17 @@ namespace SerialportSample
             {
                 richTextBox1.Text = richTextBox1.Text + tempa[0].ToString() + " " + tempa[1].ToString() + " " + tempa[2].ToString() + "\n";
             }
+
         }
 
-      
+        private void SerialportSampleForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);//获取Configuration对象
+            config.AppSettings.Settings["ComPort"].Value = comboPortName.Text;//
+            config.AppSettings.Settings["Baudrate"].Value = comboBaudrate.Text;//
+            config.Save(ConfigurationSaveMode.Modified);//保存
+            ConfigurationManager.RefreshSection("appSettings");//刷新
+
+        }
     }
 }
