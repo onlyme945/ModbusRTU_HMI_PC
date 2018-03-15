@@ -816,7 +816,7 @@ namespace SerialportSample
             Sending = 0x00,
             Receiving = 0x01,
             Idle = 0x02,
-            Disassembling=0x03
+            //Disassembling=0x03
         }
 
         public enum ErrorStatus

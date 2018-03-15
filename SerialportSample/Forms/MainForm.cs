@@ -87,6 +87,7 @@ namespace SerialportSample
                 
                 ModbusRTU.AssembleRequestADU( 1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs, 8));
                 ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadInputRegs, 8));
+                ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadCoils, 8));
                 //关闭时点击，则设置好端口，波特率后打开
                 comm.PortName = comboPortName.Text;
                 comm.BaudRate = int.Parse(comboBaudrate.Text);

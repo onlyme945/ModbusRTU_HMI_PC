@@ -111,7 +111,7 @@ namespace SerialportSample
      
 
         [Category("ModbusRTU"), Description("查询周期")]
-        public double RequestPeriod
+        public double RefreshPeriod
         {
             get
             {
