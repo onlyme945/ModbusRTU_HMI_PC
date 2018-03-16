@@ -15,28 +15,7 @@ namespace SerialportSample
     public class ModbusRTU
     {
 
-        #region//////////////////修改过待删除的量///////////////////////
-        //public const byte ReadCoils        = 0x01;
-        //public const byte ReadDistrbuteBits= 0x02;
-        //public const byte ReadStorageRegs  = 0x03;
-        //public const byte ReadInputRegs    = 0x04;
-        //public const byte WriteSingleCoil  = 0x05;
-        //public const byte WriteSingleReg   = 0x06;
-        //public const byte WriteCoils       = 0x0F;
-        //public const byte WriteRegs        = 0x10;
-
-
-        //public const byte ERR_OK= 0x00;
-        //public const byte ERR_Station = 0x01;
-        //public const byte ERR_FunctionCode = 0x02;
-        //public const byte ERR_Address = 0x03;
-        //public const byte ERR_NumOrData = 0x04;//与NumOrData相对应
-        //public const byte ERR_CRCCode = 0x05;
-        //public const byte ERR_BreakFrame = 0x06;
-        //public const byte ERR_Response = 0xFF;
-
-        #endregion
-
+        public static SerialPort SerialCommPort = new SerialPort();
         public static ModbusDataRepository MasterDataRepos = new ModbusDataRepository(65536);
         private TransmitingStatus TxRxStatus= TransmitingStatus.Idle;
 
@@ -96,6 +75,10 @@ namespace SerialportSample
             PeriodicTxTimer.Interval = 100;//待修改
             PeriodicTxTimer.Enabled = true;
 
+            SerialCommPort.NewLine = "\r\n";
+            SerialCommPort.RtsEnable = true;//
+
+
             RxDataTimer.Elapsed += RxDataTimer_Elapsed;//为接收数据定时器创建定时函数
             BroadcastTimer.Elapsed += BroadcastTimer_Elapsed;//为广播定时器创建定时函数
             ACKTimer.Elapsed += ACKTimer_Elapsed;//为应答超时定时器创建定时函数
@@ -103,6 +86,8 @@ namespace SerialportSample
 
             ModbusTransmitSuccessEvent += ModbusRTU_ModbusTransmitSuccessEvent;         
             ModbusReceiveExceptionEvent += ModbusRTU_ModbusReceiveExceptionEvent;
+            SerialCommPort.DataReceived += ModbusReceiveData_SerialPort;
+            ModbusSendFrame += SerialCommPort.Write;//为Modbus实例中的发送委托关联正确的发送函数
         }
 
         private void ModbusRTU_ModbusReceiveExceptionEvent()
@@ -339,9 +324,6 @@ namespace SerialportSample
 
         private void PeriodicTxTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            //if (TxRxStatus == TransmitingStatus.Receiving)
-            //    RxDataTimer.Enabled = true;
-                Console.Write(RxDataTimer.Enabled.ToString()) ;
             MasterSendFrame();
         }
 

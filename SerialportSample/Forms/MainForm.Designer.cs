@@ -28,15 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboPortName = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.comboBaudrate = new System.Windows.Forms.ComboBox();
-            this.buttonOpenClose = new System.Windows.Forms.Button();
             this.MainFormStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.button2 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.MainFormMenuStrip = new System.Windows.Forms.MenuStrip();
+            this.通讯设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonModbus1 = new SerialportSample.ButtonModbus();
             this.bitStatus2 = new SerialportSample.Custom_Controls.BitStatus();
             this.bitStatus1 = new SerialportSample.Custom_Controls.BitStatus();
@@ -45,72 +42,9 @@
             this.modbusView3 = new SerialportSample.TextBoxModbus();
             this.modbusView2 = new SerialportSample.TextBoxModbus();
             this.modbusView1 = new SerialportSample.TextBoxModbus();
-            this.MainFormMenuStrip = new System.Windows.Forms.MenuStrip();
-            this.通讯设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormStatusStrip.SuspendLayout();
             this.MainFormMenuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // comboPortName
-            // 
-            this.comboPortName.BackColor = System.Drawing.Color.White;
-            this.comboPortName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboPortName.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.comboPortName.FormattingEnabled = true;
-            this.comboPortName.Location = new System.Drawing.Point(77, 52);
-            this.comboPortName.Name = "comboPortName";
-            this.comboPortName.Size = new System.Drawing.Size(121, 20);
-            this.comboPortName.TabIndex = 4;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 52);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 12);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Port name";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(205, 55);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 12);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Baudrate";
-            // 
-            // comboBaudrate
-            // 
-            this.comboBaudrate.BackColor = System.Drawing.Color.White;
-            this.comboBaudrate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBaudrate.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.comboBaudrate.FormattingEnabled = true;
-            this.comboBaudrate.Items.AddRange(new object[] {
-            "2400",
-            "4800",
-            "9600",
-            "19200",
-            "38400",
-            "57600",
-            "115200"});
-            this.comboBaudrate.Location = new System.Drawing.Point(264, 52);
-            this.comboBaudrate.Name = "comboBaudrate";
-            this.comboBaudrate.Size = new System.Drawing.Size(121, 20);
-            this.comboBaudrate.TabIndex = 5;
-            // 
-            // buttonOpenClose
-            // 
-            this.buttonOpenClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.buttonOpenClose.Font = new System.Drawing.Font("宋体", 9F);
-            this.buttonOpenClose.ForeColor = System.Drawing.Color.Black;
-            this.buttonOpenClose.Location = new System.Drawing.Point(400, 52);
-            this.buttonOpenClose.Name = "buttonOpenClose";
-            this.buttonOpenClose.Size = new System.Drawing.Size(75, 23);
-            this.buttonOpenClose.TabIndex = 0;
-            this.buttonOpenClose.Text = "Open";
-            this.buttonOpenClose.UseVisualStyleBackColor = true;
-            this.buttonOpenClose.Click += new System.EventHandler(this.buttonOpenClose_Click);
             // 
             // MainFormStatusStrip
             // 
@@ -146,6 +80,23 @@
             this.richTextBox1.Size = new System.Drawing.Size(348, 122);
             this.richTextBox1.TabIndex = 44;
             this.richTextBox1.Text = "";
+            // 
+            // MainFormMenuStrip
+            // 
+            this.MainFormMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.通讯设置ToolStripMenuItem});
+            this.MainFormMenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.MainFormMenuStrip.Name = "MainFormMenuStrip";
+            this.MainFormMenuStrip.Size = new System.Drawing.Size(573, 25);
+            this.MainFormMenuStrip.TabIndex = 55;
+            this.MainFormMenuStrip.Text = "menuStrip1";
+            // 
+            // 通讯设置ToolStripMenuItem
+            // 
+            this.通讯设置ToolStripMenuItem.Name = "通讯设置ToolStripMenuItem";
+            this.通讯设置ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
+            this.通讯设置ToolStripMenuItem.Text = "通讯设置";
+            this.通讯设置ToolStripMenuItem.Click += new System.EventHandler(this.通讯设置ToolStripMenuItem_Click);
             // 
             // buttonModbus1
             // 
@@ -295,23 +246,6 @@
             this.modbusView1.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
             this.modbusView1.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteRegs;
             // 
-            // MainFormMenuStrip
-            // 
-            this.MainFormMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.通讯设置ToolStripMenuItem});
-            this.MainFormMenuStrip.Location = new System.Drawing.Point(0, 0);
-            this.MainFormMenuStrip.Name = "MainFormMenuStrip";
-            this.MainFormMenuStrip.Size = new System.Drawing.Size(573, 25);
-            this.MainFormMenuStrip.TabIndex = 55;
-            this.MainFormMenuStrip.Text = "menuStrip1";
-            // 
-            // 通讯设置ToolStripMenuItem
-            // 
-            this.通讯设置ToolStripMenuItem.Name = "通讯设置ToolStripMenuItem";
-            this.通讯设置ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
-            this.通讯设置ToolStripMenuItem.Text = "通讯设置";
-            this.通讯设置ToolStripMenuItem.Click += new System.EventHandler(this.通讯设置ToolStripMenuItem_Click);
-            // 
             // SerialportSampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -329,11 +263,6 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.MainFormStatusStrip);
             this.Controls.Add(this.MainFormMenuStrip);
-            this.Controls.Add(this.buttonOpenClose);
-            this.Controls.Add(this.comboBaudrate);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboPortName);
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.MainMenuStrip = this.MainFormMenuStrip;
             this.Name = "SerialportSampleForm";
@@ -350,12 +279,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox comboPortName;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBaudrate;
-        private System.Windows.Forms.Button buttonOpenClose;
         private System.Windows.Forms.StatusStrip MainFormStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Button button2;
