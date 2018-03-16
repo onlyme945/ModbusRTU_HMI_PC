@@ -37,21 +37,12 @@ namespace SerialportSample
 
         #endregion
 
-        private static int TempControlIndex;
-
-
         public static ModbusDataRepository MasterDataRepos = new ModbusDataRepository(65536);
-        public static byte[][] DataStorage;//以各控件的索引为序存储接收到的数据
-        public static bool[] DataStorageFlag;
-
         private TransmitingStatus TxRxStatus= TransmitingStatus.Idle;
-
 
         public static byte[] TransmitRxBuffer = new byte[256];
         private static byte[] TransmitTxBuffer;
-        public byte[] DatasInByte = new byte[250];
-        public UInt16[] DatasInWord = new UInt16[250];
-        
+               
         public static UInt16 TransmitRxLength = 0;
         private static UInt16 TransmitPointerRX = 0;
         public UInt16 RetryCNT = 0;
@@ -60,8 +51,6 @@ namespace SerialportSample
         private Boolean IsBroadcastTimeout = false;
         private Boolean IsRxDone = false;
 
-
-        //这里开始动刀子   2018.03.08————HS
         public byte StationID = 1;
         public byte FunctionCode = 0;   
         //public UInt16 qErrorCode = 0;//暂未使用
@@ -118,7 +107,7 @@ namespace SerialportSample
 
         private void ModbusRTU_ModbusReceiveExceptionEvent()
         {
-            DataStorageFlag[TempControlIndex] = false;
+            Console.Write("接收到异常帧\n");
             //作为主设备 收到异常帧 可以触发重发机制
         }
 
@@ -218,29 +207,6 @@ namespace SerialportSample
         #endregion
 
         #region//////////////////////ModbusRTU类方法//////////////////////////
-       
-
-        public static void SetDataStorage()
-        {
-            DataStorage = new byte[TotalControlNumber][];
-            DataStorageFlag = new bool[TotalControlNumber];
-        }
-        public static bool GetDataStorageFlag(int ControlIndex)
-        {
-            return DataStorageFlag[ControlIndex];
-        }
-        public static byte[] GetStorageData(int ControlIndex)
-        {
-            DataStorageFlag[ControlIndex]=false;//取数据前，将数据的标识位置false，表面数据取用后即失效
-            return DataStorage[ControlIndex];
-        }
-
-        //下面的方法完成后， 上面的方法全部失效
-
-        public static void SetFlagReg(BitInByte TargetFlagReg,UInt32 TargetBit,bool BitStatus)
-        {
-            TargetFlagReg[TargetBit] = BitStatus;
-        }
 
         public static bool VoteToConfirmTransmitRegs(char IncreaseOrDecrease, byte FuncCode , UInt16 FirstAddress , byte DataLength) //确定某一地址的数据传送与否的表决器
         {
@@ -314,7 +280,7 @@ namespace SerialportSample
             return true;
         }
 
-        public static bool SuspendRead(byte FuncCode,UInt16 FirstAddress,byte DataLength)
+        public static bool SuspendRead(byte FuncCode,UInt16 FirstAddress,byte DataLength)//暂停读取数据
         {
             BitInByte bitInByte;
             switch (FuncCode)//根据功能码选择对应的票选器 以及标志位寄存器
@@ -341,7 +307,7 @@ namespace SerialportSample
             return true;
         }
 
-        public static bool ResumeRead(byte FuncCode, UInt16 FirstAddress, byte DataLength)
+        public static bool ResumeRead(byte FuncCode, UInt16 FirstAddress, byte DataLength)//恢复读取数据
         {
             BitInByte bitInByte;
             switch (FuncCode)//根据功能码选择对应的票选器 以及标志位寄存器

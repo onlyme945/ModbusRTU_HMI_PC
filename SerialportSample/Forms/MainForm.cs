@@ -18,19 +18,10 @@ namespace SerialportSample
         private BitInByte testbitinbyte = new BitInByte("Bit",65536);
         private ModbusRTU ModbusMaster = new ModbusRTU();
         private SerialPort comm = new SerialPort();
-        private StringBuilder builder = new StringBuilder();//避免在事件处理方法中反复的创建，定义到外面。
-        private long received_count = 0;//接收计数
-        private long send_count = 0;//发送计数
+
         private bool Listening = false;//是否没有执行完invoke相关操作
         private bool Closing = false;//是否正在关闭串口，执行Application.DoEvents，并阻止再次invoke
-        private List<byte> buffer = new List<byte>(4096);//默认分配1页内存，并始终限制不允许超过
-        private byte[] binary_data_1 = new byte[9];//AA 44 05 01 02 03 04 05 EA
 
-        private byte[] testbytedata = { 8, 9, 10 };
-        private UInt16[] testworddata = { 0x11,0x22,0x33,0x44};
-
-
-        private ArrayList testarrayList = new ArrayList();
 
         public SerialportSampleForm()
         {
@@ -63,7 +54,6 @@ namespace SerialportSample
             ModbusRTU.IsMaster = true;
             comm.DataReceived += ModbusMaster.ModbusReceiveData_SerialPort;
             ModbusRTU.ModbusSendFrame += comm.Write;//为Modbus实例中的发送委托关联正确的发送函数
-            ModbusRTU.SetDataStorage();
 
         }
 
@@ -105,15 +95,6 @@ namespace SerialportSample
         }
 
 
-
-        private void buttonReset_Click(object sender, EventArgs e)
-        {
-            //复位接受和发送的字节数计数器并更新界面。
-            send_count = received_count = 0;
-            
-           
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             ArrayList temparraylist = new ArrayList();
@@ -135,7 +116,7 @@ namespace SerialportSample
 
         }
 
-        private void SerialportSampleForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void SerialportSampleForm_FormClosing(object sender, FormClosingEventArgs e)//程序关闭时保存设置信息，下次启动时无需再次设置
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);//获取Configuration对象
             config.AppSettings.Settings["ComPort"].Value = comboPortName.Text;//
@@ -143,6 +124,12 @@ namespace SerialportSample
             config.Save(ConfigurationSaveMode.Modified);//保存
             ConfigurationManager.RefreshSection("appSettings");//刷新
 
+        }
+
+        private void 通讯设置ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CommunicationSettingForm ComSettingForm = new CommunicationSettingForm();
+            ComSettingForm.ShowDialog();
         }
     }
 }
