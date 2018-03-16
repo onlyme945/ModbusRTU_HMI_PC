@@ -38,6 +38,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.button2 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.buttonModbus1 = new SerialportSample.ButtonModbus();
             this.bitStatus2 = new SerialportSample.Custom_Controls.BitStatus();
             this.bitStatus1 = new SerialportSample.Custom_Controls.BitStatus();
             this.modbusView5 = new SerialportSample.TextBoxModbus();
@@ -45,7 +46,6 @@
             this.modbusView3 = new SerialportSample.TextBoxModbus();
             this.modbusView2 = new SerialportSample.TextBoxModbus();
             this.modbusView1 = new SerialportSample.TextBoxModbus();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -158,6 +158,19 @@
             this.richTextBox1.Size = new System.Drawing.Size(348, 122);
             this.richTextBox1.TabIndex = 44;
             this.richTextBox1.Text = "";
+            // 
+            // buttonModbus1
+            // 
+            this.buttonModbus1.ButtonClickAction = SerialportSample.ButtonModbus.ModbusButtonClickActionEnum.Toggle;
+            this.buttonModbus1.EnablePeriodRefresh = true;
+            this.buttonModbus1.Location = new System.Drawing.Point(227, 207);
+            this.buttonModbus1.Name = "buttonModbus1";
+            this.buttonModbus1.ReadAddress = ((ushort)(0));
+            this.buttonModbus1.RefreshPeriod = 100D;
+            this.buttonModbus1.Size = new System.Drawing.Size(75, 23);
+            this.buttonModbus1.StationID = ((byte)(1));
+            this.buttonModbus1.TabIndex = 54;
+            this.buttonModbus1.WriteAddress = ((ushort)(0));
             // 
             // bitStatus2
             // 
@@ -294,19 +307,12 @@
             this.modbusView1.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
             this.modbusView1.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteRegs;
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(194, 170);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
-            this.textBox1.TabIndex = 54;
-            // 
             // SerialportSampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 468);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.buttonModbus1);
             this.Controls.Add(this.bitStatus2);
             this.Controls.Add(this.bitStatus1);
             this.Controls.Add(this.modbusView5);
@@ -354,7 +360,7 @@
         private TextBoxModbus modbusView5;
         private Custom_Controls.BitStatus bitStatus1;
         private Custom_Controls.BitStatus bitStatus2;
-        private System.Windows.Forms.TextBox textBox1;
+        private ButtonModbus buttonModbus1;
     }
 }
 
