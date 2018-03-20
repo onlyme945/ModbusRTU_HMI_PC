@@ -373,11 +373,12 @@ namespace SerialportSample
                     break;
             }
 
+           
             this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
-                {
+                {             
                     this.Text = StringInText;
                 }));
-                      
+
         }
 
 
