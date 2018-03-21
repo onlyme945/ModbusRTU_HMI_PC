@@ -47,88 +47,88 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Custom_Controls\BitStatus.cs">
+    <Compile Include="BitStatus.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Custom_Controls\BitStatus.Designer.cs">
+    <Compile Include="BitStatus.Designer.cs">
       <DependentUpon>BitStatus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WorkSpace\FaultInfo.cs">
+    <Compile Include="FaultInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WorkSpace\FaultInfo.Designer.cs">
+    <Compile Include="FaultInfo.Designer.cs">
       <DependentUpon>FaultInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MainForm.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainForm.Designer.cs">
+    <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Custom_Controls\LabelModbus.cs">
+    <Compile Include="LabelModbus.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Custom_Controls\LabelModbus.Designer.cs">
+    <Compile Include="LabelModbus.Designer.cs">
       <DependentUpon>LabelModbus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CommunicationSettingForm.cs">
+    <Compile Include="CommunicationSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\CommunicationSettingForm.Designer.cs">
+    <Compile Include="CommunicationSettingForm.Designer.cs">
       <DependentUpon>CommunicationSettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModbusRTU_Class\ModbusRTU.cs" />
-    <Compile Include="Custom_Controls\ButtonModbus.cs">
+    <Compile Include="ModbusRTU.cs" />
+    <Compile Include="ButtonModbus.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Custom_Controls\ButtonModbus.Designer.cs">
+    <Compile Include="ButtonModbus.Designer.cs">
       <DependentUpon>ButtonModbus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Custom_Controls\TextBoxModbus.cs">
+    <Compile Include="TextBoxModbus.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\WorkSpace\SystemInfo.cs">
+    <Compile Include="SystemInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WorkSpace\SystemInfo.Designer.cs">
+    <Compile Include="SystemInfo.Designer.cs">
       <DependentUpon>SystemInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WorkSpace\Waveform.cs">
+    <Compile Include="Waveform.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WorkSpace\Waveform.Designer.cs">
+    <Compile Include="Waveform.Designer.cs">
       <DependentUpon>Waveform.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WorkSpace\WorkMode.cs">
+    <Compile Include="WorkMode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WorkSpace\WorkMode.Designer.cs">
+    <Compile Include="WorkMode.Designer.cs">
       <DependentUpon>WorkMode.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Custom_Controls\BitStatus.resx">
+    <EmbeddedResource Include="BitStatus.resx">
       <DependentUpon>BitStatus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WorkSpace\FaultInfo.resx">
+    <EmbeddedResource Include="FaultInfo.resx">
       <DependentUpon>FaultInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainForm.resx">
+    <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Custom_Controls\LabelModbus.resx">
+    <EmbeddedResource Include="LabelModbus.resx">
       <DependentUpon>LabelModbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Custom_Controls\ButtonModbus.resx">
+    <EmbeddedResource Include="ButtonModbus.resx">
       <DependentUpon>ButtonModbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Custom_Controls\TextBoxModbus.resx">
+    <EmbeddedResource Include="TextBoxModbus.resx">
       <DependentUpon>TextBoxModbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CommunicationSettingForm.resx">
+    <EmbeddedResource Include="CommunicationSettingForm.resx">
       <DependentUpon>CommunicationSettingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WorkSpace\SystemInfo.resx">
+    <EmbeddedResource Include="SystemInfo.resx">
       <DependentUpon>SystemInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -140,10 +140,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Forms\WorkSpace\Waveform.resx">
+    <EmbeddedResource Include="Waveform.resx">
       <DependentUpon>Waveform.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WorkSpace\WorkMode.resx">
+    <EmbeddedResource Include="WorkMode.resx">
       <DependentUpon>WorkMode.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config">
