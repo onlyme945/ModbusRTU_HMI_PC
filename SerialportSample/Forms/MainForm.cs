@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace SerialportSample
 {
-    public partial class SerialportSampleForm : Form
+    public partial class MainForm : Form
     {
         private ModbusRTU ModbusMaster = new ModbusRTU();
         private SystemInfo WorkSpcaeSystemInfoForm = new SystemInfo();
@@ -21,13 +21,15 @@ namespace SerialportSample
         private Waveform WorkSpcaeWaveformForm = new Waveform();
         private WorkMode WorkSpaceWorkModeForm = new WorkMode();
 
-        public SerialportSampleForm()
+        public MainForm()
         {
             InitializeComponent();
             WorkSpcaeSystemInfoForm.MdiParent = this;
             WorkSpcaeFaultInfoForm.MdiParent = this;
             WorkSpcaeWaveformForm.MdiParent = this;
             WorkSpaceWorkModeForm.MdiParent = this;
+
+            treeView1.ExpandAll();
 
             ModbusRTU.IsMaster = true;
             ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)ModbusRTU.ModbusFuncCode.ReadStorageRegs, 8));

@@ -16,6 +16,8 @@ namespace SerialportSample
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             this.ControlBox = false;
+          
+            
         }
     }
 }

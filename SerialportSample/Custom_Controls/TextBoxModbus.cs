@@ -373,11 +373,18 @@ namespace SerialportSample
                     break;
             }
 
-           
-            this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
+            try//防止调用此控件的窗体没有显示出来之前可能发生的周期刷新事件导致的异常发生
+            {
+                this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
                 {             
                     this.Text = StringInText;
                 }));
+            }
+            catch (Exception)
+            {
+                //无需操作，直接忽略
+            }
+
 
         }
 

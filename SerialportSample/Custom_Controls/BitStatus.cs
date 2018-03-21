@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SerialportSample.Custom_Controls
+namespace SerialportSample
 {
     public partial class BitStatus : UserControl
     {
@@ -174,7 +174,7 @@ namespace SerialportSample.Custom_Controls
             this.BackColor = System.Drawing.Color.Orange;
 
         else
-            this.BackColor = System.Drawing.Color.Gray;
+            this.BackColor = Color.White;
 
     }
 

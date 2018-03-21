@@ -1,6 +1,6 @@
 ﻿namespace SerialportSample
 {
-    partial class SerialportSampleForm
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -122,7 +122,7 @@
             this.splitter1.TabIndex = 58;
             this.splitter1.TabStop = false;
             // 
-            // SerialportSampleForm
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -134,7 +134,7 @@
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.MainFormMenuStrip;
-            this.Name = "SerialportSampleForm";
+            this.Name = "MainForm";
             this.Text = "Serial tool Sample";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.MainFormStatusStrip.ResumeLayout(false);

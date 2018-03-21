@@ -14,7 +14,8 @@ namespace SerialportSample
         public ButtonModbus()
         {
             InitializeComponent();
-            PeriodicRefreshTimer.Elapsed += PeriodicRefreshTimer_Elapsed;           
+            PeriodicRefreshTimer.Elapsed += PeriodicRefreshTimer_Elapsed;
+            PeriodicRefreshTimer.Enabled = true;
             this.button1.MouseClick += Button1_MouseClick;
             ModbusRTU.VoteToConfirmTransmitRegs('+', (byte)_ReadFunctionCode, _ReadAddress, _ReadDataLengthInBit);//控件初始化时，票决器根据地址值自动加1，并判断票选结果
         }
@@ -54,13 +55,41 @@ namespace SerialportSample
         private byte _StationID = 1;
         private UInt16 _WriteAddress = 0;
         private UInt16 _ReadAddress = 0;
+        private string _IfTrueText = "On";
+        private string _IfFalseText = "Off";
         private ModbusButtonClickActionEnum _ButtonClickAction = ModbusButtonClickActionEnum.Set;
         private byte _ReadDataLengthInBit = 1;//读取长度为1
         private byte _WriteDataLengthInBit = 1;
         private WriteFunctionCodeEnum _WriteFunctionCode = WriteFunctionCodeEnum.WriteSingleCoil;
         private ReadFunctionCodeEnum _ReadFunctionCode = ReadFunctionCodeEnum.ReadCoils;
 
-    
+
+        [Category("ModbusRTU"), Description("读取的位值为真时，button上显示的字符串")]
+        public string IfTrueText
+        {
+            get
+            {
+                return _IfTrueText;
+            }
+            set
+            {
+                _IfTrueText = value;
+            }
+        }
+
+        [Category("ModbusRTU"), Description("读取的位值为真时，button上显示的字符串")]
+        public string IfFalseText
+        {
+            get
+            {
+                return _IfFalseText; 
+            }
+            set
+            {
+                _IfFalseText = value;
+            }
+        }
+
 
         [Category("ModbusRTU"), Description("读取数据的长度（以位为单位）")]
         public byte ReadDataLengthInBit
@@ -206,12 +235,25 @@ namespace SerialportSample
             if (ModbusRTU.MasterDataRepos.RCoilFlag[_ReadAddress] == false)
                 return;
             else
-                StringInText = ModbusRTU.MasterDataRepos.Coils[_ReadAddress].ToString();
-
-            this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
             {
-                this.button1.Text = StringInText;
-            }));
+                if (ModbusRTU.MasterDataRepos.Coils[_ReadAddress] == true)
+                    StringInText = _IfTrueText;
+                else
+                    StringInText = _IfFalseText;
+            }
+            
+            try//防止调用此控件的窗体没有显示出来之前可能发生的周期刷新事件导致的异常发生
+            {
+                this.Invoke((EventHandler)(delegate  //解决线程间调用显示的问题   可能存在线程间等待的问题，需要确认并优化
+                {
+                    this.button1.Text = StringInText;
+                }));
+            }
+            catch (Exception)
+            {
+                //无需操作，直接忽略
+            }
+           
 
         }
 

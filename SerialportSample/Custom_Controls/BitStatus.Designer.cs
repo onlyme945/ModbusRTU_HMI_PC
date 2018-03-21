@@ -1,4 +1,4 @@
-﻿namespace SerialportSample.Custom_Controls
+﻿namespace SerialportSample
 {
     partial class BitStatus
     {

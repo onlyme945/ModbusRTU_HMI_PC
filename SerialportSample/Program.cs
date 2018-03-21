@@ -15,7 +15,7 @@ namespace SerialportSample
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SerialportSampleForm());
+            Application.Run(new MainForm());
         }
     }
 }
