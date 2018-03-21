@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SerialportSample.Custom_Controls
+namespace SerialportSample
 {
     public partial class BitStatus : UserControl
     {
