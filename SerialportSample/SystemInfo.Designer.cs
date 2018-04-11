@@ -32,58 +32,78 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel12 = new System.Windows.Forms.Panel();
             this.label24 = new System.Windows.Forms.Label();
+            this.labelModbus11 = new SerialportSample.LabelModbus();
             this.label11 = new System.Windows.Forms.Label();
             this.panel11 = new System.Windows.Forms.Panel();
             this.label29 = new System.Windows.Forms.Label();
+            this.labelModbus7 = new SerialportSample.LabelModbus();
             this.label7 = new System.Windows.Forms.Label();
             this.panel10 = new System.Windows.Forms.Panel();
             this.label26 = new System.Windows.Forms.Label();
+            this.labelModbus3 = new SerialportSample.LabelModbus();
             this.label4 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.label31 = new System.Windows.Forms.Label();
+            this.labelModbus10 = new SerialportSample.LabelModbus();
             this.label10 = new System.Windows.Forms.Label();
             this.panel8 = new System.Windows.Forms.Panel();
             this.label27 = new System.Windows.Forms.Label();
+            this.labelModbus4 = new SerialportSample.LabelModbus();
             this.label5 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label28 = new System.Windows.Forms.Label();
+            this.labelModbus6 = new SerialportSample.LabelModbus();
             this.label6 = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label30 = new System.Windows.Forms.Label();
+            this.labelModbus8 = new SerialportSample.LabelModbus();
             this.label8 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label25 = new System.Windows.Forms.Label();
+            this.labelModbus2 = new SerialportSample.LabelModbus();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label23 = new System.Windows.Forms.Label();
+            this.labelModbus9 = new SerialportSample.LabelModbus();
             this.label9 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label22 = new System.Windows.Forms.Label();
+            this.labelModbus5 = new SerialportSample.LabelModbus();
             this.label2 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label12 = new System.Windows.Forms.Label();
+            this.labelModbus1 = new SerialportSample.LabelModbus();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel13 = new System.Windows.Forms.Panel();
+            this.textBoxModbus9 = new SerialportSample.TextBoxModbus();
             this.label21 = new System.Windows.Forms.Label();
             this.panel14 = new System.Windows.Forms.Panel();
+            this.textBoxModbus6 = new SerialportSample.TextBoxModbus();
             this.label18 = new System.Windows.Forms.Label();
             this.panel15 = new System.Windows.Forms.Panel();
+            this.textBoxModbus3 = new SerialportSample.TextBoxModbus();
             this.label15 = new System.Windows.Forms.Label();
             this.panel16 = new System.Windows.Forms.Panel();
+            this.textBoxModbus8 = new SerialportSample.TextBoxModbus();
             this.label20 = new System.Windows.Forms.Label();
             this.panel18 = new System.Windows.Forms.Panel();
+            this.textBoxModbus5 = new SerialportSample.TextBoxModbus();
             this.label17 = new System.Windows.Forms.Label();
             this.panel21 = new System.Windows.Forms.Panel();
+            this.textBoxModbus2 = new SerialportSample.TextBoxModbus();
             this.label14 = new System.Windows.Forms.Label();
             this.panel22 = new System.Windows.Forms.Panel();
+            this.textBoxModbus7 = new SerialportSample.TextBoxModbus();
             this.label19 = new System.Windows.Forms.Label();
             this.panel23 = new System.Windows.Forms.Panel();
+            this.textBoxModbus4 = new SerialportSample.TextBoxModbus();
             this.label16 = new System.Windows.Forms.Label();
             this.panel24 = new System.Windows.Forms.Panel();
+            this.textBoxModbus1 = new SerialportSample.TextBoxModbus();
             this.label13 = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
@@ -100,26 +120,6 @@
             this.bitStatus3 = new SerialportSample.BitStatus();
             this.bitStatus2 = new SerialportSample.BitStatus();
             this.bitStatus1 = new SerialportSample.BitStatus();
-            this.textBoxModbus9 = new SerialportSample.TextBoxModbus();
-            this.textBoxModbus6 = new SerialportSample.TextBoxModbus();
-            this.textBoxModbus3 = new SerialportSample.TextBoxModbus();
-            this.textBoxModbus8 = new SerialportSample.TextBoxModbus();
-            this.textBoxModbus5 = new SerialportSample.TextBoxModbus();
-            this.textBoxModbus2 = new SerialportSample.TextBoxModbus();
-            this.textBoxModbus7 = new SerialportSample.TextBoxModbus();
-            this.textBoxModbus4 = new SerialportSample.TextBoxModbus();
-            this.textBoxModbus1 = new SerialportSample.TextBoxModbus();
-            this.labelModbus11 = new SerialportSample.LabelModbus();
-            this.labelModbus7 = new SerialportSample.LabelModbus();
-            this.labelModbus3 = new SerialportSample.LabelModbus();
-            this.labelModbus10 = new SerialportSample.LabelModbus();
-            this.labelModbus4 = new SerialportSample.LabelModbus();
-            this.labelModbus6 = new SerialportSample.LabelModbus();
-            this.labelModbus8 = new SerialportSample.LabelModbus();
-            this.labelModbus2 = new SerialportSample.LabelModbus();
-            this.labelModbus9 = new SerialportSample.LabelModbus();
-            this.labelModbus5 = new SerialportSample.LabelModbus();
-            this.labelModbus1 = new SerialportSample.LabelModbus();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel12.SuspendLayout();
@@ -207,6 +207,22 @@
             this.label24.TabIndex = 10;
             this.label24.Text = "Hz";
             // 
+            // labelModbus11
+            // 
+            this.labelModbus11.AutoSize = true;
+            this.labelModbus11.EnablePeriodRequest = true;
+            this.labelModbus11.Location = new System.Drawing.Point(82, 14);
+            this.labelModbus11.Name = "labelModbus11";
+            this.labelModbus11.ReadAddress = ((ushort)(0));
+            this.labelModbus11.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus11.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus11.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus11.RefreshPeriod = 100D;
+            this.labelModbus11.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus11.StationID = ((byte)(1));
+            this.labelModbus11.TabIndex = 11;
+            this.labelModbus11.Text = "0";
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -235,6 +251,22 @@
             this.label29.Size = new System.Drawing.Size(11, 12);
             this.label29.TabIndex = 13;
             this.label29.Text = "A";
+            // 
+            // labelModbus7
+            // 
+            this.labelModbus7.AutoSize = true;
+            this.labelModbus7.EnablePeriodRequest = true;
+            this.labelModbus7.Location = new System.Drawing.Point(73, 14);
+            this.labelModbus7.Name = "labelModbus7";
+            this.labelModbus7.ReadAddress = ((ushort)(0));
+            this.labelModbus7.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus7.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus7.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus7.RefreshPeriod = 100D;
+            this.labelModbus7.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus7.StationID = ((byte)(1));
+            this.labelModbus7.TabIndex = 7;
+            this.labelModbus7.Text = "0";
             // 
             // label7
             // 
@@ -265,6 +297,22 @@
             this.label26.TabIndex = 11;
             this.label26.Text = "V";
             // 
+            // labelModbus3
+            // 
+            this.labelModbus3.AutoSize = true;
+            this.labelModbus3.EnablePeriodRequest = true;
+            this.labelModbus3.Location = new System.Drawing.Point(76, 14);
+            this.labelModbus3.Name = "labelModbus3";
+            this.labelModbus3.ReadAddress = ((ushort)(0));
+            this.labelModbus3.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus3.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus3.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus3.RefreshPeriod = 100D;
+            this.labelModbus3.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus3.StationID = ((byte)(1));
+            this.labelModbus3.TabIndex = 3;
+            this.labelModbus3.Text = "0";
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -284,6 +332,31 @@
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(164, 43);
             this.panel9.TabIndex = 8;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(133, 14);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(11, 12);
+            this.label31.TabIndex = 10;
+            this.label31.Text = "-";
+            // 
+            // labelModbus10
+            // 
+            this.labelModbus10.AutoSize = true;
+            this.labelModbus10.EnablePeriodRequest = true;
+            this.labelModbus10.Location = new System.Drawing.Point(82, 14);
+            this.labelModbus10.Name = "labelModbus10";
+            this.labelModbus10.ReadAddress = ((ushort)(0));
+            this.labelModbus10.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus10.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus10.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus10.RefreshPeriod = 100D;
+            this.labelModbus10.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus10.StationID = ((byte)(1));
+            this.labelModbus10.TabIndex = 10;
+            this.labelModbus10.Text = "0";
             // 
             // label10
             // 
@@ -314,6 +387,22 @@
             this.label27.TabIndex = 12;
             this.label27.Text = "V";
             // 
+            // labelModbus4
+            // 
+            this.labelModbus4.AutoSize = true;
+            this.labelModbus4.EnablePeriodRequest = true;
+            this.labelModbus4.Location = new System.Drawing.Point(76, 15);
+            this.labelModbus4.Name = "labelModbus4";
+            this.labelModbus4.ReadAddress = ((ushort)(0));
+            this.labelModbus4.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus4.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus4.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus4.RefreshPeriod = 100D;
+            this.labelModbus4.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus4.StationID = ((byte)(1));
+            this.labelModbus4.TabIndex = 4;
+            this.labelModbus4.Text = "0";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -343,6 +432,22 @@
             this.label28.TabIndex = 12;
             this.label28.Text = "A";
             // 
+            // labelModbus6
+            // 
+            this.labelModbus6.AutoSize = true;
+            this.labelModbus6.EnablePeriodRequest = true;
+            this.labelModbus6.Location = new System.Drawing.Point(73, 14);
+            this.labelModbus6.Name = "labelModbus6";
+            this.labelModbus6.ReadAddress = ((ushort)(0));
+            this.labelModbus6.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus6.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus6.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus6.RefreshPeriod = 100D;
+            this.labelModbus6.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus6.StationID = ((byte)(1));
+            this.labelModbus6.TabIndex = 6;
+            this.labelModbus6.Text = "0";
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -371,6 +476,22 @@
             this.label30.Size = new System.Drawing.Size(11, 12);
             this.label30.TabIndex = 14;
             this.label30.Text = "A";
+            // 
+            // labelModbus8
+            // 
+            this.labelModbus8.AutoSize = true;
+            this.labelModbus8.EnablePeriodRequest = true;
+            this.labelModbus8.Location = new System.Drawing.Point(73, 15);
+            this.labelModbus8.Name = "labelModbus8";
+            this.labelModbus8.ReadAddress = ((ushort)(0));
+            this.labelModbus8.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus8.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus8.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus8.RefreshPeriod = 100D;
+            this.labelModbus8.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus8.StationID = ((byte)(1));
+            this.labelModbus8.TabIndex = 8;
+            this.labelModbus8.Text = "0";
             // 
             // label8
             // 
@@ -409,6 +530,22 @@
             this.label25.TabIndex = 10;
             this.label25.Text = "V";
             // 
+            // labelModbus2
+            // 
+            this.labelModbus2.AutoSize = true;
+            this.labelModbus2.EnablePeriodRequest = true;
+            this.labelModbus2.Location = new System.Drawing.Point(76, 14);
+            this.labelModbus2.Name = "labelModbus2";
+            this.labelModbus2.ReadAddress = ((ushort)(0));
+            this.labelModbus2.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus2.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus2.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus2.RefreshPeriod = 100D;
+            this.labelModbus2.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus2.StationID = ((byte)(1));
+            this.labelModbus2.TabIndex = 2;
+            this.labelModbus2.Text = "0";
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -437,6 +574,22 @@
             this.label23.Size = new System.Drawing.Size(11, 12);
             this.label23.TabIndex = 6;
             this.label23.Text = "V";
+            // 
+            // labelModbus9
+            // 
+            this.labelModbus9.AutoSize = true;
+            this.labelModbus9.EnablePeriodRequest = true;
+            this.labelModbus9.Location = new System.Drawing.Point(82, 15);
+            this.labelModbus9.Name = "labelModbus9";
+            this.labelModbus9.ReadAddress = ((ushort)(0));
+            this.labelModbus9.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus9.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus9.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus9.RefreshPeriod = 100D;
+            this.labelModbus9.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus9.StationID = ((byte)(1));
+            this.labelModbus9.TabIndex = 9;
+            this.labelModbus9.Text = "0";
             // 
             // label9
             // 
@@ -467,6 +620,22 @@
             this.label22.TabIndex = 3;
             this.label22.Text = "kVar";
             // 
+            // labelModbus5
+            // 
+            this.labelModbus5.AutoSize = true;
+            this.labelModbus5.EnablePeriodRequest = true;
+            this.labelModbus5.Location = new System.Drawing.Point(73, 15);
+            this.labelModbus5.Name = "labelModbus5";
+            this.labelModbus5.ReadAddress = ((ushort)(0));
+            this.labelModbus5.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus5.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus5.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus5.RefreshPeriod = 100D;
+            this.labelModbus5.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus5.StationID = ((byte)(1));
+            this.labelModbus5.TabIndex = 5;
+            this.labelModbus5.Text = "0";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -495,6 +664,22 @@
             this.label12.Size = new System.Drawing.Size(17, 12);
             this.label12.TabIndex = 2;
             this.label12.Text = "kW";
+            // 
+            // labelModbus1
+            // 
+            this.labelModbus1.AutoSize = true;
+            this.labelModbus1.EnablePeriodRequest = true;
+            this.labelModbus1.Location = new System.Drawing.Point(76, 15);
+            this.labelModbus1.Name = "labelModbus1";
+            this.labelModbus1.ReadAddress = ((ushort)(0));
+            this.labelModbus1.ReadDataLengthInWord = ((byte)(1));
+            this.labelModbus1.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
+            this.labelModbus1.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.labelModbus1.RefreshPeriod = 100D;
+            this.labelModbus1.Size = new System.Drawing.Size(11, 12);
+            this.labelModbus1.StationID = ((byte)(1));
+            this.labelModbus1.TabIndex = 1;
+            this.labelModbus1.Text = "0";
             // 
             // label1
             // 
@@ -551,6 +736,27 @@
             this.panel13.Size = new System.Drawing.Size(164, 46);
             this.panel13.TabIndex = 8;
             // 
+            // textBoxModbus9
+            // 
+            this.textBoxModbus9.EnablePeriodRequest = true;
+            this.textBoxModbus9.Location = new System.Drawing.Point(71, 12);
+            this.textBoxModbus9.MaxValue = 100D;
+            this.textBoxModbus9.MinValue = 1D;
+            this.textBoxModbus9.Name = "textBoxModbus9";
+            this.textBoxModbus9.ReadAddress = ((ushort)(0));
+            this.textBoxModbus9.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus9.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus9.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus9.RequestPeriod = 100D;
+            this.textBoxModbus9.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus9.StationID = ((byte)(1));
+            this.textBoxModbus9.TabIndex = 13;
+            this.textBoxModbus9.Text = "0";
+            this.textBoxModbus9.WriteAddress = ((ushort)(0));
+            this.textBoxModbus9.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus9.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus9.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
+            // 
             // label21
             // 
             this.label21.AutoSize = true;
@@ -569,6 +775,27 @@
             this.panel14.Name = "panel14";
             this.panel14.Size = new System.Drawing.Size(163, 46);
             this.panel14.TabIndex = 8;
+            // 
+            // textBoxModbus6
+            // 
+            this.textBoxModbus6.EnablePeriodRequest = true;
+            this.textBoxModbus6.Location = new System.Drawing.Point(71, 12);
+            this.textBoxModbus6.MaxValue = 100D;
+            this.textBoxModbus6.MinValue = 1D;
+            this.textBoxModbus6.Name = "textBoxModbus6";
+            this.textBoxModbus6.ReadAddress = ((ushort)(0));
+            this.textBoxModbus6.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus6.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus6.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus6.RequestPeriod = 100D;
+            this.textBoxModbus6.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus6.StationID = ((byte)(1));
+            this.textBoxModbus6.TabIndex = 10;
+            this.textBoxModbus6.Text = "0";
+            this.textBoxModbus6.WriteAddress = ((ushort)(0));
+            this.textBoxModbus6.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus6.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus6.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
             // 
             // label18
             // 
@@ -589,6 +816,27 @@
             this.panel15.Size = new System.Drawing.Size(163, 46);
             this.panel15.TabIndex = 8;
             // 
+            // textBoxModbus3
+            // 
+            this.textBoxModbus3.EnablePeriodRequest = true;
+            this.textBoxModbus3.Location = new System.Drawing.Point(69, 12);
+            this.textBoxModbus3.MaxValue = 100D;
+            this.textBoxModbus3.MinValue = 1D;
+            this.textBoxModbus3.Name = "textBoxModbus3";
+            this.textBoxModbus3.ReadAddress = ((ushort)(0));
+            this.textBoxModbus3.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus3.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus3.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus3.RequestPeriod = 100D;
+            this.textBoxModbus3.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus3.StationID = ((byte)(1));
+            this.textBoxModbus3.TabIndex = 7;
+            this.textBoxModbus3.Text = "0";
+            this.textBoxModbus3.WriteAddress = ((ushort)(0));
+            this.textBoxModbus3.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus3.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus3.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
+            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -607,6 +855,27 @@
             this.panel16.Name = "panel16";
             this.panel16.Size = new System.Drawing.Size(164, 46);
             this.panel16.TabIndex = 8;
+            // 
+            // textBoxModbus8
+            // 
+            this.textBoxModbus8.EnablePeriodRequest = true;
+            this.textBoxModbus8.Location = new System.Drawing.Point(71, 13);
+            this.textBoxModbus8.MaxValue = 100D;
+            this.textBoxModbus8.MinValue = 1D;
+            this.textBoxModbus8.Name = "textBoxModbus8";
+            this.textBoxModbus8.ReadAddress = ((ushort)(0));
+            this.textBoxModbus8.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus8.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus8.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus8.RequestPeriod = 100D;
+            this.textBoxModbus8.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus8.StationID = ((byte)(1));
+            this.textBoxModbus8.TabIndex = 12;
+            this.textBoxModbus8.Text = "0";
+            this.textBoxModbus8.WriteAddress = ((ushort)(0));
+            this.textBoxModbus8.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus8.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus8.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
             // 
             // label20
             // 
@@ -627,6 +896,27 @@
             this.panel18.Size = new System.Drawing.Size(163, 46);
             this.panel18.TabIndex = 7;
             // 
+            // textBoxModbus5
+            // 
+            this.textBoxModbus5.EnablePeriodRequest = true;
+            this.textBoxModbus5.Location = new System.Drawing.Point(71, 13);
+            this.textBoxModbus5.MaxValue = 100D;
+            this.textBoxModbus5.MinValue = 1D;
+            this.textBoxModbus5.Name = "textBoxModbus5";
+            this.textBoxModbus5.ReadAddress = ((ushort)(0));
+            this.textBoxModbus5.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus5.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus5.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus5.RequestPeriod = 100D;
+            this.textBoxModbus5.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus5.StationID = ((byte)(1));
+            this.textBoxModbus5.TabIndex = 9;
+            this.textBoxModbus5.Text = "0";
+            this.textBoxModbus5.WriteAddress = ((ushort)(0));
+            this.textBoxModbus5.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus5.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus5.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
+            // 
             // label17
             // 
             this.label17.AutoSize = true;
@@ -645,6 +935,27 @@
             this.panel21.Name = "panel21";
             this.panel21.Size = new System.Drawing.Size(163, 46);
             this.panel21.TabIndex = 6;
+            // 
+            // textBoxModbus2
+            // 
+            this.textBoxModbus2.EnablePeriodRequest = true;
+            this.textBoxModbus2.Location = new System.Drawing.Point(69, 13);
+            this.textBoxModbus2.MaxValue = 100D;
+            this.textBoxModbus2.MinValue = 1D;
+            this.textBoxModbus2.Name = "textBoxModbus2";
+            this.textBoxModbus2.ReadAddress = ((ushort)(0));
+            this.textBoxModbus2.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus2.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus2.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus2.RequestPeriod = 100D;
+            this.textBoxModbus2.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus2.StationID = ((byte)(1));
+            this.textBoxModbus2.TabIndex = 6;
+            this.textBoxModbus2.Text = "0";
+            this.textBoxModbus2.WriteAddress = ((ushort)(0));
+            this.textBoxModbus2.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus2.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus2.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
             // 
             // label14
             // 
@@ -665,6 +976,27 @@
             this.panel22.Size = new System.Drawing.Size(164, 46);
             this.panel22.TabIndex = 5;
             // 
+            // textBoxModbus7
+            // 
+            this.textBoxModbus7.EnablePeriodRequest = true;
+            this.textBoxModbus7.Location = new System.Drawing.Point(71, 13);
+            this.textBoxModbus7.MaxValue = 100D;
+            this.textBoxModbus7.MinValue = 1D;
+            this.textBoxModbus7.Name = "textBoxModbus7";
+            this.textBoxModbus7.ReadAddress = ((ushort)(0));
+            this.textBoxModbus7.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus7.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus7.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus7.RequestPeriod = 100D;
+            this.textBoxModbus7.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus7.StationID = ((byte)(1));
+            this.textBoxModbus7.TabIndex = 11;
+            this.textBoxModbus7.Text = "0";
+            this.textBoxModbus7.WriteAddress = ((ushort)(0));
+            this.textBoxModbus7.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus7.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus7.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
+            // 
             // label19
             // 
             this.label19.AutoSize = true;
@@ -683,6 +1015,27 @@
             this.panel23.Name = "panel23";
             this.panel23.Size = new System.Drawing.Size(163, 46);
             this.panel23.TabIndex = 4;
+            // 
+            // textBoxModbus4
+            // 
+            this.textBoxModbus4.EnablePeriodRequest = true;
+            this.textBoxModbus4.Location = new System.Drawing.Point(71, 13);
+            this.textBoxModbus4.MaxValue = 100D;
+            this.textBoxModbus4.MinValue = 1D;
+            this.textBoxModbus4.Name = "textBoxModbus4";
+            this.textBoxModbus4.ReadAddress = ((ushort)(0));
+            this.textBoxModbus4.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus4.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus4.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus4.RequestPeriod = 100D;
+            this.textBoxModbus4.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus4.StationID = ((byte)(1));
+            this.textBoxModbus4.TabIndex = 8;
+            this.textBoxModbus4.Text = "0";
+            this.textBoxModbus4.WriteAddress = ((ushort)(0));
+            this.textBoxModbus4.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus4.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus4.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
             // 
             // label16
             // 
@@ -703,6 +1056,27 @@
             this.panel24.Size = new System.Drawing.Size(163, 46);
             this.panel24.TabIndex = 4;
             // 
+            // textBoxModbus1
+            // 
+            this.textBoxModbus1.EnablePeriodRequest = true;
+            this.textBoxModbus1.Location = new System.Drawing.Point(69, 13);
+            this.textBoxModbus1.MaxValue = 100D;
+            this.textBoxModbus1.MinValue = 1D;
+            this.textBoxModbus1.Name = "textBoxModbus1";
+            this.textBoxModbus1.ReadAddress = ((ushort)(0));
+            this.textBoxModbus1.ReadDataLengthInWord = ((byte)(1));
+            this.textBoxModbus1.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
+            this.textBoxModbus1.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
+            this.textBoxModbus1.RequestPeriod = 100D;
+            this.textBoxModbus1.Size = new System.Drawing.Size(79, 21);
+            this.textBoxModbus1.StationID = ((byte)(1));
+            this.textBoxModbus1.TabIndex = 5;
+            this.textBoxModbus1.Text = "0";
+            this.textBoxModbus1.WriteAddress = ((ushort)(0));
+            this.textBoxModbus1.WriteDataLengthInWord = ((byte)(1));
+            this.textBoxModbus1.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
+            this.textBoxModbus1.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteRegs;
+            // 
             // label13
             // 
             this.label13.AutoSize = true;
@@ -711,15 +1085,6 @@
             this.label13.Size = new System.Drawing.Size(59, 12);
             this.label13.TabIndex = 4;
             this.label13.Text = "Udc_ref：";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(133, 14);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(11, 12);
-            this.label31.TabIndex = 10;
-            this.label31.Text = "-";
             // 
             // label32
             // 
@@ -912,371 +1277,6 @@
             this.bitStatus1.Size = new System.Drawing.Size(26, 25);
             this.bitStatus1.StationID = ((byte)(1));
             this.bitStatus1.TabIndex = 4;
-            // 
-            // textBoxModbus9
-            // 
-            this.textBoxModbus9.EnablePeriodRequest = true;
-            this.textBoxModbus9.Location = new System.Drawing.Point(71, 12);
-            this.textBoxModbus9.MaxValue = 100D;
-            this.textBoxModbus9.MinValue = 1D;
-            this.textBoxModbus9.Name = "textBoxModbus9";
-            this.textBoxModbus9.ReadAddress = ((ushort)(0));
-            this.textBoxModbus9.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus9.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus9.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus9.RequestPeriod = 100D;
-            this.textBoxModbus9.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus9.StationID = ((byte)(1));
-            this.textBoxModbus9.TabIndex = 13;
-            this.textBoxModbus9.Text = "0";
-            this.textBoxModbus9.WriteAddress = ((ushort)(0));
-            this.textBoxModbus9.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus9.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus9.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // textBoxModbus6
-            // 
-            this.textBoxModbus6.EnablePeriodRequest = true;
-            this.textBoxModbus6.Location = new System.Drawing.Point(71, 12);
-            this.textBoxModbus6.MaxValue = 100D;
-            this.textBoxModbus6.MinValue = 1D;
-            this.textBoxModbus6.Name = "textBoxModbus6";
-            this.textBoxModbus6.ReadAddress = ((ushort)(0));
-            this.textBoxModbus6.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus6.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus6.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus6.RequestPeriod = 100D;
-            this.textBoxModbus6.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus6.StationID = ((byte)(1));
-            this.textBoxModbus6.TabIndex = 10;
-            this.textBoxModbus6.Text = "0";
-            this.textBoxModbus6.WriteAddress = ((ushort)(0));
-            this.textBoxModbus6.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus6.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus6.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // textBoxModbus3
-            // 
-            this.textBoxModbus3.EnablePeriodRequest = true;
-            this.textBoxModbus3.Location = new System.Drawing.Point(69, 12);
-            this.textBoxModbus3.MaxValue = 100D;
-            this.textBoxModbus3.MinValue = 1D;
-            this.textBoxModbus3.Name = "textBoxModbus3";
-            this.textBoxModbus3.ReadAddress = ((ushort)(0));
-            this.textBoxModbus3.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus3.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus3.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus3.RequestPeriod = 100D;
-            this.textBoxModbus3.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus3.StationID = ((byte)(1));
-            this.textBoxModbus3.TabIndex = 7;
-            this.textBoxModbus3.Text = "0";
-            this.textBoxModbus3.WriteAddress = ((ushort)(0));
-            this.textBoxModbus3.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus3.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus3.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // textBoxModbus8
-            // 
-            this.textBoxModbus8.EnablePeriodRequest = true;
-            this.textBoxModbus8.Location = new System.Drawing.Point(71, 13);
-            this.textBoxModbus8.MaxValue = 100D;
-            this.textBoxModbus8.MinValue = 1D;
-            this.textBoxModbus8.Name = "textBoxModbus8";
-            this.textBoxModbus8.ReadAddress = ((ushort)(0));
-            this.textBoxModbus8.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus8.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus8.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus8.RequestPeriod = 100D;
-            this.textBoxModbus8.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus8.StationID = ((byte)(1));
-            this.textBoxModbus8.TabIndex = 12;
-            this.textBoxModbus8.Text = "0";
-            this.textBoxModbus8.WriteAddress = ((ushort)(0));
-            this.textBoxModbus8.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus8.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus8.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // textBoxModbus5
-            // 
-            this.textBoxModbus5.EnablePeriodRequest = true;
-            this.textBoxModbus5.Location = new System.Drawing.Point(71, 13);
-            this.textBoxModbus5.MaxValue = 100D;
-            this.textBoxModbus5.MinValue = 1D;
-            this.textBoxModbus5.Name = "textBoxModbus5";
-            this.textBoxModbus5.ReadAddress = ((ushort)(0));
-            this.textBoxModbus5.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus5.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus5.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus5.RequestPeriod = 100D;
-            this.textBoxModbus5.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus5.StationID = ((byte)(1));
-            this.textBoxModbus5.TabIndex = 9;
-            this.textBoxModbus5.Text = "0";
-            this.textBoxModbus5.WriteAddress = ((ushort)(0));
-            this.textBoxModbus5.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus5.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus5.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // textBoxModbus2
-            // 
-            this.textBoxModbus2.EnablePeriodRequest = true;
-            this.textBoxModbus2.Location = new System.Drawing.Point(69, 13);
-            this.textBoxModbus2.MaxValue = 100D;
-            this.textBoxModbus2.MinValue = 1D;
-            this.textBoxModbus2.Name = "textBoxModbus2";
-            this.textBoxModbus2.ReadAddress = ((ushort)(0));
-            this.textBoxModbus2.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus2.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus2.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus2.RequestPeriod = 100D;
-            this.textBoxModbus2.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus2.StationID = ((byte)(1));
-            this.textBoxModbus2.TabIndex = 6;
-            this.textBoxModbus2.Text = "0";
-            this.textBoxModbus2.WriteAddress = ((ushort)(0));
-            this.textBoxModbus2.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus2.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus2.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // textBoxModbus7
-            // 
-            this.textBoxModbus7.EnablePeriodRequest = true;
-            this.textBoxModbus7.Location = new System.Drawing.Point(71, 13);
-            this.textBoxModbus7.MaxValue = 100D;
-            this.textBoxModbus7.MinValue = 1D;
-            this.textBoxModbus7.Name = "textBoxModbus7";
-            this.textBoxModbus7.ReadAddress = ((ushort)(0));
-            this.textBoxModbus7.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus7.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus7.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus7.RequestPeriod = 100D;
-            this.textBoxModbus7.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus7.StationID = ((byte)(1));
-            this.textBoxModbus7.TabIndex = 11;
-            this.textBoxModbus7.Text = "0";
-            this.textBoxModbus7.WriteAddress = ((ushort)(0));
-            this.textBoxModbus7.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus7.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus7.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // textBoxModbus4
-            // 
-            this.textBoxModbus4.EnablePeriodRequest = true;
-            this.textBoxModbus4.Location = new System.Drawing.Point(71, 13);
-            this.textBoxModbus4.MaxValue = 100D;
-            this.textBoxModbus4.MinValue = 1D;
-            this.textBoxModbus4.Name = "textBoxModbus4";
-            this.textBoxModbus4.ReadAddress = ((ushort)(0));
-            this.textBoxModbus4.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus4.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus4.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus4.RequestPeriod = 100D;
-            this.textBoxModbus4.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus4.StationID = ((byte)(1));
-            this.textBoxModbus4.TabIndex = 8;
-            this.textBoxModbus4.Text = "0";
-            this.textBoxModbus4.WriteAddress = ((ushort)(0));
-            this.textBoxModbus4.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus4.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus4.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // textBoxModbus1
-            // 
-            this.textBoxModbus1.EnablePeriodRequest = true;
-            this.textBoxModbus1.Location = new System.Drawing.Point(69, 13);
-            this.textBoxModbus1.MaxValue = 100D;
-            this.textBoxModbus1.MinValue = 1D;
-            this.textBoxModbus1.Name = "textBoxModbus1";
-            this.textBoxModbus1.ReadAddress = ((ushort)(0));
-            this.textBoxModbus1.ReadDataLengthInWord = ((byte)(1));
-            this.textBoxModbus1.ReadDataType = SerialportSample.TextBoxModbus.ReadDataTypeEnum.UINT16;
-            this.textBoxModbus1.ReadFuncCode = SerialportSample.TextBoxModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.textBoxModbus1.RequestPeriod = 100D;
-            this.textBoxModbus1.Size = new System.Drawing.Size(79, 21);
-            this.textBoxModbus1.StationID = ((byte)(1));
-            this.textBoxModbus1.TabIndex = 5;
-            this.textBoxModbus1.Text = "0";
-            this.textBoxModbus1.WriteAddress = ((ushort)(0));
-            this.textBoxModbus1.WriteDataLengthInWord = ((byte)(1));
-            this.textBoxModbus1.WriteDataType = SerialportSample.TextBoxModbus.WriteDataTypeEnum.UINT16;
-            this.textBoxModbus1.WriteFuncCode = SerialportSample.TextBoxModbus.WriteFunctionCodeEnum.WriteCoils;
-            // 
-            // labelModbus11
-            // 
-            this.labelModbus11.AutoSize = true;
-            this.labelModbus11.EnablePeriodRequest = true;
-            this.labelModbus11.Location = new System.Drawing.Point(82, 14);
-            this.labelModbus11.Name = "labelModbus11";
-            this.labelModbus11.ReadAddress = ((ushort)(0));
-            this.labelModbus11.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus11.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus11.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus11.RefreshPeriod = 100D;
-            this.labelModbus11.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus11.StationID = ((byte)(1));
-            this.labelModbus11.TabIndex = 11;
-            this.labelModbus11.Text = "0";
-            // 
-            // labelModbus7
-            // 
-            this.labelModbus7.AutoSize = true;
-            this.labelModbus7.EnablePeriodRequest = true;
-            this.labelModbus7.Location = new System.Drawing.Point(73, 14);
-            this.labelModbus7.Name = "labelModbus7";
-            this.labelModbus7.ReadAddress = ((ushort)(0));
-            this.labelModbus7.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus7.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus7.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus7.RefreshPeriod = 100D;
-            this.labelModbus7.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus7.StationID = ((byte)(1));
-            this.labelModbus7.TabIndex = 7;
-            this.labelModbus7.Text = "0";
-            // 
-            // labelModbus3
-            // 
-            this.labelModbus3.AutoSize = true;
-            this.labelModbus3.EnablePeriodRequest = true;
-            this.labelModbus3.Location = new System.Drawing.Point(76, 14);
-            this.labelModbus3.Name = "labelModbus3";
-            this.labelModbus3.ReadAddress = ((ushort)(0));
-            this.labelModbus3.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus3.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus3.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus3.RefreshPeriod = 100D;
-            this.labelModbus3.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus3.StationID = ((byte)(1));
-            this.labelModbus3.TabIndex = 3;
-            this.labelModbus3.Text = "0";
-            // 
-            // labelModbus10
-            // 
-            this.labelModbus10.AutoSize = true;
-            this.labelModbus10.EnablePeriodRequest = true;
-            this.labelModbus10.Location = new System.Drawing.Point(82, 14);
-            this.labelModbus10.Name = "labelModbus10";
-            this.labelModbus10.ReadAddress = ((ushort)(0));
-            this.labelModbus10.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus10.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus10.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus10.RefreshPeriod = 100D;
-            this.labelModbus10.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus10.StationID = ((byte)(1));
-            this.labelModbus10.TabIndex = 10;
-            this.labelModbus10.Text = "0";
-            // 
-            // labelModbus4
-            // 
-            this.labelModbus4.AutoSize = true;
-            this.labelModbus4.EnablePeriodRequest = true;
-            this.labelModbus4.Location = new System.Drawing.Point(76, 15);
-            this.labelModbus4.Name = "labelModbus4";
-            this.labelModbus4.ReadAddress = ((ushort)(0));
-            this.labelModbus4.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus4.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus4.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus4.RefreshPeriod = 100D;
-            this.labelModbus4.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus4.StationID = ((byte)(1));
-            this.labelModbus4.TabIndex = 4;
-            this.labelModbus4.Text = "0";
-            // 
-            // labelModbus6
-            // 
-            this.labelModbus6.AutoSize = true;
-            this.labelModbus6.EnablePeriodRequest = true;
-            this.labelModbus6.Location = new System.Drawing.Point(73, 14);
-            this.labelModbus6.Name = "labelModbus6";
-            this.labelModbus6.ReadAddress = ((ushort)(0));
-            this.labelModbus6.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus6.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus6.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus6.RefreshPeriod = 100D;
-            this.labelModbus6.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus6.StationID = ((byte)(1));
-            this.labelModbus6.TabIndex = 6;
-            this.labelModbus6.Text = "0";
-            // 
-            // labelModbus8
-            // 
-            this.labelModbus8.AutoSize = true;
-            this.labelModbus8.EnablePeriodRequest = true;
-            this.labelModbus8.Location = new System.Drawing.Point(73, 15);
-            this.labelModbus8.Name = "labelModbus8";
-            this.labelModbus8.ReadAddress = ((ushort)(0));
-            this.labelModbus8.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus8.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus8.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus8.RefreshPeriod = 100D;
-            this.labelModbus8.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus8.StationID = ((byte)(1));
-            this.labelModbus8.TabIndex = 8;
-            this.labelModbus8.Text = "0";
-            // 
-            // labelModbus2
-            // 
-            this.labelModbus2.AutoSize = true;
-            this.labelModbus2.EnablePeriodRequest = true;
-            this.labelModbus2.Location = new System.Drawing.Point(76, 14);
-            this.labelModbus2.Name = "labelModbus2";
-            this.labelModbus2.ReadAddress = ((ushort)(0));
-            this.labelModbus2.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus2.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus2.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus2.RefreshPeriod = 100D;
-            this.labelModbus2.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus2.StationID = ((byte)(1));
-            this.labelModbus2.TabIndex = 2;
-            this.labelModbus2.Text = "0";
-            // 
-            // labelModbus9
-            // 
-            this.labelModbus9.AutoSize = true;
-            this.labelModbus9.EnablePeriodRequest = true;
-            this.labelModbus9.Location = new System.Drawing.Point(82, 15);
-            this.labelModbus9.Name = "labelModbus9";
-            this.labelModbus9.ReadAddress = ((ushort)(0));
-            this.labelModbus9.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus9.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus9.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus9.RefreshPeriod = 100D;
-            this.labelModbus9.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus9.StationID = ((byte)(1));
-            this.labelModbus9.TabIndex = 9;
-            this.labelModbus9.Text = "0";
-            // 
-            // labelModbus5
-            // 
-            this.labelModbus5.AutoSize = true;
-            this.labelModbus5.EnablePeriodRequest = true;
-            this.labelModbus5.Location = new System.Drawing.Point(73, 15);
-            this.labelModbus5.Name = "labelModbus5";
-            this.labelModbus5.ReadAddress = ((ushort)(0));
-            this.labelModbus5.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus5.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus5.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus5.RefreshPeriod = 100D;
-            this.labelModbus5.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus5.StationID = ((byte)(1));
-            this.labelModbus5.TabIndex = 5;
-            this.labelModbus5.Text = "0";
-            // 
-            // labelModbus1
-            // 
-            this.labelModbus1.AutoSize = true;
-            this.labelModbus1.EnablePeriodRequest = true;
-            this.labelModbus1.Location = new System.Drawing.Point(76, 15);
-            this.labelModbus1.Name = "labelModbus1";
-            this.labelModbus1.ReadAddress = ((ushort)(0));
-            this.labelModbus1.ReadDataLengthInWord = ((byte)(1));
-            this.labelModbus1.ReadDataType = SerialportSample.LabelModbus.ReadDataTypeEnum.UINT16;
-            this.labelModbus1.ReadFuncCode = SerialportSample.LabelModbus.ReadFunctionCodeEnum.ReadStorageRegs;
-            this.labelModbus1.RefreshPeriod = 100D;
-            this.labelModbus1.Size = new System.Drawing.Size(11, 12);
-            this.labelModbus1.StationID = ((byte)(1));
-            this.labelModbus1.TabIndex = 1;
-            this.labelModbus1.Text = "0";
             // 
             // SystemInfo
             // 

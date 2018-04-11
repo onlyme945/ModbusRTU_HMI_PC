@@ -295,11 +295,16 @@ namespace SerialportSample
         {
             if (e.KeyChar == (char)Keys.Enter)//如果按下了Enter键，则进入发数据状态
             {
-                ModbusRTU.MasterDataRepos.StorageRegs[_WriteAddress]=Convert.ToUInt16(this.Text);
+                if (UInt16.TryParse(this.Text, out ModbusRTU.MasterDataRepos.StorageRegs[_WriteAddress]) == false)//TryParse 函数如果判断出所转换的字符串与所对应的数据格式不对应，会以0值out出来
+                {
+                    this.Text = "Wrong Input";
+                    return;
+                };// 需要改进，增加容错能力  考虑使用uint16.tryparse（）
+
                 ModbusRTU.VoteToConfirmTransmitRegs('+', (byte)_WriteFunctionCode, _WriteAddress, _WriteDataLengthInWord);
                 ModbusRTU.AssembleRequestADU(1, ModbusRTU.LoadUnmannedBuses((byte)_WriteFunctionCode, 0));
                 HideCaret(this.Handle);
-                PeriodicRefreshTimer.Enabled = true;
+                PeriodicRefreshTimer.Enabled = true;             
             }
                 
             if (e.KeyChar == (char)Keys.Escape)//通过Esc键取消写操作，恢复周期性读数据状态
