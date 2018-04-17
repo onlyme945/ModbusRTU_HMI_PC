@@ -120,6 +120,7 @@
             this.bitStatus3 = new SerialportSample.BitStatus();
             this.bitStatus2 = new SerialportSample.BitStatus();
             this.bitStatus1 = new SerialportSample.BitStatus();
+            this.buttonModbus3 = new SerialportSample.ButtonModbus();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel12.SuspendLayout();
@@ -1278,11 +1279,27 @@
             this.bitStatus1.StationID = ((byte)(1));
             this.bitStatus1.TabIndex = 4;
             // 
+            // buttonModbus3
+            // 
+            this.buttonModbus3.ButtonClickAction = SerialportSample.ButtonModbus.ModbusButtonClickActionEnum.Set;
+            this.buttonModbus3.EnablePeriodRefresh = true;
+            this.buttonModbus3.IfFalseText = "Off";
+            this.buttonModbus3.IfTrueText = "On";
+            this.buttonModbus3.Location = new System.Drawing.Point(605, 278);
+            this.buttonModbus3.Name = "buttonModbus3";
+            this.buttonModbus3.ReadAddress = ((ushort)(0));
+            this.buttonModbus3.RefreshPeriod = 100D;
+            this.buttonModbus3.Size = new System.Drawing.Size(75, 23);
+            this.buttonModbus3.StationID = ((byte)(1));
+            this.buttonModbus3.TabIndex = 21;
+            this.buttonModbus3.WriteAddress = ((ushort)(0));
+            // 
             // SystemInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(796, 609);
+            this.Controls.Add(this.buttonModbus3);
             this.Controls.Add(this.buttonModbus2);
             this.Controls.Add(this.buttonModbus1);
             this.Controls.Add(this.label39);
@@ -1447,5 +1464,6 @@
         private System.Windows.Forms.Label label39;
         private ButtonModbus buttonModbus1;
         private ButtonModbus buttonModbus2;
+        private ButtonModbus buttonModbus3;
     }
 }

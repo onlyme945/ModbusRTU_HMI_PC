@@ -19,13 +19,9 @@ namespace SerialportSample
             ModbusRTU.VoteToConfirmTransmitRegs('+', (byte)_ReadFunctionCode, _ReadAddress, _ReadDataLengthInBit);//控件初始化时，票决器根据地址值自动加1，并判断票选结果
         }
 
-        
+        private System.Timers.Timer PeriodicRefreshTimer = new System.Timers.Timer();
 
-    
-
-    private System.Timers.Timer PeriodicRefreshTimer = new System.Timers.Timer();
-
-    #region"/////////////////////自定义的属性///////////////////"
+        #region"/////////////////////自定义的属性///////////////////"
     private byte _StationID = 1;
     private UInt16 _ReadAddress = 0;
     private byte _ReadDataLengthInBit = 1;//至少为1个字，不能为0，不能超过125个字
@@ -148,7 +144,7 @@ namespace SerialportSample
 
 
 
-    private void PeriodicRefreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void PeriodicRefreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
         //周期性刷新数据代码   待完成
         BitInByte tempRegs;
@@ -178,14 +174,15 @@ namespace SerialportSample
 
     }
 
-    #region"////////////////////////枚举量或结构体////////////////////////"
-    public enum ReadFunctionCodeEnum
+        #region"////////////////////////枚举量或结构体////////////////////////"
+        public enum ReadFunctionCodeEnum
     {
         [Description("读线圈")]
         ReadCoils = 0x01,
         [Description("读离散线圈")]
         ReadDistrbuteBits = 0x02
     }
-}
+
+    }
 }
 #endregion

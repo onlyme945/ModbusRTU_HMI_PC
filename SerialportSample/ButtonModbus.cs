@@ -282,5 +282,7 @@ namespace SerialportSample
             Toggle=0x03
         }
         #endregion
+
+
     }
 }
